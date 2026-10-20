@@ -860,9 +860,13 @@
             let valid = false;
             let fx = 0, fy = 0;
             let attempts = 0;
+            
+            // Laisse la zone des caisses et le bas complètement propres (zone encadré rouge)
+            const maxFoodRows = Math.max(1, gridRows - 2);
+
             while (!valid && attempts < 500) {
                 fx = Math.floor(Math.random() * gridCols) * gridSize;
-                fy = Math.floor(Math.random() * gridRows) * gridSize;
+                fy = Math.floor(Math.random() * maxFoodRows) * gridSize;
                 valid = !snake.some(segment => segment.x === fx && segment.y === fy);
                 attempts++;
             }
@@ -929,16 +933,23 @@
 
         // Rayons / Gondoles d'épicerie vus du dessus (1 seule case de large par rayon)
         function drawSupermarketShelves() {
-            // Chaque rayon n'occupe qu'une seule colonne, avec 3 cases d'allées libres entre chaque
-            const shelfCols = [];
-            for (let col = 3; col < gridCols - 2; col += 4) {
-                shelfCols.push(col);
-            }
+            // 4 rayons répartis harmonieusement pour former 4 allées confortables
+            const shelfCols = [
+                Math.round(gridCols * 0.18),
+                Math.round(gridCols * 0.38),
+                Math.round(gridCols * 0.62),
+                Math.round(gridCols * 0.82)
+            ];
 
-            const startRow = 2; // Allée de circulation haute
-            const midRowBreakStart = Math.floor(gridRows / 2) - 1; // Allée centrale transversale
-            const midRowBreakEnd = Math.floor(gridRows / 2) + 1;
-            const endRow = gridRows - 2; // Laisse 1 allée libre juste avant les caisses
+            // Espace haut correspondant à l'encadré noir (environ 5 cases de dégagement)
+            const startRow = 5; 
+            // Espace bas généreux entre les rayons et les caisses (laisse 4 cases libres)
+            const endRow = Math.max(startRow + 6, gridRows - 5); 
+
+            // Allée transversale de passage au centre
+            const midRow = Math.floor((startRow + endRow) / 2);
+            const midRowBreakStart = midRow - 1; 
+            const midRowBreakEnd = midRow + 1;
 
             // Thèmes de rayons (produits visibles d'en haut)
             const shelfThemes = [
