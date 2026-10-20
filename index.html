@@ -23,7 +23,7 @@
             height: 100vh;
             height: 100dvh;
             margin: 0;
-            padding: 4px;
+            padding: 4px 6px;
             background: radial-gradient(circle at top, #ffffff, #e6ecf3);
             color: #0055A4;
             font-family: 'Montserrat', sans-serif;
@@ -35,12 +35,11 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            max-width: 98vw;
-            padding: 4px 10px;
+            padding: 5px 10px;
             margin-bottom: 4px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 12px;
-            border: 2px solid #0055A4;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 14px;
+            border: 3px solid #0055A4;
             box-shadow: 0 4px 12px rgba(0, 85, 164, 0.12);
             flex-shrink: 0;
         }
@@ -50,15 +49,16 @@
             flex-direction: row;
             align-items: center;
             gap: 8px;
+            min-width: 0;
         }
 
         #gameTitle {
-            font-size: clamp(14px, 3.8vw, 22px); 
+            font-size: clamp(13px, 3.6vw, 20px); 
             white-space: nowrap; 
             margin: 0;
             color: #0055A4;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             font-weight: 900;
         }
 
@@ -70,14 +70,16 @@
             background: none;
             border: none;
             color: #E30613;
-            font-size: clamp(11px, 2.5vw, 13px);
-            font-weight: 800;
+            font-size: clamp(10px, 2.4vw, 12px);
+            font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             cursor: pointer;
             text-decoration: underline;
             padding: 2px 4px;
             margin: 0;
+            line-height: 1.1;
+            white-space: nowrap;
         }
 
         .top-ten-btn:hover {
@@ -86,42 +88,48 @@
 
         #scoreboard {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: clamp(11px, 2.6vw, 14px);
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 1px;
+            font-size: clamp(10px, 2.5vw, 12px);
             font-weight: 900;
             color: #ffffff;
             background: linear-gradient(135deg, #0055A4, #003366);
-            padding: 4px 12px;
-            border-radius: 20px;
+            padding: 4px 10px;
+            border-radius: 12px;
             border: 2px solid #E30613;
-            box-shadow: 0 3px 10px rgba(0, 85, 164, 0.2);
+            box-shadow: 0 3px 8px rgba(0, 85, 164, 0.2);
             white-space: nowrap;
+            flex-shrink: 0;
         }
 
-        .badge-pill {
-            display: inline-flex;
+        .badge-row {
+            display: flex;
             align-items: center;
             gap: 4px;
+            line-height: 1.2;
         }
 
         #gameContainer {
             position: relative;
             width: 100%;
             flex: 1 1 auto;
-            max-width: 98vw;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 0;
             margin: 0 auto;
+            padding-bottom: 2px;
         }
 
         canvas {
             background: #ffffff;
             border: 4px solid #0055A4;
-            border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 40, 85, 0.16); 
+            border-radius: 16px;
+            box-shadow: 0 6px 20px rgba(0, 40, 85, 0.12); 
+            width: 100%;
+            height: 100%;
             max-width: 100%; 
             max-height: 100%; 
             aspect-ratio: 1080 / 1440;
@@ -372,12 +380,11 @@
     <div id="topBar">
         <div id="gameHeader">
             <h1 id="gameTitle">SUPER <span class="u-red">U</span> MÉNAGE</h1>
-            <button class="top-ten-btn" onclick="openLeaderboard()">🏆 Top 10</button>
+            <button class="top-ten-btn" onclick="openLeaderboard()">🏆 TOP<br>10</button>
         </div>
         <div id="scoreboard">
-            <div id="scoreDisplay" class="badge-pill">🧼 0</div>
-            <span style="opacity: 0.5;">|</span>
-            <div id="highScoreDisplay" class="badge-pill">👑 0</div>
+            <div id="scoreDisplay" class="badge-row">🧼 PROPRETÉ: 0</div>
+            <div id="highScoreDisplay" class="badge-row">👑 RECORD: 0</div>
         </div>
     </div>
     
@@ -1241,7 +1248,7 @@
             if (currentFood && snake[0].x === currentFood.x && snake[0].y === currentFood.y) {
                 const picked = currentFood.type;
                 score += picked.points;
-                document.getElementById('scoreDisplay').innerHTML = "🧼 " + score;
+                document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
 
                 playSound(picked.id);
                 createCleanupExplosion(currentFood.x, currentFood.y, picked);
