@@ -45,7 +45,6 @@
             position: relative;
         }
 
-        /* Zone gauche interchangeable : Logo OU Rocco */
         #leftSlot {
             position: relative;
             display: flex;
@@ -68,7 +67,6 @@
 
         .u-red { color: #E30613; }
 
-        /* Conteneur Rocco et bulle de dialogue */
         #roccoContainer {
             position: absolute;
             top: 0;
@@ -93,7 +91,6 @@
             display: block;
         }
 
-        /* Bulle compacte sur 2 lignes */
         #roccoSpeech {
             position: absolute;
             left: 48px;
@@ -102,14 +99,14 @@
             background: #ffffff;
             border: 1.5px solid #0055A4;
             color: #0055A4;
-            font-size: 8.5px;
+            font-size: 8px;
             line-height: 1.15;
             font-weight: 800;
             padding: 3px 6px;
             border-radius: 8px;
             white-space: normal;
             width: max-content;
-            max-width: 92px;
+            max-width: 95px;
             text-align: center;
             box-shadow: 0 2px 6px rgba(0,0,0,0.12);
             z-index: 20;
@@ -355,10 +352,8 @@
 
     <div id="topBar">
         <div id="leftSlot">
-            <!-- Titre/Logo visible par défaut -->
             <h1 id="gameTitle">SUPER <span class="u-red">U</span> MÉNAGE</h1>
 
-            <!-- Rocco et sa bulle (apparaît toutes les 62 secondes pendant 5 secondes) -->
             <div id="roccoContainer">
                 <img id="roccoImg" src="Rocco.png" alt="Rocco" onerror="this.style.display='none'">
                 <div id="roccoSpeech">Faites un tour<br>en zone promo</div>
@@ -451,14 +446,25 @@
         let top10 = [];
         let vitesseJeu = 150; 
 
-        // Gestion de l'alternance Logo <-> Rocco (toutes les 62 secondes pendant 5 secondes)
-        let roccoInterval = null;
+        // Phrases alternées pour Rocco
+        const ROCCO_MESSAGES = [
+            "Faites un tour<br>en zone promo",
+            "Essayez de passer<br>devant les caisses",
+            "Un box de picon est tombé<br>dans les alcools"
+        ];
+        let currentMessageIndex = 0;
+
+        let roccoCycleTimeout = null;
         let roccoHideTimeout = null;
 
         function setRoccoVisible(show) {
             const roccoEl = document.getElementById("roccoContainer");
             const titleEl = document.getElementById("gameTitle");
             if (show) {
+                const speechEl = document.getElementById("roccoSpeech");
+                speechEl.innerHTML = ROCCO_MESSAGES[currentMessageIndex];
+                currentMessageIndex = (currentMessageIndex + 1) % ROCCO_MESSAGES.length;
+
                 titleEl.style.opacity = "0";
                 roccoEl.classList.add("visible");
             } else {
@@ -467,25 +473,33 @@
             }
         }
 
-        function triggerRoccoPopup() {
-            if (!gameStarted || isGameOverState) return;
-            setRoccoVisible(true);
-            roccoHideTimeout = setTimeout(() => {
-                setRoccoVisible(false);
+        function scheduleNextRocco() {
+            clearTimeout(roccoCycleTimeout);
+            clearTimeout(roccoHideTimeout);
+
+            // Attente de 5 secondes avant la prochaine apparition
+            roccoCycleTimeout = setTimeout(() => {
+                if (!gameStarted || isGameOverState) return;
+                setRoccoVisible(true);
+
+                // Reste affiché 5 secondes
+                roccoHideTimeout = setTimeout(() => {
+                    setRoccoVisible(false);
+                    if (gameStarted && !isGameOverState) {
+                        scheduleNextRocco();
+                    }
+                }, 5000);
             }, 5000);
         }
 
         function startRoccoCycle() {
-            stopRoccoCycle();
+            currentMessageIndex = 0;
             setRoccoVisible(false);
-
-            roccoInterval = setInterval(() => {
-                triggerRoccoPopup();
-            }, 62000);
+            scheduleNextRocco();
         }
 
         function stopRoccoCycle() {
-            clearInterval(roccoInterval);
+            clearTimeout(roccoCycleTimeout);
             clearTimeout(roccoHideTimeout);
             setRoccoVisible(false);
         }
@@ -931,13 +945,13 @@
         }
 
         function generateFood() {
-            const bounds = getShelfBounds();
             let valid = false;
             let rCol, rRow;
             
             while(!valid) {
                 rCol = Math.floor(Math.random() * GRID_COLS);
-                rRow = Math.floor(Math.random() * gridRows);
+                // Exclut la dernière ligne (rangée des caisses : gridRows - 1)
+                rRow = Math.floor(Math.random() * (gridRows - 1));
                 
                 if(!isObstacle(rCol, rRow)) {
                     let onSnake = false;
