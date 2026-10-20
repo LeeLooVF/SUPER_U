@@ -437,6 +437,7 @@
         let gridRows = 55;
         let dx = 0, dy = 0;
         let snake = [];
+        let foods = []; // Tableau supportant plusieurs objets simultanés
         let inputQueue = [];
         let isGameOverState = false;
         let gameLoopTimeout;
@@ -446,11 +447,10 @@
         let top10 = [];
         let vitesseJeu = 150; 
 
-        // Phrases alternées pour Rocco
         const ROCCO_MESSAGES = [
-            "Faites un tour<br>en zone promo",
-            "Essayez de passer<br>devant les caisses",
-            "Un box de picon est tombé<br>dans les alcools"
+            { text: "Faites un tour<br>en zone promo", zone: "promo", count: 6 },
+            { text: "Essayez de passer<br>devant les caisses", zone: "caisses", count: 4 },
+            { text: "Un box de picon est tombé<br>dans les alcools", zone: "alcools", count: 11 }
         ];
         let currentMessageIndex = 0;
 
@@ -461,8 +461,13 @@
             const roccoEl = document.getElementById("roccoContainer");
             const titleEl = document.getElementById("gameTitle");
             if (show) {
+                const step = ROCCO_MESSAGES[currentMessageIndex];
                 const speechEl = document.getElementById("roccoSpeech");
-                speechEl.innerHTML = ROCCO_MESSAGES[currentMessageIndex];
+                speechEl.innerHTML = step.text;
+
+                // Fait apparaître les objets aléatoires dans la zone correspondante
+                spawnZoneFoods(step.zone, step.count);
+
                 currentMessageIndex = (currentMessageIndex + 1) % ROCCO_MESSAGES.length;
 
                 titleEl.style.opacity = "0";
@@ -477,12 +482,10 @@
             clearTimeout(roccoCycleTimeout);
             clearTimeout(roccoHideTimeout);
 
-            // Attente de 5 secondes avant la prochaine apparition
             roccoCycleTimeout = setTimeout(() => {
                 if (!gameStarted || isGameOverState) return;
                 setRoccoVisible(true);
 
-                // Reste affiché 5 secondes
                 roccoHideTimeout = setTimeout(() => {
                     setRoccoVisible(false);
                     if (gameStarted && !isGameOverState) {
@@ -511,8 +514,6 @@
             { type: "Pipi", proba: 0.08, points: 80, color: "#eab308" },
             { type: "Caca d'or", proba: 0.03, points: 150, color: "#fbbf24", emoji: "👑" }
         ];
-        let currentFood = null;
-        let foodX = -100, foodY = -100;
 
         let particles = [];
         let floatingTexts = [];
@@ -681,6 +682,7 @@
         function isObstacle(col, row) {
             const bounds = getShelfBounds();
             
+            // Ligne du bas = caisses
             if (row === gridRows - 1) {
                 for (let c of CAISSE_COLS) {
                     if (col === c || col === c + 1) return true;
@@ -944,41 +946,101 @@
             }
         }
 
+        function getRandomFoodType() {
+            const rand = Math.random();
+            let cumul = 0;
+            for (let d of DECHETS) {
+                cumul += d.proba;
+                if (rand <= cumul) return d;
+            }
+            return DECHETS[0];
+        }
+
+        function isPositionOccupied(col, row) {
+            if (isObstacle(col, row)) return true;
+            for (let part of snake) {
+                if (part.x === col * gridSize && part.y === row * gridSize) return true;
+            }
+            for (let f of foods) {
+                if (f.x === col * gridSize && f.y === row * gridSize) return true;
+            }
+            return false;
+        }
+
         function generateFood() {
             let valid = false;
             let rCol, rRow;
+            let attempts = 0;
             
-            while(!valid) {
+            while (!valid && attempts < 200) {
+                attempts++;
                 rCol = Math.floor(Math.random() * GRID_COLS);
-                // Exclut la dernière ligne (rangée des caisses : gridRows - 1)
                 rRow = Math.floor(Math.random() * (gridRows - 1));
                 
-                if(!isObstacle(rCol, rRow)) {
-                    let onSnake = false;
-                    for(let part of snake) {
-                        if(part.x === rCol * gridSize && part.y === rRow * gridSize) { onSnake = true; break; }
-                    }
-                    if(!onSnake) valid = true;
+                if (!isPositionOccupied(rCol, rRow)) {
+                    valid = true;
                 }
             }
             
-            foodX = rCol * gridSize;
-            foodY = rRow * gridSize;
-
-            const rand = Math.random();
-            let cumul = 0;
-            for(let d of DECHETS) {
-                cumul += d.proba;
-                if(rand <= cumul) { currentFood = d; break; }
+            if (valid) {
+                foods.push({
+                    x: rCol * gridSize,
+                    y: rRow * gridSize,
+                    item: getRandomFoodType()
+                });
             }
-            if(!currentFood) currentFood = DECHETS[0];
         }
 
-        function drawFood() {
-            if(!currentFood) return;
+        // Apparition de N objets dans les 3 zones précisées
+        function spawnZoneFoods(zone, count) {
+            const bounds = getShelfBounds();
+            const midRow = Math.floor(gridRows * 0.48);
 
-            const cx = foodX + gridSize / 2;
-            const cy = foodY + gridSize / 2;
+            let minCol = 0, maxCol = GRID_COLS - 1;
+            let minRow = 0, maxRow = gridRows - 2;
+
+            if (zone === "promo") {
+                // Zone rouge : haut gauche (colonnes 0 à 13, rangées 0 à mi-parcours)
+                minCol = 0;
+                maxCol = 13;
+                minRow = 0;
+                maxRow = midRow - 1;
+            } else if (zone === "alcools") {
+                // Zone bleu haut/droite : rayon alcools (colonnes 22 à 26, du haut jusqu'au milieu)
+                minCol = 22;
+                maxCol = GRID_COLS - 1;
+                minRow = Math.max(0, bounds.topStartRow - 2);
+                maxRow = bounds.topEndRow + 2;
+            } else if (zone === "caisses") {
+                // Zone bleu bas : devant les caisses (toute la largeur, juste au-dessus de la ligne des caisses)
+                minCol = 0;
+                maxCol = GRID_COLS - 1;
+                minRow = Math.max(0, gridRows - 6);
+                maxRow = gridRows - 2; // Exclut rigoureusement la dernière ligne (gridRows - 1)
+            }
+
+            let spawned = 0;
+            let attempts = 0;
+            while (spawned < count && attempts < 400) {
+                attempts++;
+                let rCol = Math.floor(Math.random() * (maxCol - minCol + 1)) + minCol;
+                let rRow = Math.floor(Math.random() * (maxRow - minRow + 1)) + minRow;
+
+                if (!isPositionOccupied(rCol, rRow)) {
+                    foods.push({
+                        x: rCol * gridSize,
+                        y: rRow * gridSize,
+                        item: getRandomFoodType()
+                    });
+                    spawned++;
+                }
+            }
+        }
+
+        function drawSingleFood(food) {
+            const cx = food.x + gridSize / 2;
+            const cy = food.y + gridSize / 2;
+            const currentFood = food.item;
 
             if (currentFood.type === "Pipi") {
                 ctx.fillStyle = "#facc15";
@@ -1039,6 +1101,12 @@
             }
         }
 
+        function drawFoods() {
+            for (let f of foods) {
+                drawSingleFood(f);
+            }
+        }
+
         function advanceSnake() {
             if (inputQueue.length > 0) {
                 const nextMove = inputQueue.shift();
@@ -1063,15 +1131,31 @@
             const head = {x: headX, y: headY};
             snake.unshift(head);
             
-            if (head.x === foodX && head.y === foodY) {
-                score += currentFood.points;
-                let displayText = currentFood.type === "Pipi" ? "+80 PIPI" : `+${currentFood.points}`;
-                floatingTexts.push({text: displayText, x: foodX, y: foodY, color: currentFood.color, life: 1.0});
+            // Détection de collision avec l'un des déchets présents
+            let eatenIndex = -1;
+            for (let i = 0; i < foods.length; i++) {
+                if (head.x === foods[i].x && head.y === foods[i].y) {
+                    eatenIndex = i;
+                    break;
+                }
+            }
+
+            if (eatenIndex !== -1) {
+                const eatenFood = foods[eatenIndex];
+                foods.splice(eatenIndex, 1);
+
+                score += eatenFood.item.points;
+                let displayText = eatenFood.item.type === "Pipi" ? "+80 PIPI" : `+${eatenFood.item.points}`;
+                floatingTexts.push({text: displayText, x: eatenFood.x, y: eatenFood.y, color: eatenFood.item.color, life: 1.0});
                 
                 document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
                 playSound('eat');
-                createExplosion(foodX, foodY, currentFood.color);
-                generateFood();
+                createExplosion(eatenFood.x, eatenFood.y, eatenFood.item.color);
+
+                // Garantit qu'il reste toujours au moins un déchet en jeu
+                if (foods.length === 0) {
+                    generateFood();
+                }
                 
                 if (vitesseJeu > 65) vitesseJeu -= 1.5;
             } else {
@@ -1144,6 +1228,7 @@
             particles = [];
             floatingTexts = [];
             inputQueue = [];
+            foods = [];
             
             document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: 0";
             document.getElementById('gameOverScreen').style.display = "none";
@@ -1168,7 +1253,7 @@
             gameLoopTimeout = setTimeout(function() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 drawGrid();
-                drawFood();
+                drawFoods();
                 advanceSnake();
                 
                 for(let i = snake.length - 1; i >= 0; i--) {
