@@ -53,12 +53,12 @@
         }
 
         #gameTitle {
-            font-size: clamp(12px, 3.2vw, 17px); 
+            font-size: clamp(11px, 2.9vw, 15px); 
             white-space: nowrap; 
             margin: 0;
             color: #0055A4;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.2px;
             font-weight: 900;
         }
 
@@ -311,10 +311,10 @@
             <p style="font-size: 13px; font-weight: 700; color: #555; margin-bottom: 12px;">Nettoyez le magasin avant l'ouverture !</p>
             
             <div style="text-align: left; background: #fff; padding: 10px 14px; border-radius: 12px; border: 2px solid #0055A4; margin-bottom: 14px; font-size: 12px; font-weight: 800; width: 90%; max-width: 290px;">
-                <div style="color: #64748b; margin-bottom: 4px;">📄 Mouchoir (Commun - 50%) <span style="float: right;">+10 pts</span></div>
-                <div style="color: #8b4513; margin-bottom: 4px;">☕ Tache (Peu commun - 24%) <span style="float: right;">+20 pts</span></div>
+                <div style="color: #475569; margin-bottom: 4px;">🧻 Mouchoir froissé (Commun - 50%) <span style="float: right;">+10 pts</span></div>
+                <div style="color: #8b4513; margin-bottom: 4px;">💩 Tache (Peu commun - 24%) <span style="float: right;">+20 pts</span></div>
                 <div style="color: #22c55e; margin-bottom: 4px;">🍾 Bouteille (Rare - 15%) <span style="float: right;">+45 pts</span></div>
-                <div style="color: #eab308; margin-bottom: 4px;">💦 Pipi (Épique - 8%) <span style="float: right;">+80 pts</span></div>
+                <div style="color: #ca8a04; margin-bottom: 4px;">🟡 Flaque de pipi (Épique - 8%) <span style="float: right;">+80 pts</span></div>
                 <div style="color: #fbbf24;">👑 Caca doré (Légendaire - 3%) <span style="float: right;">+150 pts</span></div>
             </div>
 
@@ -379,10 +379,10 @@
         let vitesseJeu = 150; 
 
         const DECHETS = [
-            { type: "Mouchoir", proba: 0.50, points: 10, color: "#94a3b8", emoji: "📄" },
+            { type: "Mouchoir", proba: 0.50, points: 10, color: "#cbd5e1", renderType: "mouchoir" },
             { type: "Tache", proba: 0.24, points: 20, color: "#8b4513", emoji: "💩" },
             { type: "Bouteille", proba: 0.15, points: 45, color: "#22c55e", emoji: "🍾" },
-            { type: "Pipi", proba: 0.08, points: 80, color: "#eab308", emoji: "💦" },
+            { type: "Pipi", proba: 0.08, points: 80, color: "#eab308", renderType: "pipi" },
             { type: "Caca d'or", proba: 0.03, points: 150, color: "#fbbf24", emoji: "👑" }
         ];
         let currentFood = null;
@@ -866,10 +866,104 @@
 
         function drawFood() {
             if(!currentFood) return;
-            ctx.font = (gridSize * 0.85) + "px Arial";
-            ctx.textAlign = "center";
-            ctx.textBaseline = "middle";
-            ctx.fillText(currentFood.emoji, foodX + gridSize/2, foodY + gridSize/2);
+
+            const cx = foodX + gridSize / 2;
+            const cy = foodY + gridSize / 2;
+            const s = gridSize;
+
+            if (currentFood.renderType === "pipi") {
+                // Flaque d'urine bien jaune et luisante
+                ctx.save();
+                
+                // Flaque principale asymétrique
+                ctx.fillStyle = "#facc15";
+                ctx.beginPath();
+                ctx.ellipse(cx, cy + 1, s * 0.44, s * 0.32, 0.25, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Sous-goutte attachée
+                ctx.beginPath();
+                ctx.ellipse(cx + s * 0.22, cy - s * 0.12, s * 0.18, s * 0.14, -0.3, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Gouttelette isolée
+                ctx.beginPath();
+                ctx.arc(cx - s * 0.3, cy - s * 0.2, s * 0.08, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Cœur jaune plus sombre / chaud pour donner du volume
+                ctx.fillStyle = "#eab308";
+                ctx.beginPath();
+                ctx.ellipse(cx, cy + 1.5, s * 0.32, s * 0.20, 0.2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Reflet brillant blanc translucide sur le dessus
+                ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+                ctx.beginPath();
+                ctx.ellipse(cx - s * 0.14, cy - s * 0.08, s * 0.16, s * 0.07, -0.2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                ctx.restore();
+            } else if (currentFood.renderType === "mouchoir") {
+                // Mouchoir en papier froissé blanc cassé avec relief & ombres
+                ctx.save();
+                ctx.translate(foodX, foodY);
+
+                // Ombre au sol
+                ctx.fillStyle = "rgba(100, 116, 139, 0.22)";
+                ctx.beginPath();
+                ctx.ellipse(s * 0.52, s * 0.78, s * 0.4, s * 0.15, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Corps froissé du mouchoir
+                ctx.fillStyle = "#f8fafc";
+                ctx.beginPath();
+                ctx.moveTo(s * 0.2, s * 0.65);
+                ctx.lineTo(s * 0.32, s * 0.32);
+                ctx.lineTo(s * 0.48, s * 0.18);
+                ctx.lineTo(s * 0.72, s * 0.28);
+                ctx.lineTo(s * 0.82, s * 0.58);
+                ctx.lineTo(s * 0.65, s * 0.8);
+                ctx.lineTo(s * 0.38, s * 0.75);
+                ctx.closePath();
+                ctx.fill();
+
+                // Contour doux
+                ctx.strokeStyle = "#cbd5e1";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Plis et creux ombrés pour l'effet froissé
+                ctx.strokeStyle = "#94a3b8";
+                ctx.lineWidth = 1.1;
+                ctx.beginPath();
+                // Pli central
+                ctx.moveTo(s * 0.32, s * 0.34);
+                ctx.quadraticCurveTo(s * 0.48, s * 0.48, s * 0.62, s * 0.4);
+                // Pli inférieur
+                ctx.moveTo(s * 0.45, s * 0.5);
+                ctx.lineTo(s * 0.54, s * 0.72);
+                // Corne repliée
+                ctx.moveTo(s * 0.48, s * 0.18);
+                ctx.lineTo(s * 0.44, s * 0.36);
+                ctx.stroke();
+
+                // Touche de lumière blanche vive
+                ctx.fillStyle = "#ffffff";
+                ctx.beginPath();
+                ctx.moveTo(s * 0.48, s * 0.22);
+                ctx.lineTo(s * 0.66, s * 0.32);
+                ctx.lineTo(s * 0.56, s * 0.44);
+                ctx.closePath();
+                ctx.fill();
+
+                ctx.restore();
+            } else {
+                ctx.font = (gridSize * 0.85) + "px Arial";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(currentFood.emoji, cx, cy);
+            }
         }
 
         function advanceSnake() {
