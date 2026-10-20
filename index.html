@@ -29,7 +29,6 @@
             touch-action: none; 
         }
 
-        /* Barre supérieure fidèle au visuel */
         #topBar {
             display: flex;
             align-items: center;
@@ -358,7 +357,10 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        const GRID_COLS = 27; // Résolution identique à la capture
+        const GRID_COLS = 27; 
+        const CAISSE_COLS = [5, 9, 13, 17, 21]; // Caisse de gauche retirée
+        const CAISSE_NUMS = ["8", "3", "9", "3", "8"];
+
         let gridSize = 16;
         let gridRows = 55;
         let dx = 0, dy = 0;
@@ -372,7 +374,6 @@
         let top10 = [];
         let vitesseJeu = 150; 
 
-        // Saletés et raretés
         const DECHETS = [
             { type: "Mouchoir", proba: 0.50, points: 10, color: "#94a3b8", emoji: "📄" },
             { type: "Tache", proba: 0.24, points: 20, color: "#8b4513", emoji: "💩" },
@@ -386,7 +387,6 @@
         let particles = [];
         let floatingTexts = [];
 
-        // Audio
         let audioCtx;
         let currentAudio = null;
         const audioFiles = ['Audio001.mp3', 'Audio002.mp3', 'Audio003.mp3', 'Audio004.mp3', 'Audio005.mp3'];
@@ -535,15 +535,17 @@
         }
 
         function getShelfBounds() {
-            // Emplacements exacts des 4 colonnes de rayons
             const cols = [5, 10, 16, 21];
-
-            const topStartRow = 9;
             const midRow = Math.floor(gridRows * 0.48);
-            const topEndRow = midRow - 4;
+            
+            // Longueur exactement égale aux deux rayons les plus courts (13 cases)
+            const shelfLength = 13;
 
-            const bottomStartRow = midRow + 4;
-            const bottomEndRow = gridRows - 4;
+            const topEndRow = midRow - 3;
+            const topStartRow = topEndRow - shelfLength + 1;
+
+            const bottomStartRow = midRow + 3;
+            const bottomEndRow = bottomStartRow + shelfLength - 1;
 
             return { cols, topStartRow, topEndRow, bottomStartRow, bottomEndRow };
         }
@@ -551,15 +553,19 @@
         function isObstacle(col, row) {
             const bounds = getShelfBounds();
             
-            // Ligne de caisses tout en bas
-            if (row >= gridRows - 2) return true;
+            // Caisses collées tout en bas : 1 case de haut sur 2 de long
+            if (row === gridRows - 1) {
+                for (let c of CAISSE_COLS) {
+                    if (col === c || col === c + 1) return true;
+                }
+            }
 
-            // Rayons du haut
+            // Rayons du haut (tous alignés)
             if (row >= bounds.topStartRow && row <= bounds.topEndRow) {
                 if (bounds.cols.includes(col)) return true;
             }
 
-            // Rayons du bas
+            // Rayons du bas (tous alignés)
             if (row >= bounds.bottomStartRow && row <= bounds.bottomEndRow) {
                 if (bounds.cols.includes(col)) return true;
             }
@@ -568,11 +574,9 @@
         }
 
         function drawGrid() {
-            // Fond blanc carrelage
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Lignes de carrelage bleu très douces
             ctx.strokeStyle = "rgba(0, 85, 164, 0.08)";
             ctx.lineWidth = 1;
             
@@ -594,19 +598,17 @@
             bounds.cols.forEach((col, idx) => {
                 const x = col * gridSize;
                 
-                // --- 1. RAYON DU HAUT ---
+                // 1. RAYON DU HAUT (longueur uniforme de 13 cases)
                 const yTop = bounds.topStartRow * gridSize;
                 const hTop = (bounds.topEndRow - bounds.topStartRow + 1) * gridSize;
 
-                // Tracé d'ensemble du rayon haut
                 ctx.save();
                 ctx.beginPath();
                 ctx.roundRect(x + 1.5, yTop + 1, gridSize - 3, hTop - 2, 5);
                 
-                // Couleur bordure rayon haut
                 let topBorderColor = "#0055A4";
-                if (idx === 0) topBorderColor = "#E30613"; // Promo
-                else if (idx === 1 || idx === 2) topBorderColor = "#16a34a"; // Fruits & Légumes / Bio
+                if (idx === 0) topBorderColor = "#E30613";
+                else if (idx === 1 || idx === 2) topBorderColor = "#16a34a";
 
                 ctx.strokeStyle = topBorderColor;
                 ctx.lineWidth = 2.5;
@@ -617,11 +619,9 @@
                     const cy = r * gridSize;
 
                     if (idx === 0) {
-                        // Rayon 1 : PROMO (Alternance rouge & jaune avec %)
                         ctx.fillStyle = (r % 2 === 0) ? "#E30613" : "#f59e0b";
                         ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
 
-                        // Symbole % ou étoile promo
                         ctx.fillStyle = "#ffffff";
                         ctx.font = `900 ${Math.floor(gridSize * 0.48)}px Montserrat, sans-serif`;
                         ctx.textAlign = "center";
@@ -629,7 +629,6 @@
                         ctx.fillText("%", x + gridSize / 2, cy + gridSize / 2);
 
                     } else if (idx === 1) {
-                        // Rayon 2 : FRUITS & LÉGUMES (Fond beige + étals de cagettes)
                         ctx.fillStyle = "#fefce8";
                         ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
 
@@ -637,7 +636,6 @@
                         ctx.lineWidth = 0.8;
                         ctx.strokeRect(x + 2.5, cy + 1.5, gridSize - 5, gridSize - 3);
 
-                        // Légumes/Fruits rouges et verts
                         const colors = ["#ef4444", "#22c55e", "#ef4444", "#22c55e"];
                         const dotR = Math.max(1.2, gridSize * 0.08);
                         ctx.fillStyle = colors[r % colors.length];
@@ -649,7 +647,6 @@
                         ctx.fill();
 
                     } else if (idx === 2) {
-                        // Rayon 3 : BIO & FRAIS (Fond crème + étagères colorées)
                         ctx.fillStyle = "#fbfbee";
                         ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
 
@@ -667,7 +664,6 @@
                         }
 
                     } else {
-                        // Rayon 4 : BOISSONS / EAU (Cyan lumineux et étagères blanches)
                         ctx.fillStyle = "#06b6d4";
                         ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
 
@@ -676,13 +672,12 @@
                         ctx.fillRect(x + 3.5, cy + gridSize - 3.5, gridSize - 7, 1.5);
                     }
 
-                    // Séparateur fin entre étages de gondole
                     ctx.fillStyle = "rgba(0,0,0,0.08)";
                     ctx.fillRect(x + 2, cy + gridSize - 1, gridSize - 4, 1);
                 }
                 ctx.restore();
 
-                // --- 2. RAYON DU BAS ---
+                // 2. RAYON DU BAS (longueur uniforme de 13 cases)
                 const yBottom = bounds.bottomStartRow * gridSize;
                 const hBottom = (bounds.bottomEndRow - bounds.bottomStartRow + 1) * gridSize;
 
@@ -698,28 +693,24 @@
                     const cy = r * gridSize;
 
                     if (idx === 0) {
-                        // Bas 1 : Bleu clair & blanc (Hygiène/Droguerie)
                         ctx.fillStyle = "#0284c7";
                         ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
                         ctx.fillStyle = "#ffffff";
                         ctx.fillRect(x + 4, cy + gridSize / 2 - 1, gridSize - 8, 2);
 
                     } else if (idx === 1) {
-                        // Bas 2 : Magenta & blanc
                         ctx.fillStyle = (r % 2 === 0) ? "#d946ef" : "#c026d3";
                         ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
                         ctx.fillStyle = "#ffffff";
                         ctx.fillRect(x + 4, cy + gridSize / 2 - 1, gridSize - 8, 2);
 
                     } else if (idx === 2) {
-                        // Bas 3 : Violet & mauve
                         ctx.fillStyle = (r % 2 === 0) ? "#8b5cf6" : "#6366f1";
                         ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
                         ctx.fillStyle = "#ffffff";
                         ctx.fillRect(x + 4, cy + gridSize / 2 - 1, gridSize - 8, 2);
 
                     } else {
-                        // Bas 4 : Teal & turquoise
                         ctx.fillStyle = "#0d9488";
                         ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
                         ctx.fillStyle = "#ffffff";
@@ -734,19 +725,18 @@
         }
 
         function drawCheckouts() {
-            const y = (gridRows - 2) * gridSize;
-            const caisseIndices = [1, 5, 9, 13, 17, 21];
-            const caisseNum = ["3", "8", "3", "9", "3", "8"];
+            // Collé à l'extrémité basse : rangée gridRows - 1
+            const y = (gridRows - 1) * gridSize;
+            const height = gridSize; // 1 case de haut
+            const width = 2 * gridSize; // 2 cases de long
 
-            caisseIndices.forEach((col, i) => {
+            CAISSE_COLS.forEach((col, i) => {
                 const x = col * gridSize;
-                const width = gridSize * 2.2;
-                const height = gridSize * 1.8;
 
                 // Tapis caisse noir
                 ctx.fillStyle = "#1e293b";
                 ctx.beginPath();
-                ctx.roundRect(x, y + 2, width * 0.65, height - 4, 3);
+                ctx.roundRect(x, y + 1, width * 0.65, height - 2, 2);
                 ctx.fill();
 
                 // Rainures du tapis roulant
@@ -754,38 +744,38 @@
                 ctx.lineWidth = 1;
                 for (let lx = x + 3; lx < x + width * 0.65 - 2; lx += 3) {
                     ctx.beginPath();
-                    ctx.moveTo(lx, y + 3);
-                    ctx.lineTo(lx, y + height - 3);
+                    ctx.moveTo(lx, y + 2);
+                    ctx.lineTo(lx, y + height - 2);
                     ctx.stroke();
                 }
 
                 // Meuble caisse Super U bleu
                 ctx.fillStyle = "#0055A4";
                 ctx.beginPath();
-                ctx.roundRect(x + width * 0.65 + 1, y + 2, width * 0.35, height - 4, 3);
+                ctx.roundRect(x + width * 0.65 + 1, y + 1, width * 0.35 - 1, height - 2, 2);
                 ctx.fill();
 
                 // Écran de caisse vert
                 ctx.fillStyle = "#22c55e";
-                ctx.fillRect(x + width * 0.65 + 3, y + 5, width * 0.35 - 6, 3);
+                ctx.fillRect(x + width * 0.65 + 3, y + 3, width * 0.35 - 7, 2);
 
-                // Badge numéro de caisse rouge
+                // Pastille numéro de caisse rouge
                 ctx.fillStyle = "#E30613";
                 ctx.beginPath();
-                ctx.arc(x + 3, y + 2, 3.5, 0, Math.PI * 2);
+                ctx.arc(x + 4, y + 4, 3, 0, Math.PI * 2);
                 ctx.fill();
 
                 ctx.fillStyle = "#ffffff";
                 ctx.font = "bold 5px Montserrat";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
-                ctx.fillText(caisseNum[i], x + 3, y + 2);
+                ctx.fillText(CAISSE_NUMS[i], x + 4, y + 4);
             });
         }
 
         function drawSnakePart(part, index) {
             if (index === 0) {
-                // Tête = Autolaveuse Super U vue de dessus
+                // Tête = Autolaveuse Super U
                 ctx.fillStyle = "#0055A4";
                 ctx.beginPath();
                 ctx.roundRect(part.x + 1, part.y + 1, gridSize - 2, gridSize - 2, 4);
@@ -795,14 +785,14 @@
                 ctx.fillStyle = "#E30613";
                 ctx.fillRect(part.x + 3, part.y + 3, gridSize - 6, gridSize - 6);
 
-                // Cabine / Pare-brise sombre
+                // Cabine
                 ctx.fillStyle = "#0f172a";
                 if (dx > 0) ctx.fillRect(part.x + gridSize - 5, part.y + 3, 3, gridSize - 6);
                 else if (dx < 0) ctx.fillRect(part.x + 2, part.y + 3, 3, gridSize - 6);
                 else if (dy > 0) ctx.fillRect(part.x + 3, part.y + gridSize - 5, gridSize - 6, 3);
                 else ctx.fillRect(part.x + 3, part.y + 2, gridSize - 6, 3);
 
-                // Phares avant jaunes
+                // Phares jaunes
                 ctx.fillStyle = "#facc15";
                 if (dx > 0) {
                     ctx.fillRect(part.x + gridSize - 2, part.y + 2, 2, 2);
@@ -818,27 +808,22 @@
                     ctx.fillRect(part.x + gridSize - 4, part.y, 2, 2);
                 }
             } else {
-                // Sillage d'eau lustrée (carré humide très pâle)
                 ctx.fillStyle = "rgba(186, 230, 253, 0.2)";
                 ctx.fillRect(part.x + 1, part.y + 1, gridSize - 2, gridSize - 2);
 
-                // Bulles de savon translucides avec reflet brillant
                 const radius = Math.max(3, (gridSize / 2) - 1.5);
                 const cx = part.x + gridSize / 2;
                 const cy = part.y + gridSize / 2;
 
-                // Corps de la bulle
                 ctx.fillStyle = "rgba(147, 197, 253, 0.75)";
                 ctx.beginPath();
                 ctx.arc(cx, cy, radius, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Liseret bleu délicat
                 ctx.strokeStyle = "#60a5fa";
                 ctx.lineWidth = 1;
                 ctx.stroke();
 
-                // Reflet blanc en croissant
                 ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
                 ctx.beginPath();
                 ctx.arc(cx - radius * 0.35, cy - radius * 0.35, radius * 0.3, 0, Math.PI * 2);
@@ -853,7 +838,7 @@
             
             while(!valid) {
                 rCol = Math.floor(Math.random() * GRID_COLS);
-                rRow = Math.floor(Math.random() * (gridRows - 3));
+                rRow = Math.floor(Math.random() * gridRows);
                 
                 if(!isObstacle(rCol, rRow)) {
                     let onSnake = false;
@@ -894,7 +879,6 @@
             const headX = snake[0].x + dx;
             const headY = snake[0].y + dy;
 
-            // Mur d'enceinte
             if (headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height) {
                 showGameOver(); return;
             }
@@ -902,7 +886,6 @@
             const headCol = Math.floor(headX / gridSize);
             const headRow = Math.floor(headY / gridSize);
 
-            // Obstacles rayons ou caisses
             if (isObstacle(headCol, headRow)) {
                 showGameOver(); return;
             }
@@ -910,7 +893,6 @@
             const head = {x: headX, y: headY};
             snake.unshift(head);
             
-            // Collecte
             if (head.x === foodX && head.y === foodY) {
                 score += currentFood.points;
                 let displayText = currentFood.type === "Pipi" ? "+80 PIPI" : `+${currentFood.points}`;
@@ -926,7 +908,6 @@
                 snake.pop(); 
             }
 
-            // Auto-collision
             for (let i = 4; i < snake.length; i++) {
                 if (snake[i].x === head.x && snake[i].y === head.y) {
                     showGameOver(); return;
@@ -999,7 +980,6 @@
             document.getElementById('scoreSubmittedMsg').style.display = "none";
             document.getElementById('playerNameInput').value = "";
             
-            // Placement initial en allée haute
             snake = [];
             const startY = 4 * gridSize;
             const startX = 12 * gridSize;
