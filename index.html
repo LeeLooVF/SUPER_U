@@ -21,26 +21,26 @@
             justify-content: flex-start;
             height: 100dvh;
             margin: 0;
-            padding: 6px 10px;
-            background-color: #f4f6f8; 
+            padding: 8px 12px;
+            background-color: #f1f5f9; 
             color: #0055A4;
             font-family: 'Montserrat', sans-serif;
             overflow: hidden; 
             touch-action: none; 
         }
 
-        /* Top Bar matching the screenshot exactly */
+        /* Barre supérieure fidèle au visuel */
         #topBar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            padding: 5px 10px;
-            margin-bottom: 6px;
+            padding: 8px 14px;
+            margin-bottom: 8px;
             background: #ffffff;
-            border-radius: 14px;
-            border: 3px solid #0055A4;
-            box-shadow: 0 4px 12px rgba(0, 85, 164, 0.12);
+            border-radius: 18px;
+            border: 3.5px solid #0055A4;
+            box-shadow: 0 4px 14px rgba(0, 85, 164, 0.1);
             flex-shrink: 0;
         }
 
@@ -49,14 +49,10 @@
             align-items: center;
             cursor: pointer;
             min-width: 0;
-            transition: transform 0.1s ease;
-        }
-        #gameHeader:active {
-            transform: scale(0.97);
         }
 
         #gameTitle {
-            font-size: clamp(14px, 4.3vw, 22px); 
+            font-size: clamp(15px, 4.4vw, 22px); 
             white-space: nowrap; 
             margin: 0;
             color: #0055A4;
@@ -67,79 +63,30 @@
 
         .u-red { color: #E30613; }
 
-        /* Boss Rocco Interactive Inline Avatar */
-        #bossInline {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            animation: popIn 0.2s ease-out;
-        }
-
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.85); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .boss-inline-img {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            border: 2px solid #E30613;
-            object-fit: cover;
-            background: #e2e8f0;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.18);
-        }
-
-        .boss-inline-bubble {
-            background: #ffffff;
-            color: #0055A4;
-            font-size: clamp(9px, 2.7vw, 12px);
-            font-weight: 900;
-            padding: 4px 8px;
-            border-radius: 10px;
-            border: 2px solid #0055A4;
-            position: relative;
-            text-transform: uppercase;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            white-space: nowrap;
-        }
-
-        .boss-inline-bubble::before {
-            content: '';
-            position: absolute;
-            left: -6px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 6px solid #0055A4;
-        }
-
         .top-ten-btn {
             background: none;
             border: none;
             color: #E30613;
             cursor: pointer;
-            padding: 0 6px;
+            padding: 0 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            line-height: 1.05;
+            line-height: 1.1;
         }
 
         .top-ten-btn span.title {
-            font-size: clamp(8px, 2.3vw, 11px);
+            font-size: clamp(10px, 2.7vw, 13px);
             font-weight: 900;
             color: #E30613;
             display: flex;
             align-items: center;
-            gap: 2px;
+            gap: 3px;
         }
 
         .top-ten-btn span.num {
-            font-size: clamp(10px, 2.7vw, 13px);
+            font-size: clamp(12px, 3vw, 15px);
             font-weight: 900;
             color: #E30613;
             text-decoration: underline;
@@ -150,15 +97,15 @@
             flex-direction: column;
             justify-content: center;
             align-items: flex-start;
-            gap: 1px;
-            font-size: clamp(10px, 2.6vw, 12.5px);
+            gap: 2px;
+            font-size: clamp(10px, 2.7vw, 13px);
             font-weight: 900;
             color: #ffffff;
-            background: linear-gradient(135deg, #0055A4, #003366);
-            padding: 4px 10px;
-            border-radius: 12px;
-            border: 2px solid #E30613;
-            box-shadow: 0 3px 8px rgba(0, 85, 164, 0.2);
+            background: #003974;
+            padding: 6px 14px;
+            border-radius: 18px;
+            border: 2.5px solid #E30613;
+            box-shadow: 0 3px 8px rgba(0, 85, 164, 0.25);
             white-space: nowrap;
         }
 
@@ -166,17 +113,18 @@
             position: relative;
             width: 100%;
             flex: 1 1 auto;
-            border-radius: 18px;
-            border: 4px solid #0055A4;
+            border-radius: 22px;
+            border: 4.5px solid #0055A4;
             background-color: #ffffff; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08); 
             overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         canvas {
             display: block;
-            width: 100%; 
-            height: 100%; 
             touch-action: none;
         }
 
@@ -191,7 +139,7 @@
             justify-content: center;
             color: #0055A4;
             text-align: center;
-            padding: 14px;
+            padding: 16px;
         }
 
         #startScreen { z-index: 10; }
@@ -199,11 +147,11 @@
         #gameOverScreen {
             display: none;
             z-index: 5;
-            animation: fadeIn 0.3s ease-out;
+            animation: fadeIn 0.25s ease-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.92); }
+            from { opacity: 0; transform: scale(0.94); }
             to { opacity: 1; transform: scale(1); }
         }
 
@@ -211,7 +159,7 @@
             font-size: 34px;
             margin: 0;
             color: #E30613;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
             font-weight: 900;
             text-transform: uppercase;
         }
@@ -222,13 +170,13 @@
             margin: 8px 0;
             background: #0055A4;
             color: #ffffff;
-            padding: 6px 18px;
+            padding: 6px 20px;
             border-radius: 25px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         #leaderboardContainer {
-            background: #f4f6f8;
+            background: #f8fafc;
             border: 3px solid #0055A4;
             border-radius: 12px;
             padding: 8px 12px;
@@ -260,7 +208,7 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 4px;
-            border-bottom: 2px dotted #cccccc;
+            border-bottom: 1.5px dotted #cbd5e1;
             padding-bottom: 3px;
         }
 
@@ -276,8 +224,8 @@
 
         button.action-btn {
             margin-top: 8px;
-            padding: 10px 18px;
-            width: 80%;
+            padding: 10px 20px;
+            width: 82%;
             max-width: 250px;
             font-size: 15px;
             background-color: #E30613;
@@ -285,7 +233,7 @@
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            box-shadow: 0 4px 0px #b3000b;
+            box-shadow: 0 4px 0px #a10008;
             transition: all 0.1s;
             font-weight: 800;
             text-transform: uppercase;
@@ -295,7 +243,7 @@
 
         button.action-btn:active {
             transform: translateY(3px);
-            box-shadow: 0 1px 0px #b3000b;
+            box-shadow: 0 1px 0px #a10008;
         }
 
         .modal {
@@ -337,12 +285,8 @@
 <body>
 
     <div id="topBar">
-        <div id="gameHeader" onclick="toggleHeaderBoss()" title="Consigne du directeur">
+        <div id="gameHeader">
             <h1 id="gameTitle">SUPER <span class="u-red">U</span> MÉNAGE</h1>
-            <div id="bossInline" class="hidden">
-                <img src="Rocco.png" alt="Directeur" class="boss-inline-img" onerror="this.onerror=null; this.src='https://placehold.co/40x40/0055A4/ffffff?text=U';">
-                <div class="boss-inline-bubble">Allez nettoyer en zone promo</div>
-            </div>
         </div>
 
         <button class="top-ten-btn" onclick="openLeaderboard()">
@@ -363,7 +307,7 @@
             <h2 style="color: #0055A4; font-size: 21px; text-transform: uppercase; font-weight: 900; margin-bottom: 4px;">MISE EN ROUTE AUTOLAVEUSE 🧼</h2>
             <p style="font-size: 13px; font-weight: 700; color: #555; margin-bottom: 12px;">Nettoyez le magasin avant l'ouverture !</p>
             
-            <div style="text-align: left; background: #fff; padding: 10px 14px; border-radius: 12px; border: 2px solid #0055A4; margin-bottom: 12px; font-size: 12px; font-weight: 800; width: 90%; max-width: 290px;">
+            <div style="text-align: left; background: #fff; padding: 10px 14px; border-radius: 12px; border: 2px solid #0055A4; margin-bottom: 14px; font-size: 12px; font-weight: 800; width: 90%; max-width: 290px;">
                 <div style="color: #64748b; margin-bottom: 4px;">📄 Mouchoir (Commun - 50%) <span style="float: right;">+10 pts</span></div>
                 <div style="color: #8b4513; margin-bottom: 4px;">☕ Tache (Peu commun - 24%) <span style="float: right;">+20 pts</span></div>
                 <div style="color: #22c55e; margin-bottom: 4px;">🍾 Bouteille (Rare - 15%) <span style="float: right;">+45 pts</span></div>
@@ -414,8 +358,10 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        let gridSize = 30;
-        let dx = gridSize, dy = 0;
+        const GRID_COLS = 27; // Résolution identique à la capture
+        let gridSize = 16;
+        let gridRows = 55;
+        let dx = 0, dy = 0;
         let snake = [];
         let inputQueue = [];
         let isGameOverState = false;
@@ -424,12 +370,12 @@
         
         let score = 0;
         let top10 = [];
-        let vitesseJeu = 170; 
+        let vitesseJeu = 150; 
 
         // Saletés et raretés
         const DECHETS = [
-            { type: "Mouchoir", proba: 0.50, points: 10, color: "#cbd5e1", emoji: "📄" },
-            { type: "Tache", proba: 0.24, points: 20, color: "#8b4513", emoji: "☕" },
+            { type: "Mouchoir", proba: 0.50, points: 10, color: "#94a3b8", emoji: "📄" },
+            { type: "Tache", proba: 0.24, points: 20, color: "#8b4513", emoji: "💩" },
             { type: "Bouteille", proba: 0.15, points: 45, color: "#22c55e", emoji: "🍾" },
             { type: "Pipi", proba: 0.08, points: 80, color: "#eab308", emoji: "💦" },
             { type: "Caca d'or", proba: 0.03, points: 150, color: "#fbbf24", emoji: "👑" }
@@ -440,7 +386,7 @@
         let particles = [];
         let floatingTexts = [];
 
-        // Gestion Audio
+        // Audio
         let audioCtx;
         let currentAudio = null;
         const audioFiles = ['Audio001.mp3', 'Audio002.mp3', 'Audio003.mp3', 'Audio004.mp3', 'Audio005.mp3'];
@@ -456,7 +402,7 @@
             currentAudio = new Audio(audioFiles[randIndex]);
             currentAudio.volume = 0.4;
             currentAudio.onended = playRandomMusic;
-            currentAudio.play().catch(e => console.log("Audio file info:", e));
+            currentAudio.play().catch(e => console.log("Audio:", e));
         }
 
         function stopMusic() {
@@ -473,20 +419,20 @@
 
             if (type === 'eat') {
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(600, now);
-                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
-                gainNode.gain.setValueAtTime(0.1, now);
+                osc.frequency.setValueAtTime(550, now);
+                osc.frequency.exponentialRampToValueAtTime(1100, now + 0.1);
+                gainNode.gain.setValueAtTime(0.12, now);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
                 osc.start(now);
-                osc.stop(now + 0.2);
+                osc.stop(now + 0.18);
             } else if (type === 'die') {
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(160, now);
-                osc.frequency.exponentialRampToValueAtTime(40, now + 0.5);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.45);
                 gainNode.gain.setValueAtTime(0.2, now);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.45);
                 osc.start(now);
-                osc.stop(now + 0.6);
+                osc.stop(now + 0.5);
             }
         }
 
@@ -535,18 +481,6 @@
         function closeLeaderboard() {
             document.getElementById("leaderboardModal").classList.add("hidden");
         }
-        
-        function toggleHeaderBoss() {
-            const title = document.getElementById('gameTitle');
-            const boss = document.getElementById('bossInline');
-            if (title.classList.contains('hidden')) {
-                title.classList.remove('hidden');
-                boss.classList.add('hidden');
-            } else {
-                title.classList.add('hidden');
-                boss.classList.remove('hidden');
-            }
-        }
 
         function escapeHtml(str) {
             return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
@@ -593,310 +527,321 @@
             const container = document.getElementById('gameContainer');
             const rect = container.getBoundingClientRect();
             
-            // Adapter la taille de grille pour avoir environ 17 à 19 colonnes sur mobile
-            gridSize = Math.max(26, Math.floor(rect.width / 18));
-            
-            const cols = Math.floor(rect.width / gridSize);
-            const rows = Math.floor(rect.height / gridSize);
-            canvas.width = cols * gridSize;
-            canvas.height = rows * gridSize;
+            gridSize = Math.floor(rect.width / GRID_COLS);
+            gridRows = Math.floor(rect.height / gridSize);
+
+            canvas.width = GRID_COLS * gridSize;
+            canvas.height = gridRows * gridSize;
         }
 
         function getShelfBounds() {
-            const gridRows = Math.floor(canvas.height / gridSize);
-            const gridCols = Math.floor(canvas.width / gridSize);
+            // Emplacements exacts des 4 colonnes de rayons
+            const cols = [5, 10, 16, 21];
 
-            const startRow = 6; 
-            const endRow = gridRows - 5; 
-            
-            // Allée centrale avec bande beige et pointillés
-            const midRow = Math.floor(gridRows * 0.47);
-            const midStart = midRow - 2;
-            const midEnd = midRow + 2;
+            const topStartRow = 9;
+            const midRow = Math.floor(gridRows * 0.48);
+            const topEndRow = midRow - 4;
 
-            // 4 colonnes régulières de gondoles
-            const col1 = Math.round(gridCols * 0.18);
-            const col2 = Math.round(gridCols * 0.38);
-            const col3 = Math.round(gridCols * 0.62);
-            const col4 = Math.round(gridCols * 0.82);
+            const bottomStartRow = midRow + 4;
+            const bottomEndRow = gridRows - 4;
 
-            const cols = [col1, col2, col3, col4];
-
-            return { gridRows, gridCols, startRow, endRow, midStart, midEnd, cols };
+            return { cols, topStartRow, topEndRow, bottomStartRow, bottomEndRow };
         }
 
         function isObstacle(col, row) {
             const bounds = getShelfBounds();
+            
             // Ligne de caisses tout en bas
-            if (row >= bounds.gridRows - 1) return true;
+            if (row >= gridRows - 2) return true;
 
-            // Rayons verticaux
-            if (row >= bounds.startRow && row <= bounds.endRow) {
-                if (row >= bounds.midStart && row <= bounds.midEnd) return false;
+            // Rayons du haut
+            if (row >= bounds.topStartRow && row <= bounds.topEndRow) {
                 if (bounds.cols.includes(col)) return true;
             }
+
+            // Rayons du bas
+            if (row >= bounds.bottomStartRow && row <= bounds.bottomEndRow) {
+                if (bounds.cols.includes(col)) return true;
+            }
+
             return false;
         }
 
         function drawGrid() {
-            // Carrelage blanc
+            // Fond blanc carrelage
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            // Lignes de carrelage douces
-            ctx.strokeStyle = "#e8eff7";
+            // Lignes de carrelage bleu très douces
+            ctx.strokeStyle = "rgba(0, 85, 164, 0.08)";
             ctx.lineWidth = 1;
+            
+            ctx.beginPath();
             for (let x = 0; x <= canvas.width; x += gridSize) {
-                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+                ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height);
             }
             for (let y = 0; y <= canvas.height; y += gridSize) {
-                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
+                ctx.moveTo(0, y); ctx.lineTo(canvas.width, y);
             }
+            ctx.stroke();
 
             const bounds = getShelfBounds();
-            
-            // Allée centrale couleur crème avec pointillés (exactement comme sur la capture)
-            const aisleY = bounds.midStart * gridSize;
-            const aisleHeight = (bounds.midEnd - bounds.midStart + 1) * gridSize;
-            
-            ctx.fillStyle = "rgba(254, 252, 240, 0.85)";
-            ctx.fillRect(0, aisleY, canvas.width, aisleHeight);
-
-            ctx.save();
-            ctx.setLineDash([6, 5]);
-            ctx.strokeStyle = "#e6dfb8";
-            ctx.lineWidth = 1.5;
-            ctx.beginPath();
-            ctx.moveTo(0, aisleY);
-            ctx.lineTo(canvas.width, aisleY);
-            ctx.moveTo(0, aisleY + aisleHeight);
-            ctx.lineTo(canvas.width, aisleY + aisleHeight);
-            ctx.stroke();
-            ctx.restore();
-
             drawSupermarketShelves(bounds);
-            drawCheckouts(bounds);
-
-            // Murs rigides extérieurs bleus
-            ctx.strokeStyle = "#0055A4";
-            ctx.lineWidth = 6;
-            ctx.strokeRect(3, 3, canvas.width - 6, canvas.height - 6);
+            drawCheckouts();
         }
 
         function drawSupermarketShelves(bounds) {
-            bounds.cols.forEach((col, index) => {
-                // RAYONS DU HAUT
-                for (let row = bounds.startRow; row < bounds.midStart; row++) {
-                    const x = col * gridSize;
-                    const y = row * gridSize;
-                    
-                    // Fond étagère avec contour bleu fin
-                    ctx.fillStyle = "#ffffff";
-                    ctx.fillRect(x + 2, y, gridSize - 4, gridSize);
-                    ctx.strokeStyle = "#0055A4";
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(x + 2, y, gridSize - 4, gridSize);
+            bounds.cols.forEach((col, idx) => {
+                const x = col * gridSize;
+                
+                // --- 1. RAYON DU HAUT ---
+                const yTop = bounds.topStartRow * gridSize;
+                const hTop = (bounds.topEndRow - bounds.topStartRow + 1) * gridSize;
 
-                    if (index === 0) {
-                        // RAYON 1 HAUT : ZONE PROMO (Rouge & Jaune avec %)
-                        ctx.fillStyle = (row % 2 === 0) ? "#E30613" : "#f59e0b";
-                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
-                        
+                // Tracé d'ensemble du rayon haut
+                ctx.save();
+                ctx.beginPath();
+                ctx.roundRect(x + 1.5, yTop + 1, gridSize - 3, hTop - 2, 5);
+                
+                // Couleur bordure rayon haut
+                let topBorderColor = "#0055A4";
+                if (idx === 0) topBorderColor = "#E30613"; // Promo
+                else if (idx === 1 || idx === 2) topBorderColor = "#16a34a"; // Fruits & Légumes / Bio
+
+                ctx.strokeStyle = topBorderColor;
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+                ctx.clip();
+
+                for (let r = bounds.topStartRow; r <= bounds.topEndRow; r++) {
+                    const cy = r * gridSize;
+
+                    if (idx === 0) {
+                        // Rayon 1 : PROMO (Alternance rouge & jaune avec %)
+                        ctx.fillStyle = (r % 2 === 0) ? "#E30613" : "#f59e0b";
+                        ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
+
+                        // Symbole % ou étoile promo
                         ctx.fillStyle = "#ffffff";
-                        ctx.font = `bold ${Math.floor(gridSize * 0.45)}px Montserrat, sans-serif`;
+                        ctx.font = `900 ${Math.floor(gridSize * 0.48)}px Montserrat, sans-serif`;
                         ctx.textAlign = "center";
                         ctx.textBaseline = "middle";
-                        ctx.fillText("%", x + gridSize / 2, y + gridSize / 2);
+                        ctx.fillText("%", x + gridSize / 2, cy + gridSize / 2);
 
-                    } else if (index === 1) {
-                        // RAYON 2 HAUT : FRUITS & LÉGUMES FRAIS (Points colorés)
+                    } else if (idx === 1) {
+                        // Rayon 2 : FRUITS & LÉGUMES (Fond beige + étals de cagettes)
                         ctx.fillStyle = "#fefce8";
-                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
-                        
-                        // Liseret horizontal
-                        ctx.strokeStyle = "#22c55e";
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                        ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
 
-                        // Étal avec fruits colorés (rouges, verts, oranges)
-                        const colors = ["#ef4444", "#22c55e", "#f97316"];
-                        const dotRadius = Math.max(2, gridSize * 0.08);
+                        ctx.strokeStyle = "#86efac";
+                        ctx.lineWidth = 0.8;
+                        ctx.strokeRect(x + 2.5, cy + 1.5, gridSize - 5, gridSize - 3);
+
+                        // Légumes/Fruits rouges et verts
+                        const colors = ["#ef4444", "#22c55e", "#ef4444", "#22c55e"];
+                        const dotR = Math.max(1.2, gridSize * 0.08);
+                        ctx.fillStyle = colors[r % colors.length];
+                        ctx.beginPath();
+                        ctx.arc(x + gridSize * 0.35, cy + gridSize * 0.35, dotR, 0, Math.PI * 2);
+                        ctx.arc(x + gridSize * 0.65, cy + gridSize * 0.35, dotR, 0, Math.PI * 2);
+                        ctx.arc(x + gridSize * 0.35, cy + gridSize * 0.65, dotR, 0, Math.PI * 2);
+                        ctx.arc(x + gridSize * 0.65, cy + gridSize * 0.65, dotR, 0, Math.PI * 2);
+                        ctx.fill();
+
+                    } else if (idx === 2) {
+                        // Rayon 3 : BIO & FRAIS (Fond crème + étagères colorées)
+                        ctx.fillStyle = "#fbfbee";
+                        ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
+
+                        ctx.strokeStyle = "#cbd5e1";
+                        ctx.lineWidth = 0.8;
+                        ctx.strokeRect(x + 2.5, cy + 1.5, gridSize - 5, gridSize - 3);
+
+                        const dotColors = ["#8b5cf6", "#f59e0b", "#10b981"];
+                        const dotR = Math.max(1.2, gridSize * 0.08);
                         for(let d = 0; d < 3; d++) {
-                            ctx.fillStyle = colors[d];
+                            ctx.fillStyle = dotColors[(r + d) % dotColors.length];
                             ctx.beginPath();
-                            ctx.arc(x + 7 + d * ((gridSize - 14) / 2), y + gridSize / 2, dotRadius, 0, Math.PI * 2);
+                            ctx.arc(x + gridSize * (0.28 + d * 0.22), cy + gridSize / 2, dotR, 0, Math.PI * 2);
                             ctx.fill();
                         }
 
-                    } else if (index === 2) {
-                        // RAYON 3 HAUT : ÉPICERIE / BIO (Points violets et jaunes)
-                        ctx.fillStyle = "#faf5ff";
-                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
-
-                        ctx.strokeStyle = "#eab308";
-                        ctx.lineWidth = 1;
-                        ctx.strokeRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
-
-                        const colors = ["#a855f7", "#eab308", "#a855f7"];
-                        const dotRadius = Math.max(2, gridSize * 0.08);
-                        for(let d = 0; d < 3; d++) {
-                            ctx.fillStyle = colors[d];
-                            ctx.beginPath();
-                            ctx.arc(x + 7 + d * ((gridSize - 14) / 2), y + gridSize / 2, dotRadius, 0, Math.PI * 2);
-                            ctx.fill();
-                        }
-
-                    } else if (index === 3) {
-                        // RAYON 4 HAUT : FRAÎCHEUR & BOISSONS (Lignes cyan/teal)
+                    } else {
+                        // Rayon 4 : BOISSONS / EAU (Cyan lumineux et étagères blanches)
                         ctx.fillStyle = "#06b6d4";
-                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
-                        
+                        ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
+
                         ctx.fillStyle = "#ffffff";
-                        ctx.fillRect(x + 6, y + 4, gridSize - 12, 2);
-                        ctx.fillRect(x + 6, y + gridSize - 6, gridSize - 12, 2);
+                        ctx.fillRect(x + 3.5, cy + 2, gridSize - 7, 1.5);
+                        ctx.fillRect(x + 3.5, cy + gridSize - 3.5, gridSize - 7, 1.5);
                     }
+
+                    // Séparateur fin entre étages de gondole
+                    ctx.fillStyle = "rgba(0,0,0,0.08)";
+                    ctx.fillRect(x + 2, cy + gridSize - 1, gridSize - 4, 1);
                 }
+                ctx.restore();
 
-                // Chapeau de tête de gondole haut
-                ctx.fillStyle = (index === 0) ? "#E30613" : (index === 1 ? "#22c55e" : "#0055A4");
-                ctx.fillRect(col * gridSize + 2, bounds.startRow * gridSize - 3, gridSize - 4, 3);
-                ctx.fillRect(col * gridSize + 2, (bounds.midStart - 1) * gridSize + gridSize - 1, gridSize - 4, 3);
+                // --- 2. RAYON DU BAS ---
+                const yBottom = bounds.bottomStartRow * gridSize;
+                const hBottom = (bounds.bottomEndRow - bounds.bottomStartRow + 1) * gridSize;
 
-                // RAYONS DU BAS (En dessous de l'allée centrale)
-                for (let row = bounds.midEnd + 1; row <= bounds.endRow; row++) {
-                    const x = col * gridSize;
-                    const y = row * gridSize;
-                    
-                    ctx.fillStyle = "#ffffff";
-                    ctx.fillRect(x + 2, y, gridSize - 4, gridSize);
-                    ctx.strokeStyle = "#0055A4";
-                    ctx.lineWidth = 2;
-                    ctx.strokeRect(x + 2, y, gridSize - 4, gridSize);
+                ctx.save();
+                ctx.beginPath();
+                ctx.roundRect(x + 1.5, yBottom + 1, gridSize - 3, hBottom - 2, 5);
+                ctx.strokeStyle = "#0055A4";
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
+                ctx.clip();
 
-                    if (index === 0) {
-                        // Bas 1 : Bleu et blanc
+                for (let r = bounds.bottomStartRow; r <= bounds.bottomEndRow; r++) {
+                    const cy = r * gridSize;
+
+                    if (idx === 0) {
+                        // Bas 1 : Bleu clair & blanc (Hygiène/Droguerie)
                         ctx.fillStyle = "#0284c7";
-                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                        ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
                         ctx.fillStyle = "#ffffff";
-                        ctx.fillRect(x + 6, y + gridSize / 2 - 1.5, gridSize - 12, 3);
+                        ctx.fillRect(x + 4, cy + gridSize / 2 - 1, gridSize - 8, 2);
 
-                    } else if (index === 1) {
-                        // Bas 2 : Magenta / violet et blanc
-                        ctx.fillStyle = (row % 2 === 0) ? "#c026d3" : "#0055A4";
-                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                    } else if (idx === 1) {
+                        // Bas 2 : Magenta & blanc
+                        ctx.fillStyle = (r % 2 === 0) ? "#d946ef" : "#c026d3";
+                        ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
                         ctx.fillStyle = "#ffffff";
-                        ctx.fillRect(x + 6, y + gridSize / 2 - 1.5, gridSize - 12, 3);
+                        ctx.fillRect(x + 4, cy + gridSize / 2 - 1, gridSize - 8, 2);
 
-                    } else if (index === 2) {
-                        // Bas 3 : Violet & orange
-                        ctx.fillStyle = (row % 2 === 0) ? "#8b5cf6" : "#f59e0b";
-                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                    } else if (idx === 2) {
+                        // Bas 3 : Violet & mauve
+                        ctx.fillStyle = (r % 2 === 0) ? "#8b5cf6" : "#6366f1";
+                        ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
                         ctx.fillStyle = "#ffffff";
-                        ctx.fillRect(x + 6, y + gridSize / 2 - 1.5, gridSize - 12, 3);
+                        ctx.fillRect(x + 4, cy + gridSize / 2 - 1, gridSize - 8, 2);
 
-                    } else if (index === 3) {
-                        // Bas 4 : Teal / turquoise
+                    } else {
+                        // Bas 4 : Teal & turquoise
                         ctx.fillStyle = "#0d9488";
-                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                        ctx.fillRect(x + 2, cy + 1, gridSize - 4, gridSize - 2);
                         ctx.fillStyle = "#ffffff";
-                        ctx.fillRect(x + 6, y + gridSize / 2 - 1.5, gridSize - 12, 3);
+                        ctx.fillRect(x + 4, cy + gridSize / 2 - 1, gridSize - 8, 2);
                     }
-                }
 
-                // Chapeau de tête de gondole bas
-                ctx.fillStyle = "#0055A4";
-                ctx.fillRect(col * gridSize + 2, (bounds.midEnd + 1) * gridSize, gridSize - 4, 3);
-                ctx.fillRect(col * gridSize + 2, bounds.endRow * gridSize + gridSize - 2, gridSize - 4, 3);
+                    ctx.fillStyle = "rgba(0,0,0,0.08)";
+                    ctx.fillRect(x + 2, cy + gridSize - 1, gridSize - 4, 1);
+                }
+                ctx.restore();
             });
         }
 
-        function drawCheckouts(bounds) {
-            const row = bounds.gridRows - 1;
-            const y = row * gridSize;
-            const totalCaisses = 6;
-            const step = Math.floor(bounds.gridCols / totalCaisses);
+        function drawCheckouts() {
+            const y = (gridRows - 2) * gridSize;
+            const caisseIndices = [1, 5, 9, 13, 17, 21];
+            const caisseNum = ["3", "8", "3", "9", "3", "8"];
 
-            for (let i = 0; i < totalCaisses; i++) {
-                const col = 1 + i * step;
-                if (col + 1 >= bounds.gridCols) break;
+            caisseIndices.forEach((col, i) => {
                 const x = col * gridSize;
+                const width = gridSize * 2.2;
+                const height = gridSize * 1.8;
 
-                // Tapis noir avec rainures
+                // Tapis caisse noir
                 ctx.fillStyle = "#1e293b";
-                ctx.fillRect(x, y + 3, gridSize * 1.3, gridSize - 6);
-                
-                ctx.strokeStyle = "#334155";
+                ctx.beginPath();
+                ctx.roundRect(x, y + 2, width * 0.65, height - 4, 3);
+                ctx.fill();
+
+                // Rainures du tapis roulant
+                ctx.strokeStyle = "#475569";
                 ctx.lineWidth = 1;
-                for(let l = x + 4; l < x + gridSize * 1.3; l += 4) {
-                    ctx.beginPath(); ctx.moveTo(l, y + 4); ctx.lineTo(l, y + gridSize - 5); ctx.stroke();
+                for (let lx = x + 3; lx < x + width * 0.65 - 2; lx += 3) {
+                    ctx.beginPath();
+                    ctx.moveTo(lx, y + 3);
+                    ctx.lineTo(lx, y + height - 3);
+                    ctx.stroke();
                 }
 
                 // Meuble caisse Super U bleu
                 ctx.fillStyle = "#0055A4";
-                ctx.fillRect(x + gridSize * 1.3, y + 3, gridSize * 0.7, gridSize - 6);
-
-                // Voyant TPE rouge surmonté
-                ctx.fillStyle = "#ef4444";
                 ctx.beginPath();
-                ctx.arc(x + gridSize * 1.65, y + 7, 3, 0, Math.PI * 2);
+                ctx.roundRect(x + width * 0.65 + 1, y + 2, width * 0.35, height - 4, 3);
                 ctx.fill();
-            }
+
+                // Écran de caisse vert
+                ctx.fillStyle = "#22c55e";
+                ctx.fillRect(x + width * 0.65 + 3, y + 5, width * 0.35 - 6, 3);
+
+                // Badge numéro de caisse rouge
+                ctx.fillStyle = "#E30613";
+                ctx.beginPath();
+                ctx.arc(x + 3, y + 2, 3.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 5px Montserrat";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(caisseNum[i], x + 3, y + 2);
+            });
         }
 
-        function drawSnakePart(snakePart, index) {
+        function drawSnakePart(part, index) {
             if (index === 0) {
-                // Tête = Autolaveuse Super U
+                // Tête = Autolaveuse Super U vue de dessus
                 ctx.fillStyle = "#0055A4";
                 ctx.beginPath();
-                ctx.roundRect(snakePart.x + 2, snakePart.y + 2, gridSize - 4, gridSize - 4, 6);
+                ctx.roundRect(part.x + 1, part.y + 1, gridSize - 2, gridSize - 2, 4);
                 ctx.fill();
-                
-                // Liseret Rouge Super U
+
+                // Bande centrale rouge Super U
                 ctx.fillStyle = "#E30613";
-                if(dx !== 0) ctx.fillRect(snakePart.x + 7, snakePart.y + 2, gridSize - 14, gridSize - 4);
-                else ctx.fillRect(snakePart.x + 2, snakePart.y + 7, gridSize - 4, gridSize - 14);
+                ctx.fillRect(part.x + 3, part.y + 3, gridSize - 6, gridSize - 6);
 
-                // Pare-brise
-                ctx.fillStyle = "rgba(0,0,0,0.65)";
-                if(dx > 0) ctx.fillRect(snakePart.x + gridSize - 9, snakePart.y + 5, 5, gridSize - 10);
-                else if(dx < 0) ctx.fillRect(snakePart.x + 4, snakePart.y + 5, 5, gridSize - 10);
-                else if(dy > 0) ctx.fillRect(snakePart.x + 5, snakePart.y + gridSize - 9, gridSize - 10, 5);
-                else if(dy < 0) ctx.fillRect(snakePart.x + 5, snakePart.y + 4, gridSize - 10, 5);
+                // Cabine / Pare-brise sombre
+                ctx.fillStyle = "#0f172a";
+                if (dx > 0) ctx.fillRect(part.x + gridSize - 5, part.y + 3, 3, gridSize - 6);
+                else if (dx < 0) ctx.fillRect(part.x + 2, part.y + 3, 3, gridSize - 6);
+                else if (dy > 0) ctx.fillRect(part.x + 3, part.y + gridSize - 5, gridSize - 6, 3);
+                else ctx.fillRect(part.x + 3, part.y + 2, gridSize - 6, 3);
 
-                // Gyrophare orange clignotant
-                ctx.fillStyle = "#f97316";
-                ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2, snakePart.y + gridSize/2, 3, 0, Math.PI*2); ctx.fill();
-                if(Math.floor(Date.now() / 150) % 2 === 0) {
-                    ctx.fillStyle = "rgba(249, 115, 22, 0.45)";
-                    ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2, snakePart.y + gridSize/2, 8, 0, Math.PI*2); ctx.fill();
+                // Phares avant jaunes
+                ctx.fillStyle = "#facc15";
+                if (dx > 0) {
+                    ctx.fillRect(part.x + gridSize - 2, part.y + 2, 2, 2);
+                    ctx.fillRect(part.x + gridSize - 2, part.y + gridSize - 4, 2, 2);
+                } else if (dx < 0) {
+                    ctx.fillRect(part.x, part.y + 2, 2, 2);
+                    ctx.fillRect(part.x, part.y + gridSize - 4, 2, 2);
+                } else if (dy > 0) {
+                    ctx.fillRect(part.x + 2, part.y + gridSize - 2, 2, 2);
+                    ctx.fillRect(part.x + gridSize - 4, part.y + gridSize - 2, 2, 2);
+                } else {
+                    ctx.fillRect(part.x + 2, part.y, 2, 2);
+                    ctx.fillRect(part.x + gridSize - 4, part.y, 2, 2);
                 }
-
-                // Brosses rotatives
-                ctx.fillStyle = "#334155";
-                let bx1, by1, bx2, by2;
-                if(dx > 0) { bx1 = gridSize - 4; by1 = 5; bx2 = gridSize - 4; by2 = gridSize - 5; }
-                else if(dx < 0) { bx1 = 4; by1 = 5; bx2 = 4; by2 = gridSize - 5; }
-                else if(dy < 0) { bx1 = 5; by1 = 4; bx2 = gridSize - 5; by2 = 4; }
-                else { bx1 = 5; by1 = gridSize - 4; bx2 = gridSize - 5; by2 = gridSize - 4; }
-                
-                ctx.beginPath(); ctx.arc(snakePart.x + bx1, snakePart.y + by1, 4.5, 0, Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.arc(snakePart.x + bx2, snakePart.y + by2, 4.5, 0, Math.PI*2); ctx.fill();
-
             } else {
-                // Sillage d'eau lustré avec bulles de savon (comme dans la capture)
-                const ratio = index / snake.length;
-                const size = (gridSize / 2 - 2) * (1 - ratio * 0.35);
-                
-                // Bulle translucide
-                ctx.fillStyle = "rgba(186, 230, 253, 0.65)";
-                ctx.beginPath(); 
-                ctx.arc(snakePart.x + gridSize/2, snakePart.y + gridSize/2, size, 0, Math.PI*2); 
+                // Sillage d'eau lustrée (carré humide très pâle)
+                ctx.fillStyle = "rgba(186, 230, 253, 0.2)";
+                ctx.fillRect(part.x + 1, part.y + 1, gridSize - 2, gridSize - 2);
+
+                // Bulles de savon translucides avec reflet brillant
+                const radius = Math.max(3, (gridSize / 2) - 1.5);
+                const cx = part.x + gridSize / 2;
+                const cy = part.y + gridSize / 2;
+
+                // Corps de la bulle
+                ctx.fillStyle = "rgba(147, 197, 253, 0.75)";
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
                 ctx.fill();
-                
-                // Reflet spéculaire blanc
-                ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
-                ctx.beginPath(); 
-                ctx.arc(snakePart.x + gridSize/2 - size/2.8, snakePart.y + gridSize/2 - size/2.8, size/3, 0, Math.PI*2); 
+
+                // Liseret bleu délicat
+                ctx.strokeStyle = "#60a5fa";
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Reflet blanc en croissant
+                ctx.fillStyle = "rgba(255, 255, 255, 0.95)";
+                ctx.beginPath();
+                ctx.arc(cx - radius * 0.35, cy - radius * 0.35, radius * 0.3, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
@@ -907,8 +852,8 @@
             let rCol, rRow;
             
             while(!valid) {
-                rCol = Math.floor(Math.random() * bounds.gridCols);
-                rRow = Math.floor(Math.random() * (bounds.gridRows - 2));
+                rCol = Math.floor(Math.random() * GRID_COLS);
+                rRow = Math.floor(Math.random() * (gridRows - 3));
                 
                 if(!isObstacle(rCol, rRow)) {
                     let onSnake = false;
@@ -933,7 +878,7 @@
 
         function drawFood() {
             if(!currentFood) return;
-            ctx.font = (gridSize * 0.72) + "px Arial";
+            ctx.font = (gridSize * 0.85) + "px Arial";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText(currentFood.emoji, foodX + gridSize/2, foodY + gridSize/2);
@@ -949,7 +894,7 @@
             const headX = snake[0].x + dx;
             const headY = snake[0].y + dy;
 
-            // Mur extérieur rigide
+            // Mur d'enceinte
             if (headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height) {
                 showGameOver(); return;
             }
@@ -965,7 +910,7 @@
             const head = {x: headX, y: headY};
             snake.unshift(head);
             
-            // Ramassage
+            // Collecte
             if (head.x === foodX && head.y === foodY) {
                 score += currentFood.points;
                 let displayText = currentFood.type === "Pipi" ? "+80 PIPI" : `+${currentFood.points}`;
@@ -976,12 +921,12 @@
                 createExplosion(foodX, foodY, currentFood.color);
                 generateFood();
                 
-                if (vitesseJeu > 60) vitesseJeu -= 2;
+                if (vitesseJeu > 65) vitesseJeu -= 1.5;
             } else {
                 snake.pop(); 
             }
 
-            // Auto-collision avec son corps
+            // Auto-collision
             for (let i = 4; i < snake.length; i++) {
                 if (snake[i].x === head.x && snake[i].y === head.y) {
                     showGameOver(); return;
@@ -990,11 +935,11 @@
         }
 
         function createExplosion(x, y, color) {
-            for (let i = 0; i < 15; i++) {
+            for (let i = 0; i < 12; i++) {
                 particles.push({
                     x: x + gridSize / 2, y: y + gridSize / 2,
-                    vx: (Math.random() - 0.5) * 8, vy: (Math.random() - 0.5) * 8,
-                    color: color, alpha: 1, size: Math.random() * 4 + 2
+                    vx: (Math.random() - 0.5) * 6, vy: (Math.random() - 0.5) * 6,
+                    color: color, alpha: 1, size: Math.random() * 3 + 1.5
                 });
             }
         }
@@ -1013,12 +958,12 @@
 
             for(let i = floatingTexts.length -1; i >= 0; i--) {
                 let ft = floatingTexts[i];
-                ft.y -= 1;
-                ft.life -= 0.02;
+                ft.y -= 0.8;
+                ft.life -= 0.025;
                 if(ft.life <= 0) { floatingTexts.splice(i, 1); continue; }
                 
                 ctx.globalAlpha = ft.life;
-                ctx.font = "bold 18px Montserrat";
+                ctx.font = "bold 15px Montserrat";
                 ctx.textAlign = "center";
                 ctx.fillStyle = ft.color;
                 ctx.strokeStyle = "#fff";
@@ -1040,7 +985,7 @@
 
         function initGame() {
             score = 0;
-            vitesseJeu = 170;
+            vitesseJeu = 150;
             dx = gridSize;
             dy = 0;
             isGameOverState = false;
@@ -1054,10 +999,10 @@
             document.getElementById('scoreSubmittedMsg').style.display = "none";
             document.getElementById('playerNameInput').value = "";
             
-            // Démarrage sécurisé dans l'allée haute (rangée 2)
+            // Placement initial en allée haute
             snake = [];
-            const startY = 2 * gridSize;
-            const startX = 6 * gridSize;
+            const startY = 4 * gridSize;
+            const startX = 12 * gridSize;
             for(let i = 0; i < 5; i++){ 
                 snake.push({x: startX - (i * gridSize), y: startY});
             }
@@ -1074,8 +1019,11 @@
                 drawGrid();
                 drawFood();
                 advanceSnake();
-                drawSnakePart(snake[0], 0);
-                for(let i = snake.length - 1; i > 0; i--) drawSnakePart(snake[i], i);
+                
+                for(let i = snake.length - 1; i >= 0; i--) {
+                    drawSnakePart(snake[i], i);
+                }
+                
                 drawEffects();
                 main();
             }, vitesseJeu); 
@@ -1124,7 +1072,7 @@
             if (!gameStarted || isGameOverState) return;
             let diffX = e.changedTouches[0].screenX - touchStartX;
             let diffY = e.changedTouches[0].screenY - touchStartY;
-            if (Math.abs(diffX) < 30 && Math.abs(diffY) < 30) return;
+            if (Math.abs(diffX) < 25 && Math.abs(diffY) < 25) return;
             
             let lastDir = inputQueue.length > 0 ? inputQueue[inputQueue.length - 1] : { dx, dy };
             if (Math.abs(diffX) > Math.abs(diffY)) {
