@@ -437,7 +437,7 @@
         let gridRows = 55;
         let dx = 0, dy = 0;
         let snake = [];
-        let foods = []; // Tableau supportant plusieurs objets simultanés
+        let foods = [];
         let inputQueue = [];
         let isGameOverState = false;
         let gameLoopTimeout;
@@ -447,10 +447,14 @@
         let top10 = [];
         let vitesseJeu = 150; 
 
+        // Quotas mis à jour selon vos consignes :
+        // - Zone promo (rouge) : 5 objets
+        // - Devant les caisses (grande zone bleu) : 4 objets
+        // - Alcools (petite zone bleu) : 7 objets
         const ROCCO_MESSAGES = [
-            { text: "Faites un tour<br>en zone promo", zone: "promo", count: 6 },
+            { text: "Faites un tour<br>en zone promo", zone: "promo", count: 5 },
             { text: "Essayez de passer<br>devant les caisses", zone: "caisses", count: 4 },
-            { text: "Un box de picon est tombé<br>dans les alcools", zone: "alcools", count: 11 }
+            { text: "Un box de picon est tombé<br>dans les alcools", zone: "alcools", count: 7 }
         ];
         let currentMessageIndex = 0;
 
@@ -465,7 +469,6 @@
                 const speechEl = document.getElementById("roccoSpeech");
                 speechEl.innerHTML = step.text;
 
-                // Fait apparaître les objets aléatoires dans la zone correspondante
                 spawnZoneFoods(step.zone, step.count);
 
                 currentMessageIndex = (currentMessageIndex + 1) % ROCCO_MESSAGES.length;
@@ -482,17 +485,19 @@
             clearTimeout(roccoCycleTimeout);
             clearTimeout(roccoHideTimeout);
 
+            // Intervalle de 45 secondes entre chaque annonce
             roccoCycleTimeout = setTimeout(() => {
                 if (!gameStarted || isGameOverState) return;
                 setRoccoVisible(true);
 
+                // Reste affiché 5 secondes
                 roccoHideTimeout = setTimeout(() => {
                     setRoccoVisible(false);
                     if (gameStarted && !isGameOverState) {
                         scheduleNextRocco();
                     }
                 }, 5000);
-            }, 5000);
+            }, 45000);
         }
 
         function startRoccoCycle() {
@@ -682,7 +687,6 @@
         function isObstacle(col, row) {
             const bounds = getShelfBounds();
             
-            // Ligne du bas = caisses
             if (row === gridRows - 1) {
                 for (let c of CAISSE_COLS) {
                     if (col === c || col === c + 1) return true;
@@ -991,7 +995,6 @@
             }
         }
 
-        // Apparition de N objets dans les 3 zones précisées
         function spawnZoneFoods(zone, count) {
             const bounds = getShelfBounds();
             const midRow = Math.floor(gridRows * 0.48);
@@ -1000,23 +1003,20 @@
             let minRow = 0, maxRow = gridRows - 2;
 
             if (zone === "promo") {
-                // Zone rouge : haut gauche (colonnes 0 à 13, rangées 0 à mi-parcours)
                 minCol = 0;
                 maxCol = 13;
                 minRow = 0;
                 maxRow = midRow - 1;
             } else if (zone === "alcools") {
-                // Zone bleu haut/droite : rayon alcools (colonnes 22 à 26, du haut jusqu'au milieu)
                 minCol = 22;
                 maxCol = GRID_COLS - 1;
                 minRow = Math.max(0, bounds.topStartRow - 2);
                 maxRow = bounds.topEndRow + 2;
             } else if (zone === "caisses") {
-                // Zone bleu bas : devant les caisses (toute la largeur, juste au-dessus de la ligne des caisses)
                 minCol = 0;
                 maxCol = GRID_COLS - 1;
                 minRow = Math.max(0, gridRows - 6);
-                maxRow = gridRows - 2; // Exclut rigoureusement la dernière ligne (gridRows - 1)
+                maxRow = gridRows - 2;
             }
 
             let spawned = 0;
@@ -1131,7 +1131,6 @@
             const head = {x: headX, y: headY};
             snake.unshift(head);
             
-            // Détection de collision avec l'un des déchets présents
             let eatenIndex = -1;
             for (let i = 0; i < foods.length; i++) {
                 if (head.x === foods[i].x && head.y === foods[i].y) {
@@ -1152,7 +1151,6 @@
                 playSound('eat');
                 createExplosion(eatenFood.x, eatenFood.y, eatenFood.item.color);
 
-                // Garantit qu'il reste toujours au moins un déchet en jeu
                 if (foods.length === 0) {
                     generateFood();
                 }
