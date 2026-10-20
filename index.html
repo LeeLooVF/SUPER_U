@@ -1168,74 +1168,6 @@
                 ctx.restore();
             }
         }
-        function initGame() {
-            resizeGameCanvas();
-            score = 0;
-            dx = gridSize;
-            dy = 0;
-            directionQueue = [];
-            isGameOverState = false;
-            particles = [];
-            floatingTexts = [];
-            brushRotation = 0;
-            beaconFlash = 0;
-            
-            document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
-            document.getElementById('gameOverScreen').style.display = "none";
-            document.getElementById('playerNameInput').disabled = false;
-            document.getElementById('playerNameInput').value = "";
-            document.getElementById('submitStatus').innerText = "";
-            
-            // Démarrage sécurisé : dans la grande allée supérieure libre (rangée 2)
-            snake = [];
-            const startCol = Math.floor(gridCols / 2);
-            const startRow = 2; 
-            for (let i = 0; i < 5; i++) { 
-                snake.push({ x: (startCol - i) * gridSize, y: startRow * gridSize });
-            }
-
-            spawnDechet();
-            startBGM(); 
-            main();
-        }
-
-        function spawnDechet() {
-            const rand = Math.random();
-            let cumul = 0;
-            let selected = DECHETS_TYPES[0];
-
-            for (const item of DECHETS_TYPES) {
-                cumul += item.chance;
-                if (rand <= cumul) {
-                    selected = item;
-                    break;
-                }
-            }
-
-            let valid = false;
-            let fx = 0, fy = 0;
-            let attempts = 0;
-            const maxFoodRows = Math.max(1, gridRows - 2);
-
-            while (!valid && attempts < 1000) {
-                fx = Math.floor(Math.random() * gridCols) * gridSize;
-                fy = Math.floor(Math.random() * maxFoodRows) * gridSize;
-                const c = Math.floor(fx / gridSize);
-                const r = Math.floor(fy / gridSize);
-
-                // Ne génère JAMAIS de déchet sur un rayon ou une caisse (murs)
-                valid = !isObstacle(c, r) && !snake.some(segment => segment.x === fx && segment.y === fy);
-                attempts++;
-            }
-
-            currentFood = {
-                x: fx,
-                y: fy,
-                type: selected
-            };
-        }
-            ctx.restore();
-        }
 
         // DESSIN AVANCÉ DE L'AUTOLAVEUSE
         function drawAutolaveuse() {
@@ -1701,8 +1633,6 @@
             }
 
             return false;
-        }
-            return snake[0].x < 0 || snake[0].x >= canvas.width || snake[0].y < 0 || snake[0].y >= canvas.height;
         }
 
         function showGameOver() {
