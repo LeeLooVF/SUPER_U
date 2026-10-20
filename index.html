@@ -34,48 +34,84 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            padding: 8px 14px;
+            height: 58px;
+            padding: 4px 12px;
             margin-bottom: 8px;
             background: #ffffff;
             border-radius: 18px;
             border: 3.5px solid #0055A4;
             box-shadow: 0 4px 14px rgba(0, 85, 164, 0.1);
             flex-shrink: 0;
-            gap: 6px;
+            position: relative;
         }
 
-        #gameHeader {
+        /* Conteneur Rocco et bulle de dialogue */
+        #roccoContainer {
             display: flex;
             align-items: center;
-            cursor: pointer;
-            min-width: 0;
-            flex-shrink: 1;
+            position: relative;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.4s ease-in-out;
+            pointer-events: none;
         }
 
-        #gameTitle {
-            font-size: clamp(11px, 2.9vw, 15px); 
-            white-space: nowrap; 
-            margin: 0;
+        #roccoContainer.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #roccoImg {
+            height: 48px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* Bulle de BD */
+        #roccoSpeech {
+            position: absolute;
+            left: 52px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ffffff;
+            border: 2px solid #0055A4;
             color: #0055A4;
-            text-transform: uppercase;
-            letter-spacing: 0.2px;
-            font-weight: 900;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 4px 8px;
+            border-radius: 10px;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            z-index: 20;
         }
 
-        .u-red { color: #E30613; }
+        #roccoSpeech::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: -7px;
+            transform: translateY(-50%);
+            border-width: 5px 7px 5px 0;
+            border-style: solid;
+            border-color: transparent #0055A4 transparent transparent;
+            display: block;
+            width: 0;
+        }
 
         .top-ten-btn {
             background: none;
             border: none;
             color: #E30613;
             cursor: pointer;
-            padding: 0 6px;
+            padding: 0 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             line-height: 1.1;
-            flex-shrink: 0;
+            margin-left: auto;
+            margin-right: 10px;
         }
 
         .top-ten-btn span.title {
@@ -109,7 +145,6 @@
             border: 2.5px solid #E30613;
             box-shadow: 0 3px 8px rgba(0, 85, 164, 0.25);
             white-space: nowrap;
-            flex-shrink: 0;
         }
 
         #gameContainer {
@@ -288,15 +323,19 @@
 <body>
 
     <div id="topBar">
-        <div id="gameHeader">
-            <h1 id="gameTitle">SUPER <span class="u-red">U</span> MÉNAGE</h1>
+        <!-- Rocco et sa bulle -->
+        <div id="roccoContainer">
+            <img id="roccoImg" src="Rocco.png" alt="Rocco" onerror="this.style.display='none'">
+            <div id="roccoSpeech">Faites un tour en zone promo</div>
         </div>
 
+        <!-- Bouton TOP 10 centré/à côté du score -->
         <button class="top-ten-btn" onclick="openLeaderboard()">
             <span class="title">🏆 TOP</span>
             <span class="num">10</span>
         </button>
 
+        <!-- Scoreboard -->
         <div id="scoreboard">
             <div id="scoreDisplay">🧼 PROPRETÉ: 0</div>
             <div id="highScoreDisplay">👑 RECORD: 0</div>
@@ -311,10 +350,10 @@
             <p style="font-size: 13px; font-weight: 700; color: #555; margin-bottom: 12px;">Nettoyez le magasin avant l'ouverture !</p>
             
             <div style="text-align: left; background: #fff; padding: 10px 14px; border-radius: 12px; border: 2px solid #0055A4; margin-bottom: 14px; font-size: 12px; font-weight: 800; width: 90%; max-width: 290px;">
-                <div style="color: #475569; margin-bottom: 4px;">🧻 Mouchoir froissé (Commun - 50%) <span style="float: right;">+10 pts</span></div>
-                <div style="color: #8b4513; margin-bottom: 4px;">💩 Tache (Peu commun - 24%) <span style="float: right;">+20 pts</span></div>
+                <div style="color: #64748b; margin-bottom: 4px;">🧻 Mouchoir (Commun - 50%) <span style="float: right;">+10 pts</span></div>
+                <div style="color: #8b4513; margin-bottom: 4px;">☕ Tache (Peu commun - 24%) <span style="float: right;">+20 pts</span></div>
                 <div style="color: #22c55e; margin-bottom: 4px;">🍾 Bouteille (Rare - 15%) <span style="float: right;">+45 pts</span></div>
-                <div style="color: #ca8a04; margin-bottom: 4px;">🟡 Flaque de pipi (Épique - 8%) <span style="float: right;">+80 pts</span></div>
+                <div style="color: #eab308; margin-bottom: 4px;">🟡 Pipi (Épique - 8%) <span style="float: right;">+80 pts</span></div>
                 <div style="color: #fbbf24;">👑 Caca doré (Légendaire - 3%) <span style="float: right;">+150 pts</span></div>
             </div>
 
@@ -362,7 +401,7 @@
         const ctx = canvas.getContext("2d");
 
         const GRID_COLS = 27; 
-        const CAISSE_COLS = [5, 9, 13, 17, 21]; // Caisse de gauche retirée
+        const CAISSE_COLS = [5, 9, 13, 17, 21];
         const CAISSE_NUMS = ["8", "3", "9", "3", "8"];
 
         let gridSize = 16;
@@ -378,11 +417,46 @@
         let top10 = [];
         let vitesseJeu = 150; 
 
+        // Gestion du cycle d'apparition de Rocco
+        let roccoInterval = null;
+        let roccoTimeout = null;
+
+        function startRoccoCycle() {
+            stopRoccoCycle();
+            const roccoEl = document.getElementById("roccoContainer");
+            roccoEl.classList.remove("visible");
+
+            // Apparaît après 5 secondes de jeu
+            roccoTimeout = setTimeout(() => {
+                if (!gameStarted || isGameOverState) return;
+                roccoEl.classList.add("visible");
+
+                // Cycle de 5s allumé / 5s éteint
+                let visible = true;
+                roccoInterval = setInterval(() => {
+                    visible = !visible;
+                    if (visible) {
+                        roccoEl.classList.add("visible");
+                    } else {
+                        roccoEl.classList.remove("visible");
+                    }
+                }, 5000);
+
+            }, 5000);
+        }
+
+        function stopRoccoCycle() {
+            clearTimeout(roccoTimeout);
+            clearInterval(roccoInterval);
+            const roccoEl = document.getElementById("roccoContainer");
+            if (roccoEl) roccoEl.classList.remove("visible");
+        }
+
         const DECHETS = [
-            { type: "Mouchoir", proba: 0.50, points: 10, color: "#cbd5e1", renderType: "mouchoir" },
+            { type: "Mouchoir", proba: 0.50, points: 10, color: "#94a3b8" },
             { type: "Tache", proba: 0.24, points: 20, color: "#8b4513", emoji: "💩" },
             { type: "Bouteille", proba: 0.15, points: 45, color: "#22c55e", emoji: "🍾" },
-            { type: "Pipi", proba: 0.08, points: 80, color: "#eab308", renderType: "pipi" },
+            { type: "Pipi", proba: 0.08, points: 80, color: "#eab308" },
             { type: "Caca d'or", proba: 0.03, points: 150, color: "#fbbf24", emoji: "👑" }
         ];
         let currentFood = null;
@@ -541,8 +615,6 @@
         function getShelfBounds() {
             const cols = [5, 10, 16, 21];
             const midRow = Math.floor(gridRows * 0.48);
-            
-            // Longueur exactement égale aux deux rayons les plus courts (13 cases)
             const shelfLength = 13;
 
             const topEndRow = midRow - 3;
@@ -557,19 +629,16 @@
         function isObstacle(col, row) {
             const bounds = getShelfBounds();
             
-            // Caisses collées tout en bas : 1 case de haut sur 2 de long
             if (row === gridRows - 1) {
                 for (let c of CAISSE_COLS) {
                     if (col === c || col === c + 1) return true;
                 }
             }
 
-            // Rayons du haut (tous alignés)
             if (row >= bounds.topStartRow && row <= bounds.topEndRow) {
                 if (bounds.cols.includes(col)) return true;
             }
 
-            // Rayons du bas (tous alignés)
             if (row >= bounds.bottomStartRow && row <= bounds.bottomEndRow) {
                 if (bounds.cols.includes(col)) return true;
             }
@@ -602,7 +671,6 @@
             bounds.cols.forEach((col, idx) => {
                 const x = col * gridSize;
                 
-                // 1. RAYON DU HAUT (longueur uniforme de 13 cases)
                 const yTop = bounds.topStartRow * gridSize;
                 const hTop = (bounds.topEndRow - bounds.topStartRow + 1) * gridSize;
 
@@ -681,7 +749,6 @@
                 }
                 ctx.restore();
 
-                // 2. RAYON DU BAS (longueur uniforme de 13 cases)
                 const yBottom = bounds.bottomStartRow * gridSize;
                 const hBottom = (bounds.bottomEndRow - bounds.bottomStartRow + 1) * gridSize;
 
@@ -729,21 +796,18 @@
         }
 
         function drawCheckouts() {
-            // Collé à l'extrémité basse : rangée gridRows - 1
             const y = (gridRows - 1) * gridSize;
-            const height = gridSize; // 1 case de haut
-            const width = 2 * gridSize; // 2 cases de long
+            const height = gridSize;
+            const width = 2 * gridSize;
 
             CAISSE_COLS.forEach((col, i) => {
                 const x = col * gridSize;
 
-                // Tapis caisse noir
                 ctx.fillStyle = "#1e293b";
                 ctx.beginPath();
                 ctx.roundRect(x, y + 1, width * 0.65, height - 2, 2);
                 ctx.fill();
 
-                // Rainures du tapis roulant
                 ctx.strokeStyle = "#475569";
                 ctx.lineWidth = 1;
                 for (let lx = x + 3; lx < x + width * 0.65 - 2; lx += 3) {
@@ -753,17 +817,14 @@
                     ctx.stroke();
                 }
 
-                // Meuble caisse Super U bleu
                 ctx.fillStyle = "#0055A4";
                 ctx.beginPath();
                 ctx.roundRect(x + width * 0.65 + 1, y + 1, width * 0.35 - 1, height - 2, 2);
                 ctx.fill();
 
-                // Écran de caisse vert
                 ctx.fillStyle = "#22c55e";
                 ctx.fillRect(x + width * 0.65 + 3, y + 3, width * 0.35 - 7, 2);
 
-                // Pastille numéro de caisse rouge
                 ctx.fillStyle = "#E30613";
                 ctx.beginPath();
                 ctx.arc(x + 4, y + 4, 3, 0, Math.PI * 2);
@@ -779,24 +840,20 @@
 
         function drawSnakePart(part, index) {
             if (index === 0) {
-                // Tête = Autolaveuse Super U
                 ctx.fillStyle = "#0055A4";
                 ctx.beginPath();
                 ctx.roundRect(part.x + 1, part.y + 1, gridSize - 2, gridSize - 2, 4);
                 ctx.fill();
 
-                // Bande centrale rouge Super U
                 ctx.fillStyle = "#E30613";
                 ctx.fillRect(part.x + 3, part.y + 3, gridSize - 6, gridSize - 6);
 
-                // Cabine
                 ctx.fillStyle = "#0f172a";
                 if (dx > 0) ctx.fillRect(part.x + gridSize - 5, part.y + 3, 3, gridSize - 6);
                 else if (dx < 0) ctx.fillRect(part.x + 2, part.y + 3, 3, gridSize - 6);
                 else if (dy > 0) ctx.fillRect(part.x + 3, part.y + gridSize - 5, gridSize - 6, 3);
                 else ctx.fillRect(part.x + 3, part.y + 2, gridSize - 6, 3);
 
-                // Phares jaunes
                 ctx.fillStyle = "#facc15";
                 if (dx > 0) {
                     ctx.fillRect(part.x + gridSize - 2, part.y + 2, 2, 2);
@@ -836,6 +893,7 @@
         }
 
         function generateFood() {
+            const bounds = getShelfBounds();
             let valid = false;
             let rCol, rRow;
             
@@ -869,95 +927,63 @@
 
             const cx = foodX + gridSize / 2;
             const cy = foodY + gridSize / 2;
-            const s = gridSize;
 
-            if (currentFood.renderType === "pipi") {
-                // Flaque d'urine bien jaune et luisante
-                ctx.save();
-                
-                // Flaque principale asymétrique
+            if (currentFood.type === "Pipi") {
+                // Flaque d'urine jaune stylisée
                 ctx.fillStyle = "#facc15";
                 ctx.beginPath();
-                ctx.ellipse(cx, cy + 1, s * 0.44, s * 0.32, 0.25, 0, Math.PI * 2);
+                ctx.ellipse(cx, cy + 1, gridSize * 0.42, gridSize * 0.28, 0, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Sous-goutte attachée
-                ctx.beginPath();
-                ctx.ellipse(cx + s * 0.22, cy - s * 0.12, s * 0.18, s * 0.14, -0.3, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Gouttelette isolée
-                ctx.beginPath();
-                ctx.arc(cx - s * 0.3, cy - s * 0.2, s * 0.08, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Cœur jaune plus sombre / chaud pour donner du volume
                 ctx.fillStyle = "#eab308";
                 ctx.beginPath();
-                ctx.ellipse(cx, cy + 1.5, s * 0.32, s * 0.20, 0.2, 0, Math.PI * 2);
+                ctx.ellipse(cx - 1, cy + 2, gridSize * 0.28, gridSize * 0.16, 0.2, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Reflet brillant blanc translucide sur le dessus
-                ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+                // Gouttelette
+                ctx.fillStyle = "#facc15";
                 ctx.beginPath();
-                ctx.ellipse(cx - s * 0.14, cy - s * 0.08, s * 0.16, s * 0.07, -0.2, 0, Math.PI * 2);
+                ctx.arc(cx + gridSize * 0.32, cy - gridSize * 0.2, gridSize * 0.08, 0, Math.PI * 2);
                 ctx.fill();
-                
-                ctx.restore();
-            } else if (currentFood.renderType === "mouchoir") {
-                // Mouchoir en papier froissé blanc cassé avec relief & ombres
-                ctx.save();
-                ctx.translate(foodX, foodY);
 
-                // Ombre au sol
-                ctx.fillStyle = "rgba(100, 116, 139, 0.22)";
+                // Reflet
+                ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
                 ctx.beginPath();
-                ctx.ellipse(s * 0.52, s * 0.78, s * 0.4, s * 0.15, 0, 0, Math.PI * 2);
+                ctx.ellipse(cx - gridSize * 0.15, cy - gridSize * 0.08, gridSize * 0.12, gridSize * 0.05, -0.2, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Corps froissé du mouchoir
+            } else if (currentFood.type === "Mouchoir") {
+                // Mouchoir froissé blanc avec plis
+                ctx.fillStyle = "rgba(0,0,0,0.12)";
+                ctx.beginPath();
+                ctx.ellipse(cx, cy + gridSize * 0.28, gridSize * 0.38, gridSize * 0.14, 0, 0, Math.PI * 2);
+                ctx.fill();
+
                 ctx.fillStyle = "#f8fafc";
-                ctx.beginPath();
-                ctx.moveTo(s * 0.2, s * 0.65);
-                ctx.lineTo(s * 0.32, s * 0.32);
-                ctx.lineTo(s * 0.48, s * 0.18);
-                ctx.lineTo(s * 0.72, s * 0.28);
-                ctx.lineTo(s * 0.82, s * 0.58);
-                ctx.lineTo(s * 0.65, s * 0.8);
-                ctx.lineTo(s * 0.38, s * 0.75);
-                ctx.closePath();
-                ctx.fill();
-
-                // Contour doux
                 ctx.strokeStyle = "#cbd5e1";
                 ctx.lineWidth = 1;
-                ctx.stroke();
-
-                // Plis et creux ombrés pour l'effet froissé
-                ctx.strokeStyle = "#94a3b8";
-                ctx.lineWidth = 1.1;
                 ctx.beginPath();
-                // Pli central
-                ctx.moveTo(s * 0.32, s * 0.34);
-                ctx.quadraticCurveTo(s * 0.48, s * 0.48, s * 0.62, s * 0.4);
-                // Pli inférieur
-                ctx.moveTo(s * 0.45, s * 0.5);
-                ctx.lineTo(s * 0.54, s * 0.72);
-                // Corne repliée
-                ctx.moveTo(s * 0.48, s * 0.18);
-                ctx.lineTo(s * 0.44, s * 0.36);
-                ctx.stroke();
-
-                // Touche de lumière blanche vive
-                ctx.fillStyle = "#ffffff";
-                ctx.beginPath();
-                ctx.moveTo(s * 0.48, s * 0.22);
-                ctx.lineTo(s * 0.66, s * 0.32);
-                ctx.lineTo(s * 0.56, s * 0.44);
+                ctx.moveTo(cx - gridSize * 0.36, cy + gridSize * 0.12);
+                ctx.lineTo(cx - gridSize * 0.15, cy - gridSize * 0.35);
+                ctx.lineTo(cx + gridSize * 0.05, cy - gridSize * 0.12);
+                ctx.lineTo(cx + gridSize * 0.34, cy - gridSize * 0.32);
+                ctx.lineTo(cx + gridSize * 0.38, cy + gridSize * 0.2);
+                ctx.lineTo(cx + gridSize * 0.08, cy + gridSize * 0.32);
                 ctx.closePath();
                 ctx.fill();
+                ctx.stroke();
 
-                ctx.restore();
+                // Plis
+                ctx.strokeStyle = "#94a3b8";
+                ctx.lineWidth = 0.9;
+                ctx.beginPath();
+                ctx.moveTo(cx - gridSize * 0.15, cy - gridSize * 0.35);
+                ctx.lineTo(cx, cy + gridSize * 0.1);
+                ctx.lineTo(cx + gridSize * 0.34, cy - gridSize * 0.32);
+                ctx.moveTo(cx - gridSize * 0.2, cy + gridSize * 0.05);
+                ctx.lineTo(cx + gridSize * 0.15, cy + gridSize * 0.15);
+                ctx.stroke();
+
             } else {
                 ctx.font = (gridSize * 0.85) + "px Arial";
                 ctx.textAlign = "center";
@@ -1059,6 +1085,7 @@
             gameStarted = true;
             resizeGameCanvas();
             initGame();
+            startRoccoCycle();
         }
 
         function initGame() {
@@ -1071,7 +1098,7 @@
             floatingTexts = [];
             inputQueue = [];
             
-            document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
+            document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: 0";
             document.getElementById('gameOverScreen').style.display = "none";
             document.getElementById('scoreForm').style.display = "flex";
             document.getElementById('scoreSubmittedMsg').style.display = "none";
@@ -1108,6 +1135,7 @@
 
         function showGameOver() {
             isGameOverState = true;
+            stopRoccoCycle();
             stopMusic();
             playSound('die');
             document.getElementById("finalScore").innerText = score;
