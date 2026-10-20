@@ -45,16 +45,40 @@
             position: relative;
         }
 
-        /* Conteneur Rocco et bulle de dialogue */
-        #roccoContainer {
+        /* Zone gauche interchangeable : Logo OU Rocco */
+        #leftSlot {
+            position: relative;
             display: flex;
             align-items: center;
-            position: relative;
+            height: 100%;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+
+        #gameTitle {
+            font-size: clamp(11px, 2.8vw, 15px); 
+            white-space: nowrap; 
+            margin: 0;
+            color: #0055A4;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-weight: 900;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .u-red { color: #E30613; }
+
+        /* Conteneur Rocco et bulle de dialogue */
+        #roccoContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
             height: 100%;
             opacity: 0;
-            transition: opacity 0.4s ease-in-out;
             pointer-events: none;
-            flex-shrink: 0;
+            transition: opacity 0.3s ease-in-out;
         }
 
         #roccoContainer.visible {
@@ -330,19 +354,22 @@
 <body>
 
     <div id="topBar">
-        <!-- Rocco et sa bulle -->
-        <div id="roccoContainer">
-            <img id="roccoImg" src="Rocco.png" alt="Rocco" onerror="this.style.display='none'">
-            <div id="roccoSpeech">Faites un tour<br>en zone promo</div>
+        <div id="leftSlot">
+            <!-- Titre/Logo visible par défaut -->
+            <h1 id="gameTitle">SUPER <span class="u-red">U</span> MÉNAGE</h1>
+
+            <!-- Rocco et sa bulle (apparaît toutes les 62 secondes pendant 5 secondes) -->
+            <div id="roccoContainer">
+                <img id="roccoImg" src="Rocco.png" alt="Rocco" onerror="this.style.display='none'">
+                <div id="roccoSpeech">Faites un tour<br>en zone promo</div>
+            </div>
         </div>
 
-        <!-- Bouton TOP 10 placé entre Rocco et le Score -->
         <button class="top-ten-btn" onclick="openLeaderboard()">
             <span class="title">🏆 TOP</span>
             <span class="num">10</span>
         </button>
 
-        <!-- Scoreboard -->
         <div id="scoreboard">
             <div id="scoreDisplay">🧼 PROPRETÉ: 0</div>
             <div id="highScoreDisplay">👑 RECORD: 0</div>
@@ -388,7 +415,7 @@
         </div>
     </div>
 
-    <!-- Modal Classement -->
+    <!-- Leaderboard Modal -->
     <div id="leaderboardModal" class="modal hidden" onclick="closeLeaderboard()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
@@ -424,37 +451,43 @@
         let top10 = [];
         let vitesseJeu = 150; 
 
-        // Gestion de l'apparition de Rocco
+        // Gestion de l'alternance Logo <-> Rocco (toutes les 62 secondes pendant 5 secondes)
         let roccoInterval = null;
-        let roccoTimeout = null;
+        let roccoHideTimeout = null;
 
-        function startRoccoCycle() {
-            stopRoccoCycle();
+        function setRoccoVisible(show) {
             const roccoEl = document.getElementById("roccoContainer");
-            roccoEl.classList.remove("visible");
-
-            roccoTimeout = setTimeout(() => {
-                if (!gameStarted || isGameOverState) return;
+            const titleEl = document.getElementById("gameTitle");
+            if (show) {
+                titleEl.style.opacity = "0";
                 roccoEl.classList.add("visible");
+            } else {
+                roccoEl.classList.remove("visible");
+                titleEl.style.opacity = "1";
+            }
+        }
 
-                let visible = true;
-                roccoInterval = setInterval(() => {
-                    visible = !visible;
-                    if (visible) {
-                        roccoEl.classList.add("visible");
-                    } else {
-                        roccoEl.classList.remove("visible");
-                    }
-                }, 5000);
-
+        function triggerRoccoPopup() {
+            if (!gameStarted || isGameOverState) return;
+            setRoccoVisible(true);
+            roccoHideTimeout = setTimeout(() => {
+                setRoccoVisible(false);
             }, 5000);
         }
 
+        function startRoccoCycle() {
+            stopRoccoCycle();
+            setRoccoVisible(false);
+
+            roccoInterval = setInterval(() => {
+                triggerRoccoPopup();
+            }, 62000);
+        }
+
         function stopRoccoCycle() {
-            clearTimeout(roccoTimeout);
             clearInterval(roccoInterval);
-            const roccoEl = document.getElementById("roccoContainer");
-            if (roccoEl) roccoEl.classList.remove("visible");
+            clearTimeout(roccoHideTimeout);
+            setRoccoVisible(false);
         }
 
         const DECHETS = [
