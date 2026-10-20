@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Super U - Ménage Simulator (V5)</title>
+    <title>Super U - Ménage Simulator</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
     
@@ -30,7 +30,7 @@
             justify-content: space-between;
             width: 100%;
             padding: 5px 10px;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
             background: rgba(255, 255, 255, 0.95);
             border-radius: 14px;
             border: 3px solid #0055A4;
@@ -41,7 +41,6 @@
 
         #gameHeader {
             display: flex;
-            flex-direction: row;
             align-items: center;
             cursor: pointer;
             min-width: 0;
@@ -53,7 +52,7 @@
         }
 
         #gameTitle {
-            font-size: clamp(14px, 4vw, 22px); 
+            font-size: clamp(14px, 4.2vw, 22px); 
             white-space: nowrap; 
             margin: 0;
             color: #0055A4;
@@ -64,10 +63,59 @@
 
         .u-red { color: #E30613; }
 
+        /* Animation interactive Rocco */
+        #bossInline {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            animation: popIn 0.2s ease-out;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.85); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .boss-inline-img {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 2px solid #E30613;
+            object-fit: cover;
+            background: #e2e8f0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+        }
+
+        .boss-inline-bubble {
+            background: #ffffff;
+            color: #0055A4;
+            font-size: clamp(9px, 2.7vw, 12px);
+            font-weight: 900;
+            padding: 4px 8px;
+            border-radius: 10px;
+            border: 2px solid #0055A4;
+            position: relative;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+
+        .boss-inline-bubble::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 6px solid #0055A4;
+        }
+
         .right-header-group {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             flex-shrink: 0;
         }
 
@@ -75,7 +123,7 @@
             background: none;
             border: none;
             color: #E30613;
-            font-size: clamp(10px, 2.5vw, 12px);
+            font-size: clamp(9px, 2.5vw, 12px);
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -95,11 +143,11 @@
             justify-content: center;
             align-items: flex-end;
             gap: 2px;
-            font-size: clamp(10px, 2.8vw, 13px);
+            font-size: clamp(10px, 2.6vw, 13px);
             font-weight: 900;
             color: #ffffff;
             background: linear-gradient(135deg, #0055A4, #003366);
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 12px;
             border: 2px solid #E30613;
             box-shadow: 0 3px 8px rgba(0, 85, 164, 0.2);
@@ -129,16 +177,15 @@
         .overlayScreen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.94);
             backdrop-filter: blur(5px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-radius: 12px;
             color: #0055A4;
             text-align: center;
-            padding: 10px;
+            padding: 12px;
             box-sizing: border-box;
         }
 
@@ -151,24 +198,23 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
+            from { opacity: 0; transform: scale(0.92); }
             to { opacity: 1; transform: scale(1); }
         }
 
         h1.cheh-title {
-            font-size: 38px;
+            font-size: 34px;
             margin: 0;
             color: #E30613;
-            text-shadow: 3px 3px 0px #ffffff, 6px 6px 0px rgba(227, 6, 19, 0.2);
             letter-spacing: 2px;
             font-weight: 900;
             text-transform: uppercase;
         }
 
         .overlayScreen p.score-text {
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 800;
-            margin: 10px 0;
+            margin: 8px 0;
             background: #0055A4;
             color: #ffffff;
             padding: 6px 18px;
@@ -180,20 +226,20 @@
             background: #f4f6f8;
             border: 3px solid #0055A4;
             border-radius: 12px;
-            padding: 10px 15px;
-            margin: 10px 0;
+            padding: 8px 12px;
+            margin: 8px 0;
             width: 90%;
             max-width: 300px;
-            max-height: 150px;
+            max-height: 140px;
             overflow-y: auto;
             box-sizing: border-box;
         }
 
         #leaderboardContainer h3 {
-            margin: 0 0 8px 0;
+            margin: 0 0 6px 0;
             color: #E30613;
             text-transform: uppercase;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 900;
         }
 
@@ -201,7 +247,7 @@
             list-style: none;
             padding: 0;
             margin: 0;
-            font-size: 13px; 
+            font-size: 12px; 
             text-align: left;
             font-weight: 700;
         }
@@ -209,13 +255,13 @@
         .leaderboard-entry {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             border-bottom: 2px dotted #cccccc;
-            padding-bottom: 4px;
+            padding-bottom: 3px;
         }
 
-        .leaderboard-entry .rank { color: #E30613; width: 25px;}
-        .leaderboard-entry .name { color: #0055A4; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+        .leaderboard-entry .rank { color: #E30613; width: 25px; }
+        .leaderboard-entry .name { color: #0055A4; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .leaderboard-entry .score { color: #E30613; font-weight: 900; }
 
         input[type="text"] {
@@ -225,30 +271,29 @@
         }
 
         button.action-btn {
-            margin-top: 10px;
-            padding: 12px 20px;
+            margin-top: 8px;
+            padding: 10px 18px;
             width: 80%;
-            max-width: 260px;
-            font-size: 16px;
+            max-width: 250px;
+            font-size: 15px;
             background-color: #E30613;
             color: #ffffff;
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            box-shadow: 0 5px 0px #b3000b, 0 10px 15px rgba(227, 6, 19, 0.4);
+            box-shadow: 0 4px 0px #b3000b;
             transition: all 0.1s;
             font-weight: 800;
             text-transform: uppercase;
             font-family: inherit;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             user-select: none;
             -webkit-user-select: none;
         }
 
-        button.action-btn:hover, button.action-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 1px 0px #b3000b, 0 4px 5px rgba(227, 6, 19, 0.4);
-            background-color: #ff1a2b;
+        button.action-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0px #b3000b;
         }
 
         .modal {
@@ -268,8 +313,8 @@
             border: 4px solid #0055A4;
             border-radius: 20px;
             width: 100%;
-            max-width: 380px;
-            padding: 22px;
+            max-width: 360px;
+            padding: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             text-align: center;
             box-sizing: border-box;
@@ -279,86 +324,32 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             border-bottom: 2px solid #E30613;
-            padding-bottom: 8px;
+            padding-bottom: 6px;
         }
 
-        .modal-header h3 { font-size: 18px; color: #0055A4; margin: 0; font-weight: 900; }
-        .close-modal { background: none; border: none; color: #E30613; font-size: 26px; cursor: pointer; padding: 0; font-weight: 900; }
+        .modal-header h3 { font-size: 16px; color: #0055A4; margin: 0; font-weight: 900; }
+        .close-modal { background: none; border: none; color: #E30613; font-size: 24px; cursor: pointer; padding: 0; font-weight: 900; }
         .hidden { display: none !important; }
-
-        #bossInline {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            animation: fadeIn 0.2s ease-out;
-            cursor: pointer;
-        }
-
-        .boss-inline-img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid #E30613;
-            object-fit: cover;
-            background: #f1f5f9;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .boss-inline-bubble {
-            background: #ffffff;
-            color: #0055A4;
-            font-size: clamp(10px, 3vw, 13px);
-            font-weight: 900;
-            padding: 4px 10px;
-            border-radius: 12px;
-            border: 2px solid #0055A4;
-            position: relative;
-            text-transform: uppercase;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            white-space: nowrap;
-        }
-        
-        .boss-inline-bubble::before {
-            content: '';
-            position: absolute;
-            left: -7px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-top: 5px solid transparent;
-            border-bottom: 5px solid transparent;
-            border-right: 6px solid #0055A4;
-        }
-        .boss-inline-bubble::after {
-            content: '';
-            position: absolute;
-            left: -4px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-top: 4px solid transparent;
-            border-bottom: 4px solid transparent;
-            border-right: 5px solid #ffffff;
-        }
     </style>
 </head>
 <body>
 
     <div id="topBar">
-        <div id="gameHeader" onclick="toggleHeaderBoss()" title="Ordre du chef de rayon">
+        <div id="gameHeader" onclick="toggleHeaderBoss()" title="Consigne du directeur">
             <h1 id="gameTitle">SUPER <span class="u-red">U</span> MÉNAGE</h1>
             <div id="bossInline" class="hidden">
-                <img src="Rocco.png" alt="Chef" class="boss-inline-img" onerror="this.onerror=null; this.src='https://placehold.co/40x40/0055A4/ffffff?text=CHEF';">
+                <img src="Rocco.png" alt="Directeur" class="boss-inline-img" onerror="this.onerror=null; this.src='https://placehold.co/40x40/0055A4/ffffff?text=U';">
                 <div class="boss-inline-bubble">Allez nettoyer en zone promo</div>
             </div>
         </div>
         <div class="right-header-group">
+            <button class="top-ten-btn" onclick="openLeaderboard()">🏆 TOP 10</button>
             <div id="scoreboard">
-                <div id="scoreDisplay" class="badge-row">🧼 PROPRETÉ: 0</div>
-                <div id="highScoreDisplay" class="badge-row">👑 RECORD: 0</div>
+                <div id="scoreDisplay">🧼 PROPRETÉ: 0</div>
+                <div id="highScoreDisplay">👑 RECORD: 0</div>
             </div>
-            <button class="top-ten-btn" onclick="openLeaderboard()">🏆 TOP<br>10</button>
         </div>
     </div>
     
@@ -366,10 +357,10 @@
         <canvas id="gameCanvas"></canvas>
         
         <div id="startScreen" class="overlayScreen">
-            <h2 style="color: #0055A4; font-size: 22px; text-transform: uppercase; font-weight: 900; margin-bottom: 5px;">MISE EN ROUTE AUTOLAVEUSE 🧼</h2>
-            <p style="font-size: 14px; font-weight: 700; color: #555; margin-bottom: 15px;">Nettoyez le magasin avant l'ouverture !</p>
+            <h2 style="color: #0055A4; font-size: 21px; text-transform: uppercase; font-weight: 900; margin-bottom: 4px;">MISE EN ROUTE AUTOLAVEUSE 🧼</h2>
+            <p style="font-size: 13px; font-weight: 700; color: #555; margin-bottom: 12px;">Nettoyez le magasin avant l'ouverture !</p>
             
-            <div style="text-align: left; background: #fff; padding: 10px 15px; border-radius: 12px; border: 2px solid #0055A4; margin-bottom: 15px; font-size: 13px; font-weight: 800;">
+            <div style="text-align: left; background: #fff; padding: 10px 14px; border-radius: 12px; border: 2px solid #0055A4; margin-bottom: 12px; font-size: 12px; font-weight: 800; width: 90%; max-width: 290px; box-sizing: border-box;">
                 <div style="color: #64748b; margin-bottom: 4px;">📄 Mouchoir (Commun - 50%) <span style="float: right;">+10 pts</span></div>
                 <div style="color: #8b4513; margin-bottom: 4px;">☕ Tache (Peu commun - 24%) <span style="float: right;">+20 pts</span></div>
                 <div style="color: #22c55e; margin-bottom: 4px;">🍾 Bouteille (Rare - 15%) <span style="float: right;">+45 pts</span></div>
@@ -384,11 +375,11 @@
             <h1 class="cheh-title">ACCIDENT !</h1>
             <p class="score-text">Score : <span id="finalScore" style="color:#ffcc00;">0</span></p>
             
-            <div id="scoreForm" style="margin-bottom: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
-                <input type="text" id="playerNameInput" maxlength="15" placeholder="Votre pseudo (15 max)" style="padding: 10px; width: 220px; border-radius: 8px; border: 2px solid #0055A4; text-align: center; text-transform: uppercase; font-size: 14px;">
-                <button class="action-btn" onclick="validerScore()" style="margin-top: 0; width: 240px; padding: 10px;">Enregistrer le score</button>
+            <div id="scoreForm" style="margin-bottom: 8px; display: flex; flex-direction: column; align-items: center; gap: 6px;">
+                <input type="text" id="playerNameInput" maxlength="15" placeholder="Votre pseudo (15 max)" style="padding: 8px; width: 210px; border-radius: 8px; border: 2px solid #0055A4; text-align: center; text-transform: uppercase; font-size: 13px; font-weight: 800;">
+                <button class="action-btn" onclick="validerScore()" style="margin-top: 0; width: 220px; padding: 8px;">Enregistrer le score</button>
             </div>
-            <div id="scoreSubmittedMsg" style="display:none; color: #22c55e; font-weight: 900; margin-bottom: 10px; font-size: 15px;">✅ Score enregistré !</div>
+            <div id="scoreSubmittedMsg" style="display:none; color: #22c55e; font-weight: 900; margin-bottom: 8px; font-size: 14px;">✅ Score enregistré !</div>
 
             <div id="leaderboardContainer">
                 <h3>Employés du mois</h3>
@@ -397,7 +388,7 @@
                 </ul>
             </div>
 
-            <button class="action-btn" onclick="resetGame()" style="margin-top: 5px;">Reprendre le service</button>
+            <button class="action-btn" onclick="resetGame()" style="margin-top: 4px;">Reprendre le service</button>
         </div>
     </div>
 
@@ -407,7 +398,7 @@
                 <h3>🏆 Top 10 - Employés du mois</h3>
                 <button class="close-modal" onclick="closeLeaderboard()">&times;</button>
             </div>
-            <ul id="modalLeaderboardList" class="leaderboard-list" style="max-height: 250px; overflow-y: auto; margin-bottom: 12px;">
+            <ul id="modalLeaderboardList" class="leaderboard-list" style="max-height: 240px; overflow-y: auto; margin-bottom: 12px;">
                 <li>Chargement...</li>
             </ul>
             <button class="action-btn" style="width: 100%;" onclick="closeLeaderboard()">Retour au rayon</button>
@@ -420,8 +411,7 @@
         const ctx = canvas.getContext("2d");
 
         let gridSize = 32;
-        let dx = gridSize;
-        let dy = 0;
+        let dx = gridSize, dy = 0;
         let snake = [];
         let inputQueue = [];
         let isGameOverState = false;
@@ -432,7 +422,7 @@
         let top10 = [];
         let vitesseJeu = 170; 
 
-        // Rarity System
+        // Saletés et raretés
         const DECHETS = [
             { type: "Mouchoir", proba: 0.50, points: 10, color: "#cbd5e1", emoji: "📄" },
             { type: "Tache", proba: 0.24, points: 20, color: "#8b4513", emoji: "☕" },
@@ -441,14 +431,11 @@
             { type: "Caca d'or", proba: 0.03, points: 150, color: "#fbbf24", emoji: "👑" }
         ];
         let currentFood = null;
-        let foodX = -100;
-        let foodY = -100;
+        let foodX = -100, foodY = -100;
 
-        // Visual effects
         let particles = [];
         let floatingTexts = [];
 
-        // Audio Management
         let audioCtx;
         let currentAudio = null;
         const audioFiles = ['Audio001.mp3', 'Audio002.mp3', 'Audio003.mp3', 'Audio004.mp3', 'Audio005.mp3'];
@@ -489,7 +476,7 @@
                 osc.stop(now + 0.2);
             } else if (type === 'die') {
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.setValueAtTime(160, now);
                 osc.frequency.exponentialRampToValueAtTime(40, now + 0.5);
                 gainNode.gain.setValueAtTime(0.2, now);
                 gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
@@ -613,12 +600,12 @@
             const startRow = 5; 
             const endRow = gridRows - 5; 
             
-            // Allée centrale élargie de 6 rangées : midRow - 3 à midRow + 2
+            // Allée centrale largement dégagée pour tourner
             const midRow = Math.floor(gridRows / 2);
             const midStart = midRow - 3;
             const midEnd = midRow + 2;
 
-            // 4 colonnes de rayons bien proportionnées
+            // 4 colonnes de gondoles
             const cols = [
                 Math.floor(gridCols * 0.18),
                 Math.floor(gridCols * 0.38),
@@ -631,21 +618,19 @@
 
         function isObstacle(col, row) {
             const bounds = getShelfBounds();
-            // Ligne des caisses en bas (collision mortelle)
+            // Ligne de caisses tout en bas
             if (row >= bounds.gridRows - 1) return true;
 
-            // Rayons verticaux
+            // Rayons verticaux (murs rigides)
             if (row >= bounds.startRow && row <= bounds.endRow) {
-                // Coupure centrale complètement dégagée
                 if (row >= bounds.midStart && row <= bounds.midEnd) return false;
-                // Collision avec les colonnes de gondoles
                 if (bounds.cols.includes(col)) return true;
             }
             return false;
         }
 
         function drawGrid() {
-            // Carrelage blanc propre
+            // Carrelage blanc
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
@@ -677,33 +662,49 @@
                     const x = col * gridSize;
                     const y = row * gridSize;
                     
-                    // Base gondole
+                    // Structure gondole
                     ctx.fillStyle = "#e2e8f0";
                     ctx.fillRect(x + 2, y, gridSize - 4, gridSize);
                     ctx.strokeStyle = "#cbd5e1";
                     ctx.strokeRect(x + 2, y, gridSize - 4, gridSize);
                     
-                    // Habillage selon la zone
+                    // Habillage des rayons selon l'allée
                     if (index === 0 && row < bounds.midStart) {
-                        // Zone Promo (Rouge)
+                        // 1. Zone Promo (Rouge / Jaune)
                         ctx.fillStyle = "#92400e";
                         ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
                         ctx.fillStyle = "#ef4444";
                         ctx.fillRect(x + 6, y + 6, gridSize - 12, gridSize - 12);
                         ctx.fillStyle = "#fef08a";
                         ctx.fillRect(x + 10, y + 10, gridSize - 20, 8);
-                    } else if ((index === 1 || index === 2) && row < bounds.midStart) {
-                        // Zone Frais (Fruits & Légumes)
+                    } else if (index === 1 && row < bounds.midStart) {
+                        // 2. Zone Fruits & Légumes Frais
                         ctx.fillStyle = "#fef3c7";
                         ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
-                        ctx.fillStyle = ["#22c55e", "#ef4444", "#f97316", "#8b5cf6"][row % 4];
+                        ctx.fillStyle = ["#22c55e", "#ef4444", "#f97316"][row % 3];
                         ctx.beginPath();
                         ctx.arc(x + gridSize/2, y + gridSize/2, 5, 0, Math.PI*2);
                         ctx.fill();
-                    } else {
-                        // Rayon classique épicerie
-                        ctx.fillStyle = ["#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#ec4899"][Math.abs(row+index) % 5];
+                    } else if (index === 2 && row < bounds.midStart) {
+                        // 3. Épicerie Bio
+                        ctx.fillStyle = "#f3e8ff";
+                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                        ctx.fillStyle = ["#eab308", "#a855f7"][row % 2];
+                        ctx.beginPath();
+                        ctx.arc(x + gridSize/2, y + gridSize/2, 4, 0, Math.PI*2);
+                        ctx.fill();
+                    } else if (index === 3 && row < bounds.midStart) {
+                        // 4. Rayon Boissons / Fraîcheur
+                        ctx.fillStyle = "#06b6d4";
                         ctx.fillRect(x + 6, y + 4, gridSize - 12, gridSize - 8);
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fillRect(x + 10, y + 7, gridSize - 20, 3);
+                    } else {
+                        // Rayons inférieurs : alimentation variée
+                        ctx.fillStyle = ["#3b82f6", "#ec4899", "#8b5cf6", "#06b6d4"][Math.abs(row + index) % 4];
+                        ctx.fillRect(x + 6, y + 4, gridSize - 12, gridSize - 8);
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fillRect(x + 8, y + 6, 4, 3);
                     }
                 }
             });
@@ -721,7 +722,7 @@
                 // Tapis noir
                 ctx.fillStyle = "#1e293b";
                 ctx.fillRect(x + 4, y + 4, gridSize * 2 - 8, gridSize - 8);
-                // Meuble U
+                // Meuble caisse U
                 ctx.fillStyle = "#0055A4";
                 ctx.fillRect(x + gridSize * 2 - 4, y + 4, gridSize - 4, gridSize - 8);
                 // Voyant TPE
@@ -740,12 +741,12 @@
                 ctx.roundRect(snakePart.x + 2, snakePart.y + 2, gridSize - 4, gridSize - 4, 6);
                 ctx.fill();
                 
-                // Liseret Rouge U
+                // Liseret Rouge Super U
                 ctx.fillStyle = "#E30613";
                 if(dx !== 0) ctx.fillRect(snakePart.x + 8, snakePart.y + 2, gridSize - 16, gridSize - 4);
                 else ctx.fillRect(snakePart.x + 2, snakePart.y + 8, gridSize - 4, gridSize - 16);
 
-                // Pare-brise sombre
+                // Pare-brise
                 ctx.fillStyle = "rgba(0,0,0,0.6)";
                 if(dx > 0) ctx.fillRect(snakePart.x + 18, snakePart.y + 6, 6, gridSize - 12);
                 else if(dx < 0) ctx.fillRect(snakePart.x + 8, snakePart.y + 6, 6, gridSize - 12);
@@ -789,7 +790,7 @@
             
             while(!valid) {
                 rCol = Math.floor(Math.random() * bounds.gridCols);
-                rRow = Math.floor(Math.random() * bounds.gridRows);
+                rRow = Math.floor(Math.random() * (bounds.gridRows - 2)); // Ne spawn pas dans les caisses
                 
                 if(!isObstacle(rCol, rRow)) {
                     let onSnake = false;
@@ -830,7 +831,7 @@
             const headX = snake[0].x + dx;
             const headY = snake[0].y + dy;
 
-            // Collision avec les murs extérieurs
+            // Mur extérieur rigide
             if (headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height) {
                 showGameOver(); return;
             }
@@ -838,7 +839,7 @@
             const headCol = Math.floor(headX / gridSize);
             const headRow = Math.floor(headY / gridSize);
 
-            // Obstacles physiques mortels (Rayons et Caisses)
+            // Obstacles rayons ou caisses
             if (isObstacle(headCol, headRow)) {
                 showGameOver(); return;
             }
@@ -846,7 +847,7 @@
             const head = {x: headX, y: headY};
             snake.unshift(head);
             
-            // Ramassage d'une saleté
+            // Ramassage
             if (head.x === foodX && head.y === foodY) {
                 score += currentFood.points;
                 let displayText = currentFood.type === "Pipi" ? "+80 PIPI" : `+${currentFood.points}`;
@@ -862,7 +863,7 @@
                 snake.pop(); 
             }
 
-            // Auto-collision avec son propre corps
+            // Auto-collision avec son corps
             for (let i = 4; i < snake.length; i++) {
                 if (snake[i].x === head.x && snake[i].y === head.y) {
                     showGameOver(); return;
@@ -935,7 +936,7 @@
             document.getElementById('scoreSubmittedMsg').style.display = "none";
             document.getElementById('playerNameInput').value = "";
             
-            // Spawn sécurisé dans l'allée haute (rangée 2)
+            // Démarrage sécurisé dans l'allée haute (rangée 2)
             snake = [];
             const startY = 2 * gridSize;
             for(let i = 0; i < 4; i++){ 
