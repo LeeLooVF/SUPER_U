@@ -909,9 +909,12 @@
         }
 
         function drawGrid() {
-            // Dalles de sol brillantes de supermarché sur toute la surface
-            ctx.strokeStyle = "#eef2f6"; 
-            ctx.lineWidth = 2;
+            // 1. Sol carrelé grand format de supermarché avec joints
+            ctx.fillStyle = "#f8fafc";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.strokeStyle = "#e2e8f0"; 
+            ctx.lineWidth = 1.5;
             for (let i = 0; i <= canvas.width; i += gridSize) {
                 ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
             }
@@ -919,11 +922,147 @@
                 ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
             }
 
-            // Rayons et allées marqués subtilement
-            ctx.strokeStyle = "rgba(0, 85, 164, 0.04)";
-            ctx.lineWidth = 8;
-            for (let i = gridSize * 4; i < canvas.width; i += gridSize * 8) {
-                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+            // 2. Décor du magasin : Rayons, Caisses et Têtes de gondole
+            drawSupermarketShelves();
+            drawCheckouts();
+        }
+
+        // Rayons / Gondoles d'épicerie vus du dessus
+        function drawSupermarketShelves() {
+            // Disposition d'allées larges : les rayons occupent des colonnes précises
+            // laissant 2 cases libres entre chaque rayon et des allées transversales en haut, milieu et bas
+            const colWidth = gridSize;
+            const aisleCols = [3, 4, 8, 9, 13, 14, 18, 19, 22, 23]; // Paires de colonnes qui forment des rayons
+            const startRow = 3;
+            const midRowBreakStart = Math.floor(gridRows / 2) - 1;
+            const midRowBreakEnd = Math.floor(gridRows / 2) + 1;
+            const endRow = gridRows - 5; // Laisse 5 rangées en bas pour la ligne de caisses
+
+            // Palettes de couleurs de produits selon les rayons
+            const shelfThemes = [
+                { name: "FRAIS", roof: "#e0f2fe", items: ['#38bdf8', '#0284c7', '#ffffff', '#7dd3fc'] }, // Produits laitiers
+                { name: "ÉPICERIE", roof: "#fef3c7", items: ['#f59e0b', '#d97706', '#ef4444', '#10b981'] }, // Conserves / Pâtes
+                { name: "BIO", roof: "#dcfce7", items: ['#22c55e', '#16a34a', '#84cc16', '#a3e635'] }, // Rayon Vert
+                { name: "BOISSONS", roof: "#fce7f3", items: ['#ec4899', '#be185d', '#f97316', '#3b82f6'] }  // Sodas / Jus
+            ];
+
+            aisleCols.forEach((col, idx) => {
+                if (col >= gridCols - 1) return;
+                const theme = shelfThemes[Math.floor(idx / 2) % shelfThemes.length];
+                const x = col * gridSize;
+
+                // Segment supérieur du rayon
+                drawShelfBlock(x, startRow * gridSize, gridSize - 4, (midRowBreakStart - startRow) * gridSize, theme, idx % 2 === 0);
+                // Segment inférieur du rayon
+                drawShelfBlock(x, midRowBreakEnd * gridSize, gridSize - 4, (endRow - midRowBreakEnd) * gridSize, theme, idx % 2 === 0);
+            });
+        }
+
+        function drawShelfBlock(x, y, w, h, theme, isLeftSide) {
+            if (h <= 0) return;
+            ctx.save();
+
+            // Ombre légère de la structure
+            ctx.shadowColor = "rgba(0, 30, 80, 0.08)";
+            ctx.shadowBlur = 6;
+            ctx.shadowOffsetY = 2;
+
+            // Structure métallique du rayon
+            ctx.fillStyle = "#ffffff";
+            ctx.strokeStyle = "#cbd5e1";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.roundRect(x + 2, y + 2, w, h - 4, 4);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.shadowColor = "transparent";
+
+            // Fond teinté du rayon
+            ctx.fillStyle = theme.roof;
+            ctx.fillRect(x + 4, y + 4, w - 4, h - 8);
+
+            // Étagères et petits paquets / articles alignés vus de dessus
+            const itemH = 14;
+            const count = Math.floor((h - 12) / itemH);
+            for (let i = 0; i < count; i++) {
+                const itemY = y + 8 + (i * itemH);
+                const itemColor = theme.items[i % theme.items.length];
+
+                // Petite étagère grise
+                ctx.fillStyle = "#94a3b8";
+                ctx.fillRect(x + 4, itemY, w - 4, 1.5);
+
+                // Produits alignés en rangée
+                ctx.fillStyle = itemColor;
+                ctx.fillRect(x + 6, itemY + 2.5, w - 8, itemH - 5);
+
+                // Détail de code-barres / étiquette blanche
+                ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+                ctx.fillRect(x + (isLeftSide ? 7 : w - 12), itemY + 4, 5, itemH - 8);
+            }
+
+            // Affichette Tête de gondole "PROMO U" aux extrémités
+            ctx.fillStyle = "#E30613";
+            ctx.fillRect(x + 3, y + 2, w - 2, 4);
+            ctx.fillRect(x + 3, y + h - 6, w - 2, 4);
+
+            ctx.restore();
+        }
+
+        // Caisses enregistreuses avec tapis roulants alignées le long du bas
+        function drawCheckouts() {
+            const checkoutRow = gridRows - 2;
+            const y = checkoutRow * gridSize;
+            const checkoutSpacing = 4 * gridSize;
+
+            for (let x = gridSize; x < canvas.width - gridSize * 2; x += checkoutSpacing) {
+                ctx.save();
+
+                // 1. Tapis roulant noir
+                ctx.fillStyle = "#1e293b";
+                ctx.strokeStyle = "#475569";
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.roundRect(x, y + 6, gridSize * 2, gridSize * 0.45, 3);
+                ctx.fill();
+                ctx.stroke();
+
+                // Bandes blanches de roulement
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
+                ctx.lineWidth = 2;
+                for (let r = x + 8; r < x + gridSize * 2 - 6; r += 12) {
+                    ctx.beginPath();
+                    ctx.moveTo(r, y + 8);
+                    ctx.lineTo(r, y + gridSize * 0.45 + 4);
+                    ctx.stroke();
+                }
+
+                // 2. Meuble caissier blanc/bleu
+                ctx.fillStyle = "#0055A4";
+                ctx.beginPath();
+                ctx.roundRect(x + gridSize * 1.3, y + gridSize * 0.48, gridSize * 0.7, gridSize * 0.45, 3);
+                ctx.fill();
+
+                // 3. Écran de caisse / Terminal TPE
+                ctx.fillStyle = "#0f172a";
+                ctx.fillRect(x + gridSize * 1.45, y + gridSize * 0.52, 10, 8);
+                ctx.fillStyle = "#22c55e"; // Écran allumé vert
+                ctx.fillRect(x + gridSize * 1.45 + 1.5, y + gridSize * 0.52 + 1.5, 7, 5);
+
+                // 4. Numéro de caisse suspendu au-dessus
+                ctx.fillStyle = "#E30613";
+                ctx.beginPath();
+                ctx.arc(x + gridSize, y + 2, 7, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 9px 'Montserrat', sans-serif";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                const numCaisse = Math.floor(x / checkoutSpacing) + 1;
+                ctx.fillText(numCaisse, x + gridSize, y + 2);
+
+                ctx.restore();
             }
         }
 
