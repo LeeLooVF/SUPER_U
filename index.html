@@ -988,8 +988,9 @@
             const endRow = Math.max(startRow + 8, gridRows - 5); 
             const midRow = Math.floor((startRow + endRow) / 2);
             
-            // L'encadré jaune : Allée transversale centrale complètement libre sur 4 rangées entières
-            const midRowBreakStart = midRow - 1; 
+            // Grand passage central : les rayons s'arrêtent bien avant l'encadré
+            // 6 rangées entières totalement libres au milieu
+            const midRowBreakStart = midRow - 3; 
             const midRowBreakEnd = midRow + 2;
 
             return { shelfCols, startRow, endRow, midRowBreakStart, midRowBreakEnd };
@@ -998,9 +999,9 @@
         function isShelf(c, r) {
             const { shelfCols, startRow, endRow, midRowBreakStart, midRowBreakEnd } = getShelfBounds();
             if (!shelfCols.includes(c)) return false;
-            // Rayon supérieur (au-dessus de l'allée transversale jaune)
+            // Rayon supérieur (s'arrête avant la coupure)
             if (r >= startRow && r < midRowBreakStart) return true;
-            // Rayon inférieur (en-dessous de l'allée transversale jaune)
+            // Rayon inférieur (commence après la coupure)
             if (r > midRowBreakEnd && r <= endRow) return true;
             return false;
         }
