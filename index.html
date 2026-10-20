@@ -41,6 +41,7 @@
             border: 3.5px solid #0055A4;
             box-shadow: 0 4px 14px rgba(0, 85, 164, 0.1);
             flex-shrink: 0;
+            gap: 6px;
         }
 
         #gameHeader {
@@ -48,15 +49,16 @@
             align-items: center;
             cursor: pointer;
             min-width: 0;
+            flex-shrink: 1;
         }
 
         #gameTitle {
-            font-size: clamp(15px, 4.4vw, 22px); 
+            font-size: clamp(12px, 3.2vw, 17px); 
             white-space: nowrap; 
             margin: 0;
             color: #0055A4;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             font-weight: 900;
         }
 
@@ -67,12 +69,13 @@
             border: none;
             color: #E30613;
             cursor: pointer;
-            padding: 0 8px;
+            padding: 0 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             line-height: 1.1;
+            flex-shrink: 0;
         }
 
         .top-ten-btn span.title {
@@ -106,6 +109,7 @@
             border: 2.5px solid #E30613;
             box-shadow: 0 3px 8px rgba(0, 85, 164, 0.25);
             white-space: nowrap;
+            flex-shrink: 0;
         }
 
         #gameContainer {
@@ -832,7 +836,6 @@
         }
 
         function generateFood() {
-            const bounds = getShelfBounds();
             let valid = false;
             let rCol, rRow;
             
