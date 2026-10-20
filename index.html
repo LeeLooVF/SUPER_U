@@ -831,9 +831,10 @@
             document.getElementById('playerNameInput').value = "";
             document.getElementById('submitStatus').innerText = "";
             
+            // L'autolaveuse démarre toujours dans la grande allée libre en haut (ligne 2)
             snake = [];
             const startX = Math.floor(gridCols / 2) * gridSize;
-            const startY = Math.floor(gridRows / 2) * gridSize;
+            const startY = 2 * gridSize;
             for (let i = 0; i < 5; i++) { 
                 snake.push({ x: startX - (i * gridSize), y: startY });
             }
@@ -861,13 +862,21 @@
             let fx = 0, fy = 0;
             let attempts = 0;
             
-            // Laisse la zone des caisses et le bas complètement propres (zone encadré rouge)
+            // Empêche strictement d'apparaître sur les caisses (bas) et sur les rayons
             const maxFoodRows = Math.max(1, gridRows - 2);
 
-            while (!valid && attempts < 500) {
+            while (!valid && attempts < 800) {
                 fx = Math.floor(Math.random() * gridCols) * gridSize;
                 fy = Math.floor(Math.random() * maxFoodRows) * gridSize;
-                valid = !snake.some(segment => segment.x === fx && segment.y === fy);
+                const col = Math.floor(fx / gridSize);
+                const row = Math.floor(fy / gridSize);
+                
+                const onSnake = snake.some(seg => seg.x === fx && seg.y === fy);
+                const onObstacle = isObstacle(col, row);
+
+                if (!onSnake && !onObstacle) {
+                    valid = true;
+                }
                 attempts++;
             }
 
@@ -920,13 +929,11 @@
                 const seg = snake[i];
                 const ratio = 1 - (i / snake.length);
                 
-                // Eau claire brillante
                 ctx.fillStyle = `rgba(186, 230, 253, ${0.12 + ratio * 0.22})`;
                 ctx.beginPath();
                 ctx.roundRect(seg.x + 3, seg.y + 3, gridSize - 6, gridSize - 6, 8);
                 ctx.fill();
 
-                // Reflet lustré en diagonale
                 ctx.fillStyle = `rgba(255, 255, 255, ${0.18 + ratio * 0.25})`;
                 ctx.beginPath();
                 ctx.ellipse(seg.x + gridSize * 0.35, seg.y + gridSize * 0.35, 6, 2.5, Math.PI / 4, 0, Math.PI * 2);
@@ -936,53 +943,40 @@
         }
 
         function drawGrid() {
-            // 1. Sol carrelé grand format de supermarché avec joints
-        function spawnDechet() {
-            // Choix du déchet selon les probabilités
-            const rand = Math.random();
-            let cumul = 0;
-            let selected = DECHETS_TYPES[0];
-
-            for (const item of DECHETS_TYPES) {
-                cumul += item.chance;
-                if (rand <= cumul) {
-                    selected = item;
-                    break;
-                }
+            // 1. Joints de carrelage blanc de supermarché
+            ctx.strokeStyle = "#e2e8f0";
+            ctx.lineWidth = 1;
+            for (let x = 0; x <= canvas.width; x += gridSize) {
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+            }
+            for (let y = 0; y <= canvas.height; y += gridSize) {
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
             }
 
-            let valid = false;
-            let fx = 0, fy = 0;
-            let attempts = 0;
+            // 2. Allée centrale transversale (l'encadré jaune) : marquage au sol clair et propre
+            const { midRowBreakStart, midRowBreakEnd } = getShelfBounds();
+            const yellowY = midRowBreakStart * gridSize;
+            const yellowH = (midRowBreakEnd - midRowBreakStart + 1) * gridSize;
             
-            // Laisse la zone des caisses et le bas complètement propres (zone encadré rouge)
-            const maxFoodRows = Math.max(1, gridRows - 2);
+            ctx.save();
+            ctx.fillStyle = "rgba(254, 240, 138, 0.12)";
+            ctx.fillRect(0, yellowY, canvas.width, yellowH);
+            
+            // Lignes de guidage pointillées jaunes pour signaler l'allée ouverte
+            ctx.strokeStyle = "rgba(234, 179, 8, 0.35)";
+            ctx.setLineDash([8, 8]);
+            ctx.lineWidth = 2;
+            ctx.beginPath(); ctx.moveTo(0, yellowY); ctx.lineTo(canvas.width, yellowY); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, yellowY + yellowH); ctx.lineTo(canvas.width, yellowY + yellowH); ctx.stroke();
+            ctx.restore();
 
-            while (!valid && attempts < 500) {
-                fx = Math.floor(Math.random() * gridCols) * gridSize;
-                fy = Math.floor(Math.random() * maxFoodRows) * gridSize;
-                const col = Math.floor(fx / gridSize);
-                const row = Math.floor(fy / gridSize);
-                valid = !snake.some(segment => segment.x === fx && segment.y === fy) && !isObstacle(col, row);
-                attempts++;
-            }
-
-            currentFood = {
-                x: fx,
-                y: fy,
-                type: selected
-            };
-        }
-            for (let i = 0; i <= canvas.height; i += gridSize) {
-                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
-            }
-
-            // 2. Décor du magasin : Rayons, Caisses et Têtes de gondole
+            // 3. Décor du magasin : Rayons solides et Caisses
             drawSupermarketShelves();
             drawCheckouts();
         }
 
         function getShelfBounds() {
+            // 4 allées de rayons bien espacées (colonnes à ~18%, ~38%, ~62%, ~82%)
             const shelfCols = [
                 Math.round(gridCols * 0.18),
                 Math.round(gridCols * 0.38),
@@ -991,11 +985,12 @@
             ];
 
             const startRow = 5; 
-            const endRow = Math.max(startRow + 6, gridRows - 5); 
+            const endRow = Math.max(startRow + 8, gridRows - 5); 
             const midRow = Math.floor((startRow + endRow) / 2);
-            // Allée centrale jaune : 3 rangées totalement libres pour manœuvrer
+            
+            // L'encadré jaune : Allée transversale centrale complètement libre sur 4 rangées entières
             const midRowBreakStart = midRow - 1; 
-            const midRowBreakEnd = midRow + 1;
+            const midRowBreakEnd = midRow + 2;
 
             return { shelfCols, startRow, endRow, midRowBreakStart, midRowBreakEnd };
         }
@@ -1003,14 +998,15 @@
         function isShelf(c, r) {
             const { shelfCols, startRow, endRow, midRowBreakStart, midRowBreakEnd } = getShelfBounds();
             if (!shelfCols.includes(c)) return false;
-            // Partie haute (avant allée transversale jaune)
+            // Rayon supérieur (au-dessus de l'allée transversale jaune)
             if (r >= startRow && r < midRowBreakStart) return true;
-            // Partie basse (après allée transversale jaune)
+            // Rayon inférieur (en-dessous de l'allée transversale jaune)
             if (r > midRowBreakEnd && r <= endRow) return true;
             return false;
         }
 
         function isCheckout(c, r) {
+            // Caisses enregistreuses sur la toute dernière ligne
             if (r !== gridRows - 1) return false;
             const checkoutSpacing = 4;
             for (let startC = 1; startC < gridCols - 2; startC += checkoutSpacing) {
@@ -1029,18 +1025,17 @@
             shelfCols.forEach((col, idx) => {
                 const x = col * gridSize;
 
-                // Rayon 1 (Index 0) Haut : ZONE PROMO (Encadré Rouge)
-                // Rayon 2 & 3 (Index 1 & 2) Haut : ZONE FRUITS ET LÉGUMES FRAIS (Encadré Bleu)
-                // Rayon 4 (Index 3) Haut & Tous les Rayons Bas : Épicerie / Boissons / Hygiène
-                
+                // Index 0 Haut (Encadré Rouge) : ZONE PROMO
+                // Index 1 & 2 Haut (Encadré Bleu) : ZONE FRUITS ET LÉGUMES FRAIS
+                // Index 3 Haut & tous les rayons bas : Épicerie / Boissons standards
                 let upperTheme = "STANDARD";
                 if (idx === 0) upperTheme = "PROMO";
                 else if (idx === 1 || idx === 2) upperTheme = "FRUITS_LEGUMES";
 
-                // Segment supérieur (au-dessus de l'allée transversale jaune)
+                // 1. Rayon supérieur
                 drawShelfSection(x, startRow * gridSize, gridSize - 4, (midRowBreakStart - startRow) * gridSize, upperTheme, idx);
 
-                // Segment inférieur (sous l'allée jaune) : rayons standards
+                // 2. Rayon inférieur (sous l'allée transversale jaune)
                 drawShelfSection(x, (midRowBreakEnd + 1) * gridSize, gridSize - 4, (endRow - midRowBreakEnd) * gridSize, "STANDARD", idx);
             });
         }
@@ -1049,15 +1044,15 @@
             if (h <= 0) return;
             ctx.save();
 
-            // Ombre 3D marquée pour matérialiser le mur physique infranchissable
-            ctx.shadowColor = "rgba(0, 20, 60, 0.22)";
+            // Ombre 3D du meuble pour bien marquer le relief de l'obstacle
+            ctx.shadowColor = "rgba(0, 30, 80, 0.28)";
             ctx.shadowBlur = 6;
             ctx.shadowOffsetY = 3;
 
-            // Cadre principal
+            // Structure du meuble
             ctx.fillStyle = "#ffffff";
             ctx.strokeStyle = "#0055A4";
-            ctx.lineWidth = 2;
+            ctx.lineWidth = 2.5;
             ctx.beginPath();
             ctx.roundRect(x + 2, y + 2, w, h - 4, 4);
             ctx.fill();
@@ -1066,56 +1061,54 @@
             ctx.shadowColor = "transparent";
 
             if (zoneType === "PROMO") {
-                // --- ZONE PROMO (Encadré Rouge) ---
-                // Fond jaune/orange promo avec palettes et cartons supermarché
+                // --- ENCADRÉ ROUGE : ZONE PROMO U ---
                 ctx.fillStyle = "#fef08a";
                 ctx.fillRect(x + 4, y + 4, w - 4, h - 8);
 
-                const count = Math.floor((h - 10) / 14);
+                const count = Math.floor((h - 10) / 15);
                 for (let i = 0; i < count; i++) {
-                    const itemY = y + 6 + (i * 14);
-                    // Palette bois
-                    ctx.fillStyle = "#b45309";
-                    ctx.fillRect(x + 4, itemY + 11, w - 4, 2);
+                    const itemY = y + 6 + (i * 15);
+                    // Palette bois de manutention
+                    ctx.fillStyle = "#92400e";
+                    ctx.fillRect(x + 4, itemY + 11, w - 4, 2.5);
 
-                    // Cartons de promo rouges et jaunes
+                    // Cartons de déstockage promo jaunes et rouges
                     ctx.fillStyle = (i % 2 === 0) ? "#E30613" : "#f59e0b";
                     ctx.fillRect(x + 6, itemY + 2, w - 8, 9);
 
-                    // Badge promo blanc
+                    // Symbole promo %
                     ctx.fillStyle = "#ffffff";
-                    ctx.font = "bold 7px sans-serif";
+                    ctx.font = "900 8px 'Montserrat', sans-serif";
                     ctx.textAlign = "center";
                     ctx.fillText("%", x + 2 + w / 2, itemY + 9);
                 }
 
-                // Tête de gondole jaune éclatant "PROMO"
+                // Tête de gondole rouge et jaune "PROMO"
                 ctx.fillStyle = "#E30613";
-                ctx.fillRect(x + 2, y + 2, w, 5);
-                ctx.fillRect(x + 2, y + h - 7, w, 5);
+                ctx.fillRect(x + 2, y + 2, w, 6);
+                ctx.fillRect(x + 2, y + h - 8, w, 6);
                 ctx.fillStyle = "#ffeb3b";
-                ctx.fillRect(x + 5, y + 3, w - 6, 3);
-                ctx.fillRect(x + 5, y + h - 6, w - 6, 3);
+                ctx.fillRect(x + 5, y + 3.5, w - 6, 3);
+                ctx.fillRect(x + 5, y + h - 6.5, w - 6, 3);
 
             } else if (zoneType === "FRUITS_LEGUMES") {
-                // --- ZONE FRUITS & LÉGUMES FRAIS (Encadré Bleu) ---
-                // Fond effet bois primeur
+                // --- ENCADRÉ BLEU : ZONE FRUITS ET LÉGUMES FRAIS ---
                 ctx.fillStyle = "#fef3c7";
                 ctx.fillRect(x + 4, y + 4, w - 4, h - 8);
 
                 const produce = colIndex === 1 
-                    ? ['#ef4444', '#f97316', '#22c55e'] // Pommes rouges, Oranges, Salades
-                    : ['#eab308', '#84cc16', '#a855f7']; // Bananes, Poires vertes, Aubergines
+                    ? ['#ef4444', '#f97316', '#22c55e'] // Pommes rouges, Oranges de saison, Salades
+                    : ['#eab308', '#84cc16', '#a855f7']; // Bananes des Antilles, Poires vertes, Aubergines
 
-                const count = Math.floor((h - 10) / 13);
+                const count = Math.floor((h - 10) / 14);
                 for (let i = 0; i < count; i++) {
-                    const itemY = y + 6 + (i * 13);
+                    const itemY = y + 6 + (i * 14);
 
-                    // Cagette en bois
+                    // Cagette primeur en bois
                     ctx.fillStyle = "#d97706";
-                    ctx.fillRect(x + 4, itemY + 10, w - 4, 2);
+                    ctx.fillRect(x + 4, itemY + 10, w - 4, 2.5);
 
-                    // Étal primeur : 3 fruits/légumes vus du dessus
+                    // Étal de fruits/légumes frais vus de dessus
                     const color = produce[i % produce.length];
                     ctx.fillStyle = color;
                     ctx.beginPath();
@@ -1126,40 +1119,40 @@
 
                     // Petite feuille verte
                     ctx.fillStyle = "#15803d";
-                    ctx.fillRect(x + 15, itemY + 1.5, 2, 2);
+                    ctx.fillRect(x + 15, itemY + 1.5, 2.5, 2.5);
                 }
 
                 // Tête de gondole verte primeur "FRAIS U"
                 ctx.fillStyle = "#16a34a";
-                ctx.fillRect(x + 2, y + 2, w, 5);
-                ctx.fillRect(x + 2, y + h - 7, w, 5);
+                ctx.fillRect(x + 2, y + 2, w, 6);
+                ctx.fillRect(x + 2, y + h - 8, w, 6);
 
             } else {
-                // --- RAYONS STANDARDS (Épicerie, Boissons, Hygiène) ---
+                // --- RAYONS STANDARDS (Épicerie, Conserves, Boissons) ---
                 const themes = [
-                    { roof: "#e0f2fe", items: ['#0284c7', '#38bdf8', '#ffffff'] },
-                    { roof: "#fce7f3", items: ['#ec4899', '#be185d', '#3b82f6'] },
-                    { roof: "#f3e8ff", items: ['#9333ea', '#c084fc', '#f59e0b'] },
-                    { roof: "#ccfbf1", items: ['#0d9488', '#14b8a6', '#0284c7'] }
+                    { shelf: "#e0f2fe", items: ['#0284c7', '#38bdf8', '#ffffff'] },
+                    { shelf: "#fce7f3", items: ['#ec4899', '#be185d', '#3b82f6'] },
+                    { shelf: "#f3e8ff", items: ['#9333ea', '#c084fc', '#f59e0b'] },
+                    { shelf: "#ccfbf1", items: ['#0d9488', '#14b8a6', '#0284c7'] }
                 ];
                 const theme = themes[colIndex % themes.length];
 
-                ctx.fillStyle = theme.roof;
+                ctx.fillStyle = theme.shelf;
                 ctx.fillRect(x + 4, y + 4, w - 4, h - 8);
 
                 const count = Math.floor((h - 10) / 12);
                 for (let i = 0; i < count; i++) {
                     const itemY = y + 6 + (i * 12);
                     ctx.fillStyle = "#94a3b8";
-                    ctx.fillRect(x + 4, itemY + 9, w - 4, 1.5);
+                    ctx.fillRect(x + 4, itemY + 9, w - 4, 2);
 
                     ctx.fillStyle = theme.items[i % theme.items.length];
                     ctx.fillRect(x + 6, itemY + 2, w - 8, 7);
                 }
 
-                ctx.fillStyle = "#E30613";
-                ctx.fillRect(x + 2, y + 2, w, 4);
-                ctx.fillRect(x + 2, y + h - 6, w, 4);
+                ctx.fillStyle = "#0055A4";
+                ctx.fillRect(x + 2, y + 2, w, 5);
+                ctx.fillRect(x + 2, y + h - 7, w, 5);
             }
 
             ctx.restore();
