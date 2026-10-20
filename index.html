@@ -8,26 +8,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        * {
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-user-select: none;
-            touch-action: manipulation;
-        }
-
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
-            height: 100vh;
             height: 100dvh;
             margin: 0;
-            padding: 4px 6px;
-            background: radial-gradient(circle at top, #ffffff, #e6ecf3);
+            padding: 5px 10px;
+            background-color: #f4f6f8; 
             color: #0055A4;
             font-family: 'Montserrat', sans-serif;
             overflow: hidden; 
+            touch-action: none; 
+            box-sizing: border-box;
         }
 
         #topBar {
@@ -42,18 +36,24 @@
             border: 3px solid #0055A4;
             box-shadow: 0 4px 12px rgba(0, 85, 164, 0.12);
             flex-shrink: 0;
+            box-sizing: border-box;
         }
 
         #gameHeader {
             display: flex;
             flex-direction: row;
             align-items: center;
-            gap: 8px;
+            cursor: pointer;
             min-width: 0;
+            user-select: none;
+            transition: transform 0.1s ease;
+        }
+        #gameHeader:active {
+            transform: scale(0.97);
         }
 
         #gameTitle {
-            font-size: clamp(13px, 3.6vw, 20px); 
+            font-size: clamp(14px, 4vw, 22px); 
             white-space: nowrap; 
             margin: 0;
             color: #0055A4;
@@ -62,15 +62,20 @@
             font-weight: 900;
         }
 
-        .u-red {
-            color: #E30613;
+        .u-red { color: #E30613; }
+
+        .right-header-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
         }
 
         .top-ten-btn {
             background: none;
             border: none;
             color: #E30613;
-            font-size: clamp(10px, 2.4vw, 12px);
+            font-size: clamp(10px, 2.5vw, 12px);
             font-weight: 900;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -82,62 +87,50 @@
             white-space: nowrap;
         }
 
-        .top-ten-btn:hover {
-            color: #b3000b;
-        }
+        .top-ten-btn:hover { color: #b3000b; }
 
         #scoreboard {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: flex-end;
-            gap: 1px;
-            font-size: clamp(10px, 2.5vw, 12px);
+            gap: 2px;
+            font-size: clamp(10px, 2.8vw, 13px);
             font-weight: 900;
             color: #ffffff;
             background: linear-gradient(135deg, #0055A4, #003366);
-            padding: 4px 10px;
+            padding: 4px 12px;
             border-radius: 12px;
             border: 2px solid #E30613;
             box-shadow: 0 3px 8px rgba(0, 85, 164, 0.2);
             white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .badge-row {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            line-height: 1.2;
         }
 
         #gameContainer {
             position: relative;
             width: 100%;
             flex: 1 1 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 0;
-            margin: 0 auto;
-            padding-bottom: 2px;
+            margin: 0;
+            border-radius: 16px;
+            border: 4px solid #0055A4;
+            background-color: #ffffff; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            overflow: hidden;
+            box-sizing: border-box;
         }
 
         canvas {
-            background: #ffffff;
-            border: 4px solid #0055A4;
-            border-radius: 16px;
-            box-shadow: 0 6px 20px rgba(0, 40, 85, 0.12); 
-            width: 100%;
-            height: 100%;
             display: block;
+            width: 100%; 
+            height: 100%; 
+            touch-action: none;
         }
 
         .overlayScreen {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.94);
-            backdrop-filter: blur(6px);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(5px);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -145,9 +138,8 @@
             border-radius: 12px;
             color: #0055A4;
             text-align: center;
-            padding: 16px;
-            border: 3px solid #E30613;
-            overflow-y: auto;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         #startScreen { z-index: 10; }
@@ -155,75 +147,53 @@
         #gameOverScreen {
             display: none;
             z-index: 5;
-            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            animation: fadeIn 0.3s ease-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.94); }
+            from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
         }
 
         h1.cheh-title {
-            font-size: clamp(26px, 6vw, 36px);
-            margin: 0 0 6px 0;
+            font-size: 38px;
+            margin: 0;
             color: #E30613;
-            text-shadow: 2px 2px 0px #ffffff, 4px 4px 0px rgba(227, 6, 19, 0.2);
+            text-shadow: 3px 3px 0px #ffffff, 6px 6px 0px rgba(227, 6, 19, 0.2);
             letter-spacing: 2px;
             font-weight: 900;
             text-transform: uppercase;
         }
 
-        .score-pill {
-            font-size: 17px;
+        .overlayScreen p.score-text {
+            font-size: 19px;
             font-weight: 800;
-            margin: 6px 0 10px;
+            margin: 10px 0;
             background: #0055A4;
             color: #ffffff;
             padding: 6px 18px;
             border-radius: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.12);
-        }
-
-        /* Encart raretés sur le menu */
-        .rarity-legend {
-            background: #f1f5f9;
-            border: 2px solid #0055A4;
-            border-radius: 12px;
-            padding: 10px 14px;
-            margin: 10px 0 14px;
-            font-size: 12px;
-            text-align: left;
-            max-width: 320px;
-            width: 100%;
-            line-height: 1.4;
-        }
-        .rarity-legend div {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 3px 0;
-            font-weight: 800;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         #leaderboardContainer {
             background: #f4f6f8;
             border: 3px solid #0055A4;
             border-radius: 12px;
-            padding: 8px 14px;
-            margin: 8px 0;
-            box-shadow: inset 0 2px 6px rgba(0,0,0,0.06);
+            padding: 10px 15px;
+            margin: 10px 0;
             width: 90%;
-            max-width: 310px;
-            max-height: 140px;
+            max-width: 300px;
+            max-height: 150px;
             overflow-y: auto;
+            box-sizing: border-box;
         }
 
         #leaderboardContainer h3 {
-            margin: 0 0 6px 0;
+            margin: 0 0 8px 0;
             color: #E30613;
             text-transform: uppercase;
             font-size: 14px;
-            letter-spacing: 1px;
             font-weight: 900;
         }
 
@@ -239,96 +209,58 @@
         .leaderboard-entry {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
             border-bottom: 2px dotted #cccccc;
-            padding-bottom: 3px;
+            padding-bottom: 4px;
         }
 
-        .leaderboard-entry .rank { color: #E30613; width: 26px; }
-        .leaderboard-entry .name { color: #0055A4; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .leaderboard-entry .rank { color: #E30613; width: 25px;}
+        .leaderboard-entry .name { color: #0055A4; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
         .leaderboard-entry .score { color: #E30613; font-weight: 900; }
 
-        /* Formulaire de saisie du pseudo fin de partie */
-        .score-form {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            width: 90%;
-            max-width: 300px;
-            margin-bottom: 6px;
-        }
-
-        .score-input-wrap {
-            display: flex;
-            gap: 6px;
-        }
-
-        .score-input {
-            flex: 1;
-            padding: 10px 12px;
-            border: 2px solid #0055A4;
-            border-radius: 20px;
-            font-family: inherit;
+        input[type="text"] {
+            font-family: 'Montserrat', sans-serif;
             font-weight: 800;
-            font-size: 14px;
-            text-transform: uppercase;
-            color: #0055A4;
             outline: none;
-            text-align: center;
-        }
-        .score-input:focus {
-            border-color: #E30613;
         }
 
         button.action-btn {
-            margin-top: 6px;
-            padding: 10px 0;
-            width: 85%;
+            margin-top: 10px;
+            padding: 12px 20px;
+            width: 80%;
             max-width: 260px;
-            font-size: 15px;
+            font-size: 16px;
             background-color: #E30613;
             color: #ffffff;
             border: none;
             border-radius: 30px;
             cursor: pointer;
-            box-shadow: 0 5px 0px #b3000b, 0 8px 14px rgba(227, 6, 19, 0.35);
+            box-shadow: 0 5px 0px #b3000b, 0 10px 15px rgba(227, 6, 19, 0.4);
             transition: all 0.1s;
-            font-weight: 900;
+            font-weight: 800;
             text-transform: uppercase;
             font-family: inherit;
             letter-spacing: 1px;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         button.action-btn:hover, button.action-btn:active {
-            transform: translateY(3px);
-            box-shadow: 0 2px 0px #b3000b, 0 4px 6px rgba(227, 6, 19, 0.35);
+            transform: translateY(4px);
+            box-shadow: 0 1px 0px #b3000b, 0 4px 5px rgba(227, 6, 19, 0.4);
             background-color: #ff1a2b;
         }
 
-        button.action-btn.secondary {
-            background-color: #0055A4;
-            box-shadow: 0 4px 0px #003366, 0 6px 12px rgba(0, 85, 164, 0.3);
-            padding: 8px 0;
-            font-size: 13px;
-        }
-        button.action-btn.secondary:hover {
-            background-color: #006dd1;
-            box-shadow: 0 2px 0px #003366;
-        }
-
-        /* Modale Top 10 */
         .modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.65);
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 100;
-            padding: 16px;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .modal-content {
@@ -337,100 +269,135 @@
             border-radius: 20px;
             width: 100%;
             max-width: 380px;
-            padding: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+            padding: 22px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             text-align: center;
+            box-sizing: border-box;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             border-bottom: 2px solid #E30613;
-            padding-bottom: 6px;
+            padding-bottom: 8px;
         }
 
-        .modal-header h3 {
-            font-size: 17px;
-            color: #0055A4;
-            margin: 0;
-            font-weight: 900;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            color: #E30613;
-            font-size: 26px;
-            cursor: pointer;
-            padding: 0;
-            font-weight: 900;
-        }
-
+        .modal-header h3 { font-size: 18px; color: #0055A4; margin: 0; font-weight: 900; }
+        .close-modal { background: none; border: none; color: #E30613; font-size: 26px; cursor: pointer; padding: 0; font-weight: 900; }
         .hidden { display: none !important; }
+
+        #bossInline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: fadeIn 0.2s ease-out;
+            cursor: pointer;
+        }
+
+        .boss-inline-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #E30613;
+            object-fit: cover;
+            background: #f1f5f9;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .boss-inline-bubble {
+            background: #ffffff;
+            color: #0055A4;
+            font-size: clamp(10px, 3vw, 13px);
+            font-weight: 900;
+            padding: 4px 10px;
+            border-radius: 12px;
+            border: 2px solid #0055A4;
+            position: relative;
+            text-transform: uppercase;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            white-space: nowrap;
+        }
+        
+        .boss-inline-bubble::before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 6px solid #0055A4;
+        }
+        .boss-inline-bubble::after {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-top: 4px solid transparent;
+            border-bottom: 4px solid transparent;
+            border-right: 5px solid #ffffff;
+        }
     </style>
 </head>
 <body>
 
     <div id="topBar">
-        <div id="gameHeader">
+        <div id="gameHeader" onclick="toggleHeaderBoss()" title="Ordre du chef de rayon">
             <h1 id="gameTitle">SUPER <span class="u-red">U</span> MÉNAGE</h1>
-            <button class="top-ten-btn" onclick="openLeaderboard()">🏆 TOP<br>10</button>
+            <div id="bossInline" class="hidden">
+                <img src="Rocco.png" alt="Chef" class="boss-inline-img" onerror="this.onerror=null; this.src='https://placehold.co/40x40/0055A4/ffffff?text=CHEF';">
+                <div class="boss-inline-bubble">Allez nettoyer en zone promo</div>
+            </div>
         </div>
-        <div id="scoreboard">
-            <div id="scoreDisplay" class="badge-row">🧼 PROPRETÉ: 0</div>
-            <div id="highScoreDisplay" class="badge-row">👑 RECORD: 0</div>
+        <div class="right-header-group">
+            <div id="scoreboard">
+                <div id="scoreDisplay" class="badge-row">🧼 PROPRETÉ: 0</div>
+                <div id="highScoreDisplay" class="badge-row">👑 RECORD: 0</div>
+            </div>
+            <button class="top-ten-btn" onclick="openLeaderboard()">🏆 TOP<br>10</button>
         </div>
     </div>
     
     <div id="gameContainer">
-        <canvas id="gameCanvas" width="1080" height="1440"></canvas>
+        <canvas id="gameCanvas"></canvas>
         
-        <!-- ÉCRAN D'ACCUEIL -->
         <div id="startScreen" class="overlayScreen">
-            <h2 style="color: #0055A4; font-size: clamp(19px, 4.2vw, 25px); text-transform: uppercase; font-weight: 900; margin: 0 0 6px;">
-                Mise en route autolaveuse 🧼
-            </h2>
-            <p style="margin: 0 0 10px; font-weight: 700; font-size: 13px; color: #475569;">
-                Nettoyez le magasin avant l'ouverture des portes !
-            </p>
-
-            <div class="rarity-legend">
-                <div style="color: #64748b;"><span>🧻 Mouchoir (Commun - 50%)</span> <span>+10 pts</span></div>
-                <div style="color: #92400e;"><span>☕ Tache (Peu commun - 24%)</span> <span>+20 pts</span></div>
-                <div style="color: #059669;"><span>🍾 Bouteille cassée (Rare - 15%)</span> <span>+45 pts</span></div>
-                <div style="color: #d97706;"><span>💦 Pipi glissant (Épique - 8%)</span> <span>+80 pts</span></div>
-                <div style="color: #eab308; text-shadow: 0 0 5px rgba(234,179,8,0.5);"><span>✨ Caca doré (Légendaire - 3%)</span> <span>+150 pts</span></div>
+            <h2 style="color: #0055A4; font-size: 22px; text-transform: uppercase; font-weight: 900; margin-bottom: 5px;">MISE EN ROUTE AUTOLAVEUSE 🧼</h2>
+            <p style="font-size: 14px; font-weight: 700; color: #555; margin-bottom: 15px;">Nettoyez le magasin avant l'ouverture !</p>
+            
+            <div style="text-align: left; background: #fff; padding: 10px 15px; border-radius: 12px; border: 2px solid #0055A4; margin-bottom: 15px; font-size: 13px; font-weight: 800;">
+                <div style="color: #64748b; margin-bottom: 4px;">📄 Mouchoir (Commun - 50%) <span style="float: right;">+10 pts</span></div>
+                <div style="color: #8b4513; margin-bottom: 4px;">☕ Tache (Peu commun - 24%) <span style="float: right;">+20 pts</span></div>
+                <div style="color: #22c55e; margin-bottom: 4px;">🍾 Bouteille (Rare - 15%) <span style="float: right;">+45 pts</span></div>
+                <div style="color: #eab308; margin-bottom: 4px;">💦 Pipi (Épique - 8%) <span style="float: right;">+80 pts</span></div>
+                <div style="color: #fbbf24;">👑 Caca doré (Légendaire - 3%) <span style="float: right;">+150 pts</span></div>
             </div>
 
             <button class="action-btn" onclick="startGame()">Démarrer la tournée</button>
         </div>
 
-        <!-- ÉCRAN GAME OVER -->
         <div id="gameOverScreen" class="overlayScreen">
-            <h1 class="cheh-title">ACCIDENT DE RAYON !</h1>
-            <p class="score-pill">Score de propreté : <span id="finalScore" style="color:#ffeb3b;">0</span> pts</p>
-
-            <!-- Formulaire de saisie du pseudo intégré (Remplace prompt) -->
-            <div id="submitSection" class="score-form">
-                <span style="font-size: 12px; font-weight: 800; color: #0055A4;">ENREGISTRER AU TABLEAU D'HONNEUR :</span>
-                <div class="score-input-wrap">
-                    <input type="text" id="playerNameInput" class="score-input" maxlength="15" placeholder="AGENT U" autocomplete="off" />
-                    <button class="action-btn" style="width: auto; padding: 0 16px; margin: 0;" onclick="submitPlayerScore()">OK</button>
-                </div>
-                <span id="submitStatus" style="font-size: 11px; font-weight: 700; color: #059669; min-height: 14px;"></span>
-            </div>
+            <h1 class="cheh-title">ACCIDENT !</h1>
+            <p class="score-text">Score : <span id="finalScore" style="color:#ffcc00;">0</span></p>
             
+            <div id="scoreForm" style="margin-bottom: 10px; display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                <input type="text" id="playerNameInput" maxlength="15" placeholder="Votre pseudo (15 max)" style="padding: 10px; width: 220px; border-radius: 8px; border: 2px solid #0055A4; text-align: center; text-transform: uppercase; font-size: 14px;">
+                <button class="action-btn" onclick="validerScore()" style="margin-top: 0; width: 240px; padding: 10px;">Enregistrer le score</button>
+            </div>
+            <div id="scoreSubmittedMsg" style="display:none; color: #22c55e; font-weight: 900; margin-bottom: 10px; font-size: 15px;">✅ Score enregistré !</div>
+
             <div id="leaderboardContainer">
                 <h3>Employés du mois</h3>
                 <ul id="leaderboardList" class="leaderboard-list">
-                    <li>Chargement du palmarès...</li>
+                    <li>Chargement...</li>
                 </ul>
             </div>
 
-            <button class="action-btn" onclick="resetGame()">Reprendre le service</button>
-            <button class="action-btn secondary" onclick="chargerClassement()">Actualiser le top</button>
+            <button class="action-btn" onclick="resetGame()" style="margin-top: 5px;">Reprendre le service</button>
         </div>
     </div>
 
@@ -450,253 +417,88 @@
 
     <script>
         const API_URL = "https://api-super-u.kjh27r4i-70a.workers.dev";
-
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        // Configuration Grille dynamique
-        const gridSize = 40; 
-        let gridCols = 27;
-        let gridRows = 36;
-        let vitesseJeu = 155; 
-        let score = 0;
-        let top10 = [];
-
-        function resizeGameCanvas() {
-            const container = document.getElementById("gameContainer");
-            const rect = container.getBoundingClientRect();
-            
-            // Calcule le nombre de colonnes et rangées entières qui remplissent exactement le conteneur
-            gridCols = Math.max(15, Math.floor(rect.width / 15)); // Densité adaptée
-            // On veut conserver une taille de cellule standard, disons 40px en résolution logique
-            // On calibre la résolution interne du canvas pour qu'elle corresponde exactement au ratio affiché :
-            const targetCols = 26; // Nombre de cases horizontales fixes
-            const cellPixel = rect.width / targetCols;
-            const targetRows = Math.round(rect.height / cellPixel);
-
-            canvas.width = targetCols * gridSize;
-            canvas.height = targetRows * gridSize;
-            gridCols = targetCols;
-            gridRows = targetRows;
-        }
-
-        window.addEventListener('resize', () => {
-            if (!gameStarted || isGameOverState) {
-                resizeGameCanvas();
-                clearCanvas();
-                drawGrid();
-            }
-        });
-
-        // Raretés et types de déchets
-        // Taux cumulés: 50% mouchoir, 24% tache, 15% bouteille, 8% pipi, 3% caca doré
-        const DECHETS_TYPES = [
-            {
-                id: 'tissue',
-                name: 'Mouchoir jeté',
-                points: 10,
-                rarity: 'common',
-                color: '#cbd5e1',
-                auraColor: 'rgba(203, 213, 225, 0.4)',
-                chance: 0.50
-            },
-            {
-                id: 'stain',
-                name: 'Tache',
-                points: 20,
-                rarity: 'uncommon',
-                color: '#5c3a21',
-                auraColor: 'rgba(92, 58, 33, 0.35)',
-                chance: 0.24
-            },
-            {
-                id: 'bottle',
-                name: 'Bouteille brisée',
-                points: 45,
-                rarity: 'rare',
-                color: '#10b981',
-                auraColor: 'rgba(16, 185, 129, 0.55)',
-                chance: 0.15
-            },
-            {
-                id: 'pee',
-                name: 'PIPI',
-                points: 80,
-                rarity: 'epic',
-                color: '#facc15',
-                auraColor: 'rgba(250, 204, 21, 0.65)',
-                chance: 0.08
-            },
-            {
-                id: 'poop_gold',
-                name: 'Croissant d\'or Légendaire',
-                points: 150,
-                rarity: 'legendary',
-                color: '#f59e0b',
-                auraColor: 'rgba(245, 158, 11, 0.85)',
-                chance: 0.03
-            }
-        ];
-
-        let currentFood = null;
-        let foodAnimationTick = 0;
-        let brushRotation = 0;
-        let beaconFlash = 0;
-
-        // Variables Snake / Autolaveuse
-        let snake = [];
+        let gridSize = 32; // Adapted for mobile
         let dx = gridSize;
         let dy = 0;
-        let directionQueue = [];
+        let snake = [];
+        let inputQueue = [];
         let isGameOverState = false;
-        let gameLoopTimeout = null;
+        let gameLoopTimeout;
         let gameStarted = false;
+        
+        let score = 0;
+        let top10 = [];
+        let vitesseJeu = 170; 
+
+        // Rarity System
+        const DECHETS = [
+            { type: "Mouchoir", proba: 0.50, points: 10, color: "#cbd5e1", emoji: "📄" },
+            { type: "Tache", proba: 0.24, points: 20, color: "#8b4513", emoji: "☕" },
+            { type: "Bouteille", proba: 0.15, points: 45, color: "#22c55e", emoji: "🍾" },
+            { type: "Pipi", proba: 0.08, points: 80, color: "#eab308", emoji: "💦" },
+            { type: "Caca d'or", proba: 0.03, points: 150, color: "#fbbf24", emoji: "👑" }
+        ];
+        let currentFood = null;
+        let foodX = -100;
+        let foodY = -100;
+
+        // Visual effects
         let particles = [];
         let floatingTexts = [];
 
-        // Audio : Playlist des 5 musiques MP3 & Bruitages
-        const TRACK_LIST = [
-            "Audio001.mp3",
-            "Audio002.mp3",
-            "Audio003.mp3",
-            "Audio004.mp3",
-            "Audio005.mp3"
-        ];
+        // Audio Management
+        let audioCtx;
         let currentAudio = null;
-        let currentTrackIndex = -1;
-
-        let audioCtx = null;
+        const audioFiles = ['Audio001.mp3', 'Audio002.mp3', 'Audio003.mp3', 'Audio004.mp3', 'Audio005.mp3'];
 
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
             if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
+        function playRandomMusic() {
+            if(currentAudio) currentAudio.pause();
+            const randIndex = Math.floor(Math.random() * audioFiles.length);
+            currentAudio = new Audio(audioFiles[randIndex]);
+            currentAudio.volume = 0.4;
+            currentAudio.onended = playRandomMusic; // Loop
+            currentAudio.play().catch(e => console.log("Audio not available:", e));
+        }
+
+        function stopMusic() {
+            if(currentAudio) currentAudio.pause();
+        }
+
         function playSound(type) {
             if (!audioCtx) return;
             const now = audioCtx.currentTime;
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
 
-            if (type === 'tissue') {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(450, now);
-                osc.frequency.exponentialRampToValueAtTime(800, now + 0.12);
-                gain.gain.setValueAtTime(0.08, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(now); osc.stop(now + 0.14);
-            } 
-            else if (type === 'stain') {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
+            if (type === 'eat') {
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(250, now);
-                osc.frequency.exponentialRampToValueAtTime(550, now + 0.14);
-                gain.gain.setValueAtTime(0.12, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(now); osc.stop(now + 0.16);
-            }
-            else if (type === 'bottle') {
-                // Son de carillon de verre brisé
-                [1100, 1600, 2400].forEach((freq, idx) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, now + idx * 0.03);
-                    gain.gain.setValueAtTime(0.07, now + idx * 0.03);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-                    osc.connect(gain); gain.connect(audioCtx.destination);
-                    osc.start(now + idx * 0.03); osc.stop(now + 0.28);
-                });
-            }
-            else if (type === 'pee') {
-                // Splash ascendant cartoon
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(300, now);
-                osc.frequency.linearRampToValueAtTime(900, now + 0.08);
-                osc.frequency.exponentialRampToValueAtTime(400, now + 0.22);
-                gain.gain.setValueAtTime(0.14, now);
-                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(now); osc.stop(now + 0.26);
-            }
-            else if (type === 'poop_gold') {
-                // Fanfare / carillon légendaire
-                [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(freq, now + idx * 0.07);
-                    gain.gain.setValueAtTime(0.12, now + idx * 0.07);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.35);
-                    osc.connect(gain); gain.connect(audioCtx.destination);
-                    osc.start(now + idx * 0.07); osc.stop(now + idx * 0.07 + 0.38);
-                });
-            }
-            else if (type === 'die') {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(1200, now + 0.1);
+                gainNode.gain.setValueAtTime(0.1, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } else if (type === 'die') {
                 osc.type = 'sawtooth';
-                osc.frequency.setValueAtTime(220, now);
-                osc.frequency.exponentialRampToValueAtTime(45, now + 0.55);
-                gain.gain.setValueAtTime(0.2, now);
-                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.55);
-                osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(now); osc.stop(now + 0.6);
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.5);
+                gainNode.gain.setValueAtTime(0.2, now);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+                osc.start(now);
+                osc.stop(now + 0.6);
             }
         }
 
-        function playRandomTrack() {
-            if (!TRACK_LIST || TRACK_LIST.length === 0) return;
-
-            // Choisit un morceau aléatoire différent du précédent
-            let nextIndex = Math.floor(Math.random() * TRACK_LIST.length);
-            if (TRACK_LIST.length > 1 && nextIndex === currentTrackIndex) {
-                nextIndex = (nextIndex + 1) % TRACK_LIST.length;
-            }
-            currentTrackIndex = nextIndex;
-
-            if (currentAudio) {
-                try {
-                    currentAudio.pause();
-                    currentAudio.currentTime = 0;
-                } catch (e) {}
-            }
-
-            currentAudio = new Audio(TRACK_LIST[currentTrackIndex]);
-            currentAudio.volume = 0.55;
-
-            // Enchaîne automatiquement avec un nouveau morceau à la fin
-            currentAudio.addEventListener('ended', () => {
-                if (gameStarted && !isGameOverState) {
-                    playRandomTrack();
-                }
-            });
-
-            currentAudio.play().catch(e => {
-                console.warn("Lecture audio bloquée ou fichier introuvable :", e);
-            });
-        }
-
-        function startBGM() {
-            stopBGM();
-            playRandomTrack();
-        }
-
-        function stopBGM() {
-            if (currentAudio) {
-                try {
-                    currentAudio.pause();
-                    currentAudio.currentTime = 0;
-                } catch (e) {}
-            }
-        }
-
-        // Leaderboard API
         async function chargerClassement() {
             try {
                 const reponse = await fetch(API_URL);
@@ -707,39 +509,31 @@
                     renderLeaderboard();
                 }
             } catch (e) {
-                console.warn("Mode dégradé hors-ligne pour le classement:", e);
+                console.error("Erreur classement :", e);
             }
         }
 
-        async function submitPlayerScore() {
-            const input = document.getElementById("playerNameInput");
-            const status = document.getElementById("submitStatus");
-            let nom = input.value.trim().toUpperCase() || "AGENT U";
-            nom = nom.substring(0, 15);
-
-            status.style.color = "#0055A4";
-            status.innerText = "Transmission en cours...";
-
+        async function envoyerScore(nom, scoreFinal) {
             try {
                 const reponse = await fetch(API_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name: nom, score: score })
+                    body: JSON.stringify({ name: nom, score: scoreFinal })
                 });
                 const res = await reponse.json();
-                if (res && res.scores) {
-                    top10 = res.scores;
-                    renderLeaderboard();
-                    updateHighScoreDisplay();
-                }
-                status.style.color = "#059669";
-                status.innerText = "✓ Score archivé !";
-                input.disabled = true;
+                if (res && res.scores) top10 = res.scores;
+                chargerClassement();
             } catch (e) {
-                console.error("Erreur de publication du score :", e);
-                status.style.color = "#E30613";
-                status.innerText = "Sauvegarde locale uniquement.";
+                console.error("Erreur envoi score :", e);
             }
+        }
+
+        async function validerScore() {
+            const nameInput = document.getElementById("playerNameInput");
+            const name = nameInput.value.trim().substring(0, 15).toUpperCase() || "EMPLOYÉ";
+            await envoyerScore(name, score);
+            document.getElementById("scoreForm").style.display = "none";
+            document.getElementById("scoreSubmittedMsg").style.display = "block";
         }
 
         function openLeaderboard() {
@@ -747,30 +541,20 @@
             renderModalLeaderboard();
             chargerClassement();
         }
-
         function closeLeaderboard() {
             document.getElementById("leaderboardModal").classList.add("hidden");
         }
-
-        function renderModalLeaderboard() {
-            const listEl = document.getElementById("modalLeaderboardList");
-            listEl.innerHTML = "";
-
-            if (!top10 || top10.length === 0) {
-                listEl.innerHTML = "<li style='text-align:center; color:#999; padding:10px;'>Aucun enregistrement</li>";
-                return;
+        
+        function toggleHeaderBoss() {
+            const title = document.getElementById('gameTitle');
+            const boss = document.getElementById('bossInline');
+            if (title.classList.contains('hidden')) {
+                title.classList.remove('hidden');
+                boss.classList.add('hidden');
+            } else {
+                title.classList.add('hidden');
+                boss.classList.remove('hidden');
             }
-
-            top10.forEach((entry, index) => {
-                const li = document.createElement("li");
-                li.className = "leaderboard-entry";
-                li.innerHTML = `
-                    <span class="rank">#${index + 1}</span>
-                    <span class="name">${escapeHtml(entry.name)}</span>
-                    <span class="score">${entry.score} pts</span>
-                `;
-                listEl.appendChild(li);
-            });
         }
 
         function escapeHtml(str) {
@@ -784,167 +568,89 @@
 
         function renderLeaderboard() {
             const listElement = document.getElementById("leaderboardList");
-            listElement.innerHTML = ""; 
-
+            listElement.innerHTML = "";
             if (top10.length === 0) {
                 listElement.innerHTML = "<li style='text-align:center; color:#999;'>Aucune donnée</li>";
                 return;
             }
-
-            top10.slice(0, 5).forEach((entry, index) => {
+            top10.forEach((entry, index) => {
                 const li = document.createElement("li");
                 li.className = "leaderboard-entry";
-                li.innerHTML = `
-                    <span class="rank">#${index + 1}</span>
-                    <span class="name">${escapeHtml(entry.name)}</span>
-                    <span class="score">${entry.score}</span>
-                `;
+                li.innerHTML = `<span class="rank">#${index + 1}</span><span class="name">${escapeHtml(entry.name)}</span><span class="score">${entry.score}</span>`;
                 listElement.appendChild(li);
             });
-
             renderModalLeaderboard();
         }
 
-        // Cycle de Jeu
-        function startGame() {
-            document.getElementById('startScreen').style.display = "none";
-            initAudio();
-            gameStarted = true;
-            initGame();
-        }
-
-        function initGame() {
-            resizeGameCanvas();
-            score = 0;
-            dx = gridSize;
-            dy = 0;
-            directionQueue = [];
-            isGameOverState = false;
-            particles = [];
-            floatingTexts = [];
-            brushRotation = 0;
-            beaconFlash = 0;
-            
-            document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
-            document.getElementById('gameOverScreen').style.display = "none";
-            document.getElementById('playerNameInput').disabled = false;
-            document.getElementById('playerNameInput').value = "";
-            document.getElementById('submitStatus').innerText = "";
-            
-            // L'autolaveuse démarre toujours dans la grande allée libre en haut (ligne 2)
-            snake = [];
-            const startX = Math.floor(gridCols / 2) * gridSize;
-            const startY = 2 * gridSize;
-            for (let i = 0; i < 5; i++) { 
-                snake.push({ x: startX - (i * gridSize), y: startY });
-            }
-
-            spawnDechet();
-            startBGM(); 
-            main();
-        }
-
-        function spawnDechet() {
-            // Choix du déchet selon les probabilités
-            const rand = Math.random();
-            let cumul = 0;
-            let selected = DECHETS_TYPES[0];
-
-            for (const item of DECHETS_TYPES) {
-                cumul += item.chance;
-                if (rand <= cumul) {
-                    selected = item;
-                    break;
-                }
-            }
-
-            let valid = false;
-            let fx = 0, fy = 0;
-            let attempts = 0;
-            
-            // Empêche strictement d'apparaître sur les caisses (bas) et sur les rayons
-            const maxFoodRows = Math.max(1, gridRows - 2);
-
-            while (!valid && attempts < 800) {
-                fx = Math.floor(Math.random() * gridCols) * gridSize;
-                fy = Math.floor(Math.random() * maxFoodRows) * gridSize;
-                const col = Math.floor(fx / gridSize);
-                const row = Math.floor(fy / gridSize);
-                
-                const onSnake = snake.some(seg => seg.x === fx && seg.y === fy);
-                const onObstacle = isObstacle(col, row);
-
-                if (!onSnake && !onObstacle) {
-                    valid = true;
-                }
-                attempts++;
-            }
-
-            currentFood = {
-                x: fx,
-                y: fy,
-                type: selected
-            };
-        }
-
-        function main() {
-            if (hasGameEnded()) {
-                showGameOver();
+        function renderModalLeaderboard() {
+            const listEl = document.getElementById("modalLeaderboardList");
+            if(!listEl) return;
+            listEl.innerHTML = "";
+            if (top10.length === 0) {
+                listEl.innerHTML = "<li style='text-align:center; color:#999; padding:10px;'>Aucune donnée</li>";
                 return;
             }
-
-            // Dépile la prochaine commande de direction
-            if (directionQueue.length > 0) {
-                const nextDir = directionQueue.shift();
-                dx = nextDir.dx;
-                dy = nextDir.dy;
-            }
-
-            foodAnimationTick += 0.08;
-            brushRotation += 0.35;
-            beaconFlash = (beaconFlash + 1) % 20;
-
-            clearCanvas();
-            drawGrid();
-            drawTrail();
-            updateParticles();
-            drawParticles();
-            drawDechet();
-            advanceSnake();
-            drawAutolaveuse();
-            updateAndDrawFloatingTexts();
-
-            gameLoopTimeout = setTimeout(main, Math.max(85, vitesseJeu - Math.floor(score / 35)));
+            top10.forEach((entry, index) => {
+                const li = document.createElement("li");
+                li.className = "leaderboard-entry";
+                li.innerHTML = `<span class="rank">#${index + 1}</span><span class="name">${escapeHtml(entry.name)}</span><span class="score">${entry.score} pts</span>`;
+                listEl.appendChild(li);
+            });
         }
 
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function resizeGameCanvas() {
+            const container = document.getElementById('gameContainer');
+            const rect = container.getBoundingClientRect();
+            const cols = Math.floor(rect.width / gridSize);
+            const rows = Math.floor(rect.height / gridSize);
+            canvas.width = cols * gridSize;
+            canvas.height = rows * gridSize;
         }
 
-        function drawTrail() {
-            // Sillage d'eau lustrée et propre laissé sur le carrelage
-            if (!snake || snake.length < 2) return;
-            ctx.save();
-            for (let i = 1; i < snake.length; i++) {
-                const seg = snake[i];
-                const ratio = 1 - (i / snake.length);
-                
-                ctx.fillStyle = `rgba(186, 230, 253, ${0.12 + ratio * 0.22})`;
-                ctx.beginPath();
-                ctx.roundRect(seg.x + 3, seg.y + 3, gridSize - 6, gridSize - 6, 8);
-                ctx.fill();
+        function getShelfBounds() {
+            const gridRows = Math.floor(canvas.height / gridSize);
+            const gridCols = Math.floor(canvas.width / gridSize);
 
-                ctx.fillStyle = `rgba(255, 255, 255, ${0.18 + ratio * 0.25})`;
-                ctx.beginPath();
-                ctx.ellipse(seg.x + gridSize * 0.35, seg.y + gridSize * 0.35, 6, 2.5, Math.PI / 4, 0, Math.PI * 2);
-                ctx.fill();
+            const startRow = 5; 
+            const endRow = gridRows - 5; 
+            
+            // Allée centrale élargie : midRow - 3 à midRow + 2
+            const midRow = Math.floor(gridRows / 2);
+            const midStart = midRow - 3;
+            const midEnd = midRow + 2;
+
+            // 4 colonnes de rayons
+            const cols = [
+                Math.floor(gridCols * 0.18),
+                Math.floor(gridCols * 0.38),
+                Math.floor(gridCols * 0.62),
+                Math.floor(gridCols * 0.82)
+            ];
+
+            return { gridRows, gridCols, startRow, endRow, midStart, midEnd, cols };
+        }
+
+        function isObstacle(col, row) {
+            const bounds = getShelfBounds();
+            // Ligne des caisses en bas
+            if (row >= bounds.gridRows - 1) return true;
+
+            // Rayons
+            if (row >= bounds.startRow && row <= bounds.endRow) {
+                // Coupure centrale jaune
+                if (row >= bounds.midStart && row <= bounds.midEnd) return false;
+                // Collision avec les colonnes de gondoles
+                if (bounds.cols.includes(col)) return true;
             }
-            ctx.restore();
+            return false;
         }
 
         function drawGrid() {
-            // 1. Joints de carrelage blanc de supermarché
-            ctx.strokeStyle = "#e2e8f0";
+            // Carrelage blanc propre sur toute la surface
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.strokeStyle = "#f1f5f9";
             ctx.lineWidth = 1;
             for (let x = 0; x <= canvas.width; x += gridSize) {
                 ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
@@ -953,822 +659,373 @@
                 ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
             }
 
-            // 2. Allée centrale transversale (l'encadré jaune) : marquage au sol clair et propre
-            const { midRowBreakStart, midRowBreakEnd } = getShelfBounds();
-            const yellowY = midRowBreakStart * gridSize;
-            const yellowH = (midRowBreakEnd - midRowBreakStart + 1) * gridSize;
-            
-            ctx.save();
-            ctx.fillStyle = "rgba(254, 240, 138, 0.12)";
-            ctx.fillRect(0, yellowY, canvas.width, yellowH);
-            
-            // Lignes de guidage pointillées jaunes pour signaler l'allée ouverte
-            ctx.strokeStyle = "rgba(234, 179, 8, 0.35)";
-            ctx.setLineDash([8, 8]);
-            ctx.lineWidth = 2;
-            ctx.beginPath(); ctx.moveTo(0, yellowY); ctx.lineTo(canvas.width, yellowY); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(0, yellowY + yellowH); ctx.lineTo(canvas.width, yellowY + yellowH); ctx.stroke();
-            ctx.restore();
-
-            // 3. Décor du magasin : Rayons solides et Caisses
             drawSupermarketShelves();
             drawCheckouts();
-        }
 
-        function getShelfBounds() {
-            // 4 allées de rayons bien espacées (colonnes à ~18%, ~38%, ~62%, ~82%)
-            const shelfCols = [
-                Math.round(gridCols * 0.18),
-                Math.round(gridCols * 0.38),
-                Math.round(gridCols * 0.62),
-                Math.round(gridCols * 0.82)
-            ];
-
-            const startRow = 5; 
-            const endRow = Math.max(startRow + 8, gridRows - 5); 
-            const midRow = Math.floor((startRow + endRow) / 2);
-            
-            // Grand passage central : les rayons s'arrêtent bien avant l'encadré
-            // 6 rangées entières totalement libres au milieu
-            const midRowBreakStart = midRow - 3; 
-            const midRowBreakEnd = midRow + 2;
-
-            return { shelfCols, startRow, endRow, midRowBreakStart, midRowBreakEnd };
-        }
-
-        function isShelf(c, r) {
-            const { shelfCols, startRow, endRow, midRowBreakStart, midRowBreakEnd } = getShelfBounds();
-            if (!shelfCols.includes(c)) return false;
-            // Rayon supérieur (s'arrête avant la coupure)
-            if (r >= startRow && r < midRowBreakStart) return true;
-            // Rayon inférieur (commence après la coupure)
-            if (r > midRowBreakEnd && r <= endRow) return true;
-            return false;
-        }
-
-        function isCheckout(c, r) {
-            // Caisses enregistreuses sur la toute dernière ligne
-            if (r !== gridRows - 1) return false;
-            const checkoutSpacing = 4;
-            for (let startC = 1; startC < gridCols - 2; startC += checkoutSpacing) {
-                if (c >= startC && c < startC + 2) return true;
-            }
-            return false;
-        }
-
-        function isObstacle(c, r) {
-            return isShelf(c, r) || isCheckout(c, r);
+            // Mur d'enceinte rigide (pour éviter l'effet visuel de traverser les bords)
+            ctx.strokeStyle = "#003366";
+            ctx.lineWidth = 8;
+            ctx.strokeRect(4, 4, canvas.width - 8, canvas.height - 8);
         }
 
         function drawSupermarketShelves() {
-            const { shelfCols, startRow, endRow, midRowBreakStart, midRowBreakEnd } = getShelfBounds();
-
-            shelfCols.forEach((col, idx) => {
-                const x = col * gridSize;
-
-                // Index 0 Haut (Encadré Rouge) : ZONE PROMO
-                // Index 1 & 2 Haut (Encadré Bleu) : ZONE FRUITS ET LÉGUMES FRAIS
-                // Index 3 Haut & tous les rayons bas : Épicerie / Boissons standards
-                let upperTheme = "STANDARD";
-                if (idx === 0) upperTheme = "PROMO";
-                else if (idx === 1 || idx === 2) upperTheme = "FRUITS_LEGUMES";
-
-                // 1. Rayon supérieur
-                drawShelfSection(x, startRow * gridSize, gridSize - 4, (midRowBreakStart - startRow) * gridSize, upperTheme, idx);
-
-                // 2. Rayon inférieur (sous l'allée transversale jaune)
-                drawShelfSection(x, (midRowBreakEnd + 1) * gridSize, gridSize - 4, (endRow - midRowBreakEnd) * gridSize, "STANDARD", idx);
+            const bounds = getShelfBounds();
+            
+            bounds.cols.forEach((col, index) => {
+                for (let row = bounds.startRow; row <= bounds.endRow; row++) {
+                    if (row >= bounds.midStart && row <= bounds.midEnd) continue; // Allée centrale
+                    
+                    const x = col * gridSize;
+                    const y = row * gridSize;
+                    
+                    // Base gondole
+                    ctx.fillStyle = "#e2e8f0";
+                    ctx.fillRect(x + 2, y, gridSize - 4, gridSize);
+                    ctx.strokeStyle = "#cbd5e1";
+                    ctx.strokeRect(x + 2, y, gridSize - 4, gridSize);
+                    
+                    // Habillage selon la zone
+                    if (index === 0 && row < bounds.midStart) {
+                        // Zone Promo (Rouge)
+                        ctx.fillStyle = "#92400e"; // Palette bois
+                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                        ctx.fillStyle = "#ef4444"; // Carton rouge
+                        ctx.fillRect(x + 6, y + 6, gridSize - 12, gridSize - 12);
+                        ctx.fillStyle = "#fef08a"; // Bande promo %
+                        ctx.fillRect(x + 10, y + 10, gridSize - 20, 8);
+                    } else if ((index === 1 || index === 2) && row < bounds.midStart) {
+                        // Zone Frais (Bleu)
+                        ctx.fillStyle = "#fef3c7"; // Cagette bois clair
+                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                        ctx.fillStyle = ["#22c55e", "#ef4444", "#f97316", "#8b5cf6"][row % 4]; // Fruits (pomme, orange, salade...)
+                        ctx.beginPath();
+                        ctx.arc(x + gridSize/2, y + gridSize/2, 5, 0, Math.PI*2);
+                        ctx.fill();
+                    } else {
+                        // Rayon classique
+                        ctx.fillStyle = ["#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#ec4899"][Math.abs(row+index) % 5];
+                        ctx.fillRect(x + 6, y + 4, gridSize - 12, gridSize - 8);
+                    }
+                }
             });
         }
 
-        function drawShelfSection(x, y, w, h, zoneType, colIndex) {
-            if (h <= 0) return;
-            ctx.save();
+        function drawCheckouts() {
+            const bounds = getShelfBounds();
+            const row = bounds.gridRows - 1;
+            const y = row * gridSize;
+            
+            for (let col = 0; col < bounds.gridCols; col += 4) {
+                if (col + 2 >= bounds.gridCols) break;
+                const x = col * gridSize;
+                
+                // Tapis noir
+                ctx.fillStyle = "#1e293b";
+                ctx.fillRect(x + 4, y + 4, gridSize * 2 - 8, gridSize - 8);
+                // Meuble U
+                ctx.fillStyle = "#0055A4";
+                ctx.fillRect(x + gridSize * 2 - 4, y + 4, gridSize - 4, gridSize - 8);
+                // Voyant TPE
+                ctx.fillStyle = "#ef4444";
+                ctx.beginPath();
+                ctx.arc(x + gridSize * 2.5 - 4, y + gridSize/2, 3, 0, Math.PI*2);
+                ctx.fill();
+            }
+        }
 
-            // Ombre 3D du meuble pour bien marquer le relief de l'obstacle
-            ctx.shadowColor = "rgba(0, 30, 80, 0.28)";
-            ctx.shadowBlur = 6;
-            ctx.shadowOffsetY = 3;
-
-            // Structure du meuble
-            ctx.fillStyle = "#ffffff";
-            ctx.strokeStyle = "#0055A4";
-            ctx.lineWidth = 2.5;
-            ctx.beginPath();
-            ctx.roundRect(x + 2, y + 2, w, h - 4, 4);
-            ctx.fill();
-            ctx.stroke();
-
-            ctx.shadowColor = "transparent";
-
-            if (zoneType === "PROMO") {
-                // --- ENCADRÉ ROUGE : ZONE PROMO U ---
-                ctx.fillStyle = "#fef08a";
-                ctx.fillRect(x + 4, y + 4, w - 4, h - 8);
-
-                const count = Math.floor((h - 10) / 15);
-                for (let i = 0; i < count; i++) {
-                    const itemY = y + 6 + (i * 15);
-                    // Palette bois de manutention
-                    ctx.fillStyle = "#92400e";
-                    ctx.fillRect(x + 4, itemY + 11, w - 4, 2.5);
-
-                    // Cartons de déstockage promo jaunes et rouges
-                    ctx.fillStyle = (i % 2 === 0) ? "#E30613" : "#f59e0b";
-                    ctx.fillRect(x + 6, itemY + 2, w - 8, 9);
-
-                    // Symbole promo %
-                    ctx.fillStyle = "#ffffff";
-                    ctx.font = "900 8px 'Montserrat', sans-serif";
-                    ctx.textAlign = "center";
-                    ctx.fillText("%", x + 2 + w / 2, itemY + 9);
-                }
-
-                // Tête de gondole rouge et jaune "PROMO"
+        function drawSnakePart(snakePart, index) {
+            if (index === 0) {
+                // Tête = Autolaveuse
+                ctx.fillStyle = "#0055A4";
+                ctx.beginPath();
+                ctx.roundRect(snakePart.x + 2, snakePart.y + 2, gridSize - 4, gridSize - 4, 6);
+                ctx.fill();
+                
+                // Liseret Rouge U
                 ctx.fillStyle = "#E30613";
-                ctx.fillRect(x + 2, y + 2, w, 6);
-                ctx.fillRect(x + 2, y + h - 8, w, 6);
-                ctx.fillStyle = "#ffeb3b";
-                ctx.fillRect(x + 5, y + 3.5, w - 6, 3);
-                ctx.fillRect(x + 5, y + h - 6.5, w - 6, 3);
+                if(dx !== 0) ctx.fillRect(snakePart.x + 8, snakePart.y + 2, gridSize - 16, gridSize - 4);
+                else ctx.fillRect(snakePart.x + 2, snakePart.y + 8, gridSize - 4, gridSize - 16);
 
-            } else if (zoneType === "FRUITS_LEGUMES") {
-                // --- ENCADRÉ BLEU : ZONE FRUITS ET LÉGUMES FRAIS ---
-                ctx.fillStyle = "#fef3c7";
-                ctx.fillRect(x + 4, y + 4, w - 4, h - 8);
+                // Pare-brise sombre
+                ctx.fillStyle = "rgba(0,0,0,0.6)";
+                if(dx > 0) ctx.fillRect(snakePart.x + 18, snakePart.y + 6, 6, gridSize - 12);
+                else if(dx < 0) ctx.fillRect(snakePart.x + 8, snakePart.y + 6, 6, gridSize - 12);
+                else if(dy > 0) ctx.fillRect(snakePart.x + 6, snakePart.y + 18, gridSize - 12, 6);
+                else if(dy < 0) ctx.fillRect(snakePart.x + 6, snakePart.y + 8, gridSize - 12, 6);
 
-                const produce = colIndex === 1 
-                    ? ['#ef4444', '#f97316', '#22c55e'] // Pommes rouges, Oranges de saison, Salades
-                    : ['#eab308', '#84cc16', '#a855f7']; // Bananes des Antilles, Poires vertes, Aubergines
-
-                const count = Math.floor((h - 10) / 14);
-                for (let i = 0; i < count; i++) {
-                    const itemY = y + 6 + (i * 14);
-
-                    // Cagette primeur en bois
-                    ctx.fillStyle = "#d97706";
-                    ctx.fillRect(x + 4, itemY + 10, w - 4, 2.5);
-
-                    // Étal de fruits/légumes frais vus de dessus
-                    const color = produce[i % produce.length];
-                    ctx.fillStyle = color;
-                    ctx.beginPath();
-                    ctx.arc(x + 8, itemY + 5, 3.5, 0, Math.PI * 2);
-                    ctx.arc(x + 16, itemY + 5, 3.5, 0, Math.PI * 2);
-                    ctx.arc(x + 24, itemY + 5, 3.5, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    // Petite feuille verte
-                    ctx.fillStyle = "#15803d";
-                    ctx.fillRect(x + 15, itemY + 1.5, 2.5, 2.5);
+                // Gyrophare orange clignotant
+                ctx.fillStyle = "#f97316";
+                ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2, snakePart.y + gridSize/2, 3, 0, Math.PI*2); ctx.fill();
+                if(Math.floor(Date.now()/150) % 2 === 0) {
+                    ctx.fillStyle = "rgba(249, 115, 22, 0.4)";
+                    ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2, snakePart.y + gridSize/2, 8, 0, Math.PI*2); ctx.fill();
                 }
 
-                // Tête de gondole verte primeur "FRAIS U"
-                ctx.fillStyle = "#16a34a";
-                ctx.fillRect(x + 2, y + 2, w, 6);
-                ctx.fillRect(x + 2, y + h - 8, w, 6);
+                // Brosses rotatives
+                ctx.fillStyle = "#475569";
+                let bx1, by1, bx2, by2;
+                if(dx > 0) { bx1 = 28; by1 = 6; bx2 = 28; by2 = 26; }
+                else if(dx < 0) { bx1 = 4; by1 = 6; bx2 = 4; by2 = 26; }
+                else if(dy < 0) { bx1 = 6; by1 = 4; bx2 = 26; by2 = 4; }
+                else { bx1 = 6; by1 = 28; bx2 = 26; by2 = 28; }
+                
+                ctx.beginPath(); ctx.arc(snakePart.x + bx1, snakePart.y + by1, 5, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(snakePart.x + bx2, snakePart.y + by2, 5, 0, Math.PI*2); ctx.fill();
 
             } else {
-                // --- RAYONS STANDARDS (Épicerie, Conserves, Boissons) ---
-                const themes = [
-                    { shelf: "#e0f2fe", items: ['#0284c7', '#38bdf8', '#ffffff'] },
-                    { shelf: "#fce7f3", items: ['#ec4899', '#be185d', '#3b82f6'] },
-                    { shelf: "#f3e8ff", items: ['#9333ea', '#c084fc', '#f59e0b'] },
-                    { shelf: "#ccfbf1", items: ['#0d9488', '#14b8a6', '#0284c7'] }
-                ];
-                const theme = themes[colIndex % themes.length];
-
-                ctx.fillStyle = theme.shelf;
-                ctx.fillRect(x + 4, y + 4, w - 4, h - 8);
-
-                const count = Math.floor((h - 10) / 12);
-                for (let i = 0; i < count; i++) {
-                    const itemY = y + 6 + (i * 12);
-                    ctx.fillStyle = "#94a3b8";
-                    ctx.fillRect(x + 4, itemY + 9, w - 4, 2);
-
-                    ctx.fillStyle = theme.items[i % theme.items.length];
-                    ctx.fillRect(x + 6, itemY + 2, w - 8, 7);
-                }
-
-                ctx.fillStyle = "#0055A4";
-                ctx.fillRect(x + 2, y + 2, w, 5);
-                ctx.fillRect(x + 2, y + h - 7, w, 5);
-            }
-
-            ctx.restore();
-        }
-
-        // Caisses enregistreuses collées contre l'extrémité bas de la grille
-        function drawCheckouts() {
-            const y = canvas.height - gridSize;
-            const checkoutSpacing = 4 * gridSize;
-
-            for (let x = gridSize; x < canvas.width - gridSize * 2; x += checkoutSpacing) {
-                ctx.save();
-
-                // 1. Tapis roulant noir collé au bas
-                ctx.fillStyle = "#1e293b";
-                ctx.strokeStyle = "#475569";
-                ctx.lineWidth = 1.5;
-                ctx.beginPath();
-                ctx.roundRect(x, y + 6, gridSize * 2, gridSize - 8, 3);
-                ctx.fill();
-                ctx.stroke();
-
-                // Bandes métalliques du roulement
-                ctx.strokeStyle = "rgba(255, 255, 255, 0.3)";
-                ctx.lineWidth = 1.5;
-                for (let r = x + 8; r < x + gridSize * 2 - 6; r += 10) {
-                    ctx.beginPath();
-                    ctx.moveTo(r, y + 8);
-                    ctx.lineTo(r, y + gridSize - 4);
-                    ctx.stroke();
-                }
-
-                // 2. Meuble caissier bleu Super U
-                ctx.fillStyle = "#0055A4";
-                ctx.beginPath();
-                ctx.roundRect(x + gridSize * 1.3, y + 8, gridSize * 0.65, gridSize - 12, 3);
-                ctx.fill();
-
-                // 3. Écran TPE / terminal allumé
-                ctx.fillStyle = "#0f172a";
-                ctx.fillRect(x + gridSize * 1.42, y + 11, 10, 8);
-                ctx.fillStyle = "#22c55e";
-                ctx.fillRect(x + gridSize * 1.42 + 1.5, y + 12.5, 7, 5);
-
-                // 4. Pastille rouge numéro de caisse
-                ctx.fillStyle = "#E30613";
-                ctx.beginPath();
-                ctx.arc(x + gridSize, y + 4, 7, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.fillStyle = "#ffffff";
-                ctx.font = "bold 9px 'Montserrat', sans-serif";
-                ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                const numCaisse = Math.floor(x / checkoutSpacing) + 1;
-                ctx.fillText(numCaisse, x + gridSize, y + 4);
-
-                ctx.restore();
+                // Sillage d'eau lustré
+                const ratio = index / snake.length;
+                const size = (gridSize/2 - 2) * (1 - ratio * 0.4);
+                ctx.fillStyle = "rgba(173, 216, 230, 0.5)"; // Eau bleutée
+                ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2, snakePart.y + gridSize/2, size, 0, Math.PI*2); ctx.fill();
+                ctx.fillStyle = "rgba(255, 255, 255, 0.6)"; // Reflet
+                ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2 - size/3, snakePart.y + gridSize/2 - size/3, size/3, 0, Math.PI*2); ctx.fill();
             }
         }
 
-        // DESSIN AVANCÉ DE L'AUTOLAVEUSE
-        function drawAutolaveuse() {
-            // Corps arrière / Remorque de lavage (eau propre & aspiration)
-            for (let i = snake.length - 1; i >= 1; i--) {
-                drawTrailerPart(snake[i], i);
-            }
-
-            // Tête : L'autolaveuse principale autoportée
-            drawMachineHead(snake[0]);
-        }
-
-        function drawTrailerPart(part, index) {
-            const cx = part.x + gridSize / 2;
-            const cy = part.y + gridSize / 2;
-            const ratio = index / snake.length;
-            const size = (gridSize * 0.42) * (1 - ratio * 0.3);
-
-            ctx.save();
-            // Cuve à eau transparente / bleue
-            const grad = ctx.createRadialGradient(cx, cy, 2, cx, cy, size);
-            grad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-            grad.addColorStop(0.5, 'rgba(56, 189, 248, 0.75)');
-            grad.addColorStop(1, 'rgba(2, 132, 199, 0.65)');
-
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.arc(cx, cy, size, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Reflet lumineux
-            ctx.fillStyle = "#ffffff";
-            ctx.beginPath();
-            ctx.arc(cx - size * 0.35, cy - size * 0.35, size * 0.3, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Raclette en caoutchouc sur le tout dernier élément
-            if (index === snake.length - 1) {
-                ctx.strokeStyle = "#1e293b";
-                ctx.lineWidth = 4;
-                ctx.beginPath();
-                ctx.arc(cx, cy, size + 3, Math.PI * 0.25, Math.PI * 0.75);
-                ctx.stroke();
-            }
-            ctx.restore();
-        }
-
-        function drawMachineHead(head) {
-            const cx = head.x + gridSize / 2;
-            const cy = head.y + gridSize / 2;
-
-            ctx.save();
-            ctx.translate(cx, cy);
-
-            // Angle d'orientation de l'autolaveuse
-            let angle = 0;
-            if (dx > 0) angle = 0;
-            else if (dx < 0) angle = Math.PI;
-            else if (dy > 0) angle = Math.PI / 2;
-            else if (dy < 0) angle = -Math.PI / 2;
-
-            ctx.rotate(angle);
-
-            // 1. CHÂSSIS BLEU SUPER U
-            ctx.shadowColor = "rgba(0, 0, 0, 0.25)";
-            ctx.shadowBlur = 8;
-            ctx.shadowOffsetY = 3;
-
-            // Forme aérodynamique industrielle
-            ctx.fillStyle = "#0055A4";
-            ctx.beginPath();
-            ctx.roundRect(-gridSize * 0.46, -gridSize * 0.44, gridSize * 0.92, gridSize * 0.88, [8, 14, 14, 8]);
-            ctx.fill();
-
-            ctx.shadowColor = "transparent";
-
-            // 2. BANDE ROUGE OFFICIELLE U & PARE-CHOCS
-            ctx.fillStyle = "#E30613";
-            ctx.fillRect(-gridSize * 0.2, -gridSize * 0.42, gridSize * 0.24, gridSize * 0.84);
-
-            // Capot avant renforcé
-            ctx.fillStyle = "#0f172a";
-            ctx.beginPath();
-            ctx.roundRect(gridSize * 0.22, -gridSize * 0.38, gridSize * 0.22, gridSize * 0.76, 4);
-            ctx.fill();
-
-            // 3. BROSSES ROTATIVES DOUBLES (à l'avant de la machine)
-            const brushOffset = gridSize * 0.28;
-            const brushRadius = 8;
-            drawRotatingBrush(gridSize * 0.32, -brushOffset, brushRadius, brushRotation);
-            drawRotatingBrush(gridSize * 0.32, brushOffset, brushRadius, -brushRotation);
-
-            // 4. POSTE DE PILOTAGE / PARE-BRISE VERRE TEINTÉ
-            const glassGrad = ctx.createLinearGradient(-10, -10, 10, 10);
-            glassGrad.addColorStop(0, '#7dd3fc');
-            glassGrad.addColorStop(1, '#0284c7');
-            ctx.fillStyle = glassGrad;
-            ctx.beginPath();
-            ctx.roundRect(-gridSize * 0.35, -gridSize * 0.3, gridSize * 0.35, gridSize * 0.6, 5);
-            ctx.fill();
-            ctx.strokeStyle = "#e0f2fe";
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
-
-            // Volant / Volant console
-            ctx.fillStyle = "#0f172a";
-            ctx.beginPath();
-            ctx.arc(-gridSize * 0.12, 0, 4, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 5. FEUX AVANT LED
-            ctx.fillStyle = "#fef08a";
-            ctx.shadowColor = "#fde047";
-            ctx.shadowBlur = 10;
-            ctx.beginPath();
-            ctx.arc(gridSize * 0.44, -gridSize * 0.28, 3.5, 0, Math.PI * 2);
-            ctx.arc(gridSize * 0.44, gridSize * 0.28, 3.5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-
-            // 6. GYROPHARE ORANGE CLIGNOTANT
-            const gyroOn = beaconFlash < 10;
-            ctx.fillStyle = gyroOn ? "#ff9800" : "#b45309";
-            if (gyroOn) {
-                ctx.shadowColor = "rgba(255, 152, 0, 0.9)";
-                ctx.shadowBlur = 14;
-            }
-            ctx.beginPath();
-            ctx.arc(-gridSize * 0.18, 0, 4.5, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-
-            // 7. RACLETTE EN CAOUTCHOUC ARRIÈRE
-            ctx.fillStyle = "#334155";
-            ctx.fillRect(-gridSize * 0.49, -gridSize * 0.4, 3, gridSize * 0.8);
-
-            ctx.restore();
-        }
-
-        function drawRotatingBrush(x, y, radius, rotation) {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.rotate(rotation);
-
-            // Disque brosse
-            ctx.fillStyle = "#1e293b";
-            ctx.beginPath();
-            ctx.arc(0, 0, radius, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Poils brosse animés (croix rotative)
-            ctx.strokeStyle = "#f8fafc";
-            ctx.lineWidth = 2;
-            for (let a = 0; a < 4; a++) {
-                ctx.beginPath();
-                ctx.moveTo(-radius + 2, 0);
-                ctx.lineTo(radius - 2, 0);
-                ctx.stroke();
-                ctx.rotate(Math.PI / 4);
-            }
-
-            // Écrou central
-            ctx.fillStyle = "#E30613";
-            ctx.beginPath();
-            ctx.arc(0, 0, 3, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.restore();
-        }
-
-        // DESSIN DES DÉCHETS SELON RARETÉ
-        function drawDechet() {
-            if (!currentFood) return;
-            const cx = currentFood.x + gridSize / 2;
-            const cy = currentFood.y + gridSize / 2;
-            const pulse = Math.sin(foodAnimationTick * 3) * 2.5;
-            const type = currentFood.type;
-
-            ctx.save();
-
-            // 1. Halo / Aura de rareté
-            const auraRad = (gridSize * 0.45) + pulse;
-            const auraGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, auraRad + 6);
-            auraGrad.addColorStop(0, type.auraColor);
-            auraGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
-            ctx.fillStyle = auraGrad;
-            ctx.beginPath();
-            ctx.arc(cx, cy, auraRad + 6, 0, Math.PI * 2);
-            ctx.fill();
-
-            // 2. Visuels spécifiques
-            switch (type.id) {
-                case 'tissue':
-                    // Mouchoir en papier froissé (Commun)
-                    ctx.fillStyle = "#f8fafc";
-                    ctx.strokeStyle = "#94a3b8";
-                    ctx.lineWidth = 1.5;
-                    ctx.beginPath();
-                    ctx.moveTo(cx - 10, cy - 6);
-                    ctx.lineTo(cx + 8, cy - 12);
-                    ctx.lineTo(cx + 12, cy + 5);
-                    ctx.lineTo(cx - 3, cy + 12);
-                    ctx.lineTo(cx - 12, cy + 4);
-                    ctx.closePath();
-                    ctx.fill();
-                    ctx.stroke();
-                    // Plis intérieurs
-                    ctx.beginPath();
-                    ctx.moveTo(cx - 5, cy - 2); ctx.lineTo(cx + 6, cy + 2);
-                    ctx.moveTo(cx + 2, cy - 7); ctx.lineTo(cx - 2, cy + 8);
-                    ctx.stroke();
-                    break;
-
-                case 'stain':
-                    // Tache de café / sauce (Peu commun)
-                    ctx.fillStyle = "#5c3a21";
-                    ctx.beginPath();
-                    ctx.arc(cx - 4, cy - 2, 9 + pulse * 0.4, 0, Math.PI * 2);
-                    ctx.arc(cx + 6, cy - 5, 7 + pulse * 0.3, 0, Math.PI * 2);
-                    ctx.arc(cx - 2, cy + 7, 8 + pulse * 0.3, 0, Math.PI * 2);
-                    ctx.arc(cx + 7, cy + 5, 6, 0, Math.PI * 2);
-                    ctx.fill();
-                    // Éclaboussures
-                    ctx.beginPath();
-                    ctx.arc(cx - 12, cy - 9, 2.5, 0, Math.PI * 2);
-                    ctx.arc(cx + 13, cy + 10, 2, 0, Math.PI * 2);
-                    ctx.fill();
-                    break;
-
-                case 'bottle':
-                    // Bouteille de soda en verre brisée avec éclats (Rare)
-                    // Flaque de liquide
-                    ctx.fillStyle = "rgba(185, 28, 28, 0.55)";
-                    ctx.beginPath();
-                    ctx.ellipse(cx, cy + 2, 14, 8, 0, 0, Math.PI * 2);
-                    ctx.fill();
-
-                    // Morceaux de verre vert émeraude
-                    ctx.fillStyle = "#10b981";
-                    ctx.strokeStyle = "#047857";
-                    ctx.lineWidth = 1.5;
-                    // Éclat 1 (goulot)
-                    ctx.beginPath();
-                    ctx.moveTo(cx - 10, cy - 6);
-                    ctx.lineTo(cx - 4, cy - 12);
-                    ctx.lineTo(cx - 1, cy - 4);
-                    ctx.closePath();
-                    ctx.fill(); ctx.stroke();
-                    // Éclat 2 (corps)
-                    ctx.beginPath();
-                    ctx.moveTo(cx, cy + 6);
-                    ctx.lineTo(cx + 10, cy - 2);
-                    ctx.lineTo(cx + 8, cy + 10);
-                    ctx.closePath();
-                    ctx.fill(); ctx.stroke();
-                    break;
-
-                case 'pee':
-                    // Pipi fluorescent avec bulles pétillantes (Épique)
-                    ctx.fillStyle = "#facc15";
-                    ctx.beginPath();
-                    ctx.arc(cx - 3, cy, 11 + pulse * 0.5, 0, Math.PI * 2);
-                    ctx.arc(cx + 6, cy - 2, 9 + pulse * 0.5, 0, Math.PI * 2);
-                    ctx.arc(cx + 2, cy + 7, 8, 0, Math.PI * 2);
-                    ctx.fill();
-                    // Reflet étincelant
-                    ctx.fillStyle = "#fef08a";
-                    ctx.beginPath();
-                    ctx.arc(cx - 4, cy - 3, 3, 0, Math.PI * 2);
-                    ctx.arc(cx + 6, cy + 4, 2, 0, Math.PI * 2);
-                    ctx.fill();
-                    // Étincelle brillante
-                    drawSparkle(cx + 10, cy - 10, 5);
-                    break;
-
-                case 'poop_gold':
-                    // Caca doré Légendaire avec couronne et paillettes
-                    const goldGrad = ctx.createLinearGradient(cx - 12, cy - 12, cx + 12, cy + 12);
-                    goldGrad.addColorStop(0, '#fef08a');
-                    goldGrad.addColorStop(0.5, '#f59e0b');
-                    goldGrad.addColorStop(1, '#b45309');
-
-                    ctx.fillStyle = goldGrad;
-                    // Étages de la crotte dorée
-                    ctx.beginPath();
-                    ctx.ellipse(cx, cy + 7, 12, 6, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.ellipse(cx, cy + 1, 9, 5, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.beginPath();
-                    ctx.ellipse(cx, cy - 4, 6, 4, 0, 0, Math.PI * 2);
-                    ctx.fill();
-                    // Pointe stylisée
-                    ctx.beginPath();
-                    ctx.moveTo(cx - 3, cy - 5);
-                    ctx.quadraticCurveTo(cx + 6, cy - 12, cx + 1, cy - 13);
-                    ctx.fill();
-
-                    // Petite couronne royale d'or
-                    ctx.fillStyle = "#fbbf24";
-                    ctx.strokeStyle = "#b45309";
-                    ctx.lineWidth = 1;
-                    ctx.beginPath();
-                    ctx.moveTo(cx - 6, cy - 12);
-                    ctx.lineTo(cx - 6, cy - 17);
-                    ctx.lineTo(cx - 2, cy - 14);
-                    ctx.lineTo(cx, cy - 19);
-                    ctx.lineTo(cx + 2, cy - 14);
-                    ctx.lineTo(cx + 6, cy - 17);
-                    ctx.lineTo(cx + 6, cy - 12);
-                    ctx.closePath();
-                    ctx.fill(); ctx.stroke();
-
-                    // Étoiles dorées animées
-                    drawSparkle(cx - 12, cy - 8, 6);
-                    drawSparkle(cx + 12, cy + 8, 5);
-                    break;
-            }
-
-            ctx.restore();
-        }
-
-        function drawSparkle(x, y, radius) {
-            ctx.save();
-            ctx.fillStyle = "#ffffff";
-            ctx.beginPath();
-            ctx.moveTo(x, y - radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.quadraticCurveTo(x, y, x, y + radius);
-            ctx.quadraticCurveTo(x, y, x - radius, y);
-            ctx.quadraticCurveTo(x, y, x, y - radius);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        // Déplacement du Snake & Ramassage
-        function advanceSnake() {
-            const head = { x: snake[0].x + dx, y: snake[0].y + dy };
-            snake.unshift(head); 
-
-            if (currentFood && snake[0].x === currentFood.x && snake[0].y === currentFood.y) {
-                const picked = currentFood.type;
-                score += picked.points;
-                document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
-
-                playSound(picked.id);
-                createCleanupExplosion(currentFood.x, currentFood.y, picked);
+        function generateFood() {
+            const bounds = getShelfBounds();
+            let valid = false;
+            let rCol, rRow;
+            
+            while(!valid) {
+                rCol = Math.floor(Math.random() * bounds.gridCols);
+                rRow = Math.floor(Math.random() * bounds.gridRows);
                 
-                const label = picked.id === 'pee' ? 'PIPI' : picked.name.split(' ')[0];
-                addFloatingText(currentFood.x + gridSize / 2, currentFood.y, `+${picked.points} ${label}`, picked.color);
+                if(!isObstacle(rCol, rRow)) {
+                    let onSnake = false;
+                    for(let part of snake) {
+                        if(part.x === rCol * gridSize && part.y === rRow * gridSize) { onSnake = true; break; }
+                    }
+                    if(!onSnake) valid = true;
+                }
+            }
+            
+            foodX = rCol * gridSize;
+            foodY = rRow * gridSize;
 
-                spawnDechet();
+            const rand = Math.random();
+            let cumul = 0;
+            for(let d of DECHETS) {
+                cumul += d.proba;
+                if(rand <= cumul) { currentFood = d; break; }
+            }
+            if(!currentFood) currentFood = DECHETS[0];
+        }
+
+        function drawFood() {
+            if(!currentFood) return;
+            ctx.font = (gridSize * 0.7) + "px Arial";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(currentFood.emoji, foodX + gridSize/2, foodY + gridSize/2);
+        }
+
+        function advanceSnake() {
+            // Buffer input to prevent instant suicide
+            if (inputQueue.length > 0) {
+                const nextMove = inputQueue.shift();
+                dx = nextMove.dx;
+                dy = nextMove.dy;
+            }
+
+            const headX = snake[0].x + dx;
+            const headY = snake[0].y + dy;
+
+            // Hors limites (Murs extérieurs)
+            if (headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height) {
+                showGameOver(); return;
+            }
+
+            const headCol = Math.floor(headX / gridSize);
+            const headRow = Math.floor(headY / gridSize);
+
+            // Obstacles physiques (Rayons, Caisses)
+            if (isObstacle(headCol, headRow)) {
+                showGameOver(); return;
+            }
+
+            const head = {x: headX, y: headY};
+            snake.unshift(head);
+            
+            // Nettoyage de la tache
+            if (head.x === foodX && head.y === foodY) {
+                score += currentFood.points;
+                let displayText = currentFood.type === "Pipi" ? "+80 PIPI" : `+${currentFood.points}`;
+                floatingTexts.push({text: displayText, x: foodX, y: foodY, color: currentFood.color, life: 1.0});
+                
+                document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
+                playSound('eat');
+                createExplosion(foodX, foodY, currentFood.color);
+                generateFood();
+                
+                if (vitesseJeu > 60) vitesseJeu -= 2; // Accélération progressive
             } else {
                 snake.pop(); 
             }
+
+            // Auto-collision
+            for (let i = 4; i < snake.length; i++) {
+                if (snake[i].x === head.x && snake[i].y === head.y) {
+                    showGameOver(); return;
+                }
+            }
         }
 
-        // Particules de mousse & savon éclatant
-        function createCleanupExplosion(x, y, type) {
-            const count = type.rarity === 'legendary' ? 45 : (type.rarity === 'epic' ? 32 : 22);
-            const palette = type.rarity === 'legendary' 
-                ? ['#ffffff', '#fef08a', '#f59e0b', '#fbbf24'] 
-                : ['#ffffff', '#e0f2fe', '#bae6fd', type.color];
-
-            for (let i = 0; i < count; i++) {
-                const angle = Math.random() * Math.PI * 2;
-                const speed = Math.random() * 8 + 3;
+        function createExplosion(x, y, color) {
+            for (let i = 0; i < 15; i++) {
                 particles.push({
-                    x: x + gridSize / 2, 
-                    y: y + gridSize / 2,
-                    vx: Math.cos(angle) * speed, 
-                    vy: Math.sin(angle) * speed,
-                    color: palette[Math.floor(Math.random() * palette.length)],
-                    alpha: 1, 
-                    life: Math.random() * 18 + 12,
-                    size: Math.random() * 6 + 3
+                    x: x + gridSize / 2, y: y + gridSize / 2,
+                    vx: (Math.random() - 0.5) * 8, vy: (Math.random() - 0.5) * 8,
+                    color: color, alpha: 1, size: Math.random() * 4 + 2
                 });
             }
         }
 
-        function updateParticles() {
+        function drawEffects() {
+            // Particules
             for (let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
-                p.x += p.vx; 
-                p.y += p.vy;
-                p.vx *= 0.88; 
-                p.vy *= 0.88; 
-                p.alpha -= 1 / p.life;
-                p.size *= 0.96;
-                if (p.alpha <= 0 || p.size < 0.5) particles.splice(i, 1);
-            }
-        }
-
-        function drawParticles() {
-            particles.forEach(p => {
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, p.alpha); 
+                p.x += p.vx; p.y += p.vy;
+                p.alpha -= 0.05;
+                if (p.alpha <= 0) { particles.splice(i, 1); continue; }
+                ctx.globalAlpha = p.alpha;
                 ctx.fillStyle = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI*2); ctx.fill();
+            }
+            ctx.globalAlpha = 1.0;
+
+            // Textes flottants
+            for(let i = floatingTexts.length -1; i >= 0; i--) {
+                let ft = floatingTexts[i];
+                ft.y -= 1;
+                ft.life -= 0.02;
+                if(ft.life <= 0) { floatingTexts.splice(i, 1); continue; }
                 
-                // Centre de bulle
-                ctx.fillStyle = "#ffffff";
-                ctx.beginPath();
-                ctx.arc(p.x - p.size / 3, p.y - p.size / 3, p.size / 3, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
-            });
-        }
-
-        // Textes flottants (+Points)
-        function addFloatingText(x, y, text, color) {
-            floatingTexts.push({
-                x: x,
-                y: y,
-                text: text,
-                color: color || '#0055A4',
-                alpha: 1,
-                vy: -2
-            });
-        }
-
-        function updateAndDrawFloatingTexts() {
-            for (let i = floatingTexts.length - 1; i >= 0; i--) {
-                const ft = floatingTexts[i];
-                ft.y += ft.vy;
-                ft.alpha -= 0.025;
-
-                ctx.save();
-                ctx.globalAlpha = Math.max(0, ft.alpha);
-                ctx.font = "900 18px 'Montserrat', sans-serif";
-                ctx.fillStyle = ft.color;
+                ctx.globalAlpha = ft.life;
+                ctx.font = "bold 18px Montserrat";
                 ctx.textAlign = "center";
-                ctx.strokeStyle = "#ffffff";
-                ctx.lineWidth = 4;
-                ctx.strokeText(ft.text, ft.x, ft.y);
-                ctx.fillText(ft.text, ft.x, ft.y);
-                ctx.restore();
-
-                if (ft.alpha <= 0) floatingTexts.splice(i, 1);
+                ctx.fillStyle = ft.color;
+                ctx.strokeStyle = "#fff";
+                ctx.lineWidth = 3;
+                ctx.strokeText(ft.text, ft.x + gridSize/2, ft.y);
+                ctx.fillText(ft.text, ft.x + gridSize/2, ft.y);
             }
+            ctx.globalAlpha = 1.0;
         }
 
-        // Fin de jeu et collisions
-        function hasGameEnded() {
-            // Collision avec le propre corps du serpent
-            for (let i = 4; i < snake.length; i++) {
-                if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) return true;
+        function startGame() {
+            document.getElementById('startScreen').style.display = "none";
+            initAudio();
+            playRandomMusic();
+            gameStarted = true;
+            resizeGameCanvas();
+            initGame();
+        }
+
+        function initGame() {
+            score = 0;
+            vitesseJeu = 170;
+            dx = gridSize;
+            dy = 0;
+            isGameOverState = false;
+            particles = [];
+            floatingTexts = [];
+            inputQueue = [];
+            
+            document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
+            document.getElementById('gameOverScreen').style.display = "none";
+            document.getElementById('scoreForm').style.display = "flex";
+            document.getElementById('scoreSubmittedMsg').style.display = "none";
+            document.getElementById('playerNameInput').value = "";
+            
+            // Spawn safe in row 2
+            snake = [];
+            const startY = 2 * gridSize;
+            for(let i = 0; i < 4; i++){ 
+                snake.push({x: 5 * gridSize - (i*gridSize), y: startY});
             }
 
-            // Collision avec les bords de la grille
-            if (snake[0].x < 0 || snake[0].x >= canvas.width || snake[0].y < 0 || snake[0].y >= canvas.height) {
-                return true;
-            }
+            generateFood();
+            chargerClassement();
+            main();
+        }
 
-            // Collision physique : les rayons et les caisses sont des MURS solides
-            const headCol = Math.floor(snake[0].x / gridSize);
-            const headRow = Math.floor(snake[0].y / gridSize);
-            if (isObstacle(headCol, headRow)) {
-                return true;
-            }
-
-            return false;
+        function main() {
+            if (isGameOverState) return;
+            gameLoopTimeout = setTimeout(function() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                drawGrid();
+                drawFood();
+                advanceSnake();
+                drawSnakePart(snake[0], 0); // Head
+                for(let i = snake.length - 1; i > 0; i--) drawSnakePart(snake[i], i); // Tail
+                drawEffects();
+                main();
+            }, vitesseJeu); 
         }
 
         function showGameOver() {
             isGameOverState = true;
-            stopBGM(); 
-            playSound('die'); 
-            
+            stopMusic();
+            playSound('die');
             document.getElementById("finalScore").innerText = score;
             document.getElementById("gameOverScreen").style.display = "flex";
-            
             chargerClassement();
         }
 
         function resetGame() {
             clearTimeout(gameLoopTimeout);
-            initGame();
+            startGame();
         }
 
-        // Gestion des Directions & Clavier avec Buffer anti-demi-tour instantané
-        function handleDirection(keyCode) {
-            const LEFT_KEY = 37, RIGHT_KEY = 39, UP_KEY = 38, DOWN_KEY = 40;
+        // Controls
+        document.addEventListener("keydown", function(e) {
+            if (!gameStarted && e.key === "Enter") { startGame(); return; }
+            if (isGameOverState && e.key === "Enter") { validerScore(); return; }
+            if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
             
-            // Récupère la dernière direction planifiée ou actuelle
-            const currentDir = directionQueue.length > 0 
-                ? directionQueue[directionQueue.length - 1] 
-                : { dx: dx, dy: dy };
-
-            let newDx = currentDir.dx;
-            let newDy = currentDir.dy;
-
-            if (keyCode === LEFT_KEY && currentDir.dx === 0) {
-                newDx = -gridSize; newDy = 0;
-            } else if (keyCode === UP_KEY && currentDir.dy === 0) {
-                newDx = 0; newDy = -gridSize;
-            } else if (keyCode === RIGHT_KEY && currentDir.dx === 0) {
-                newDx = gridSize; newDy = 0;
-            } else if (keyCode === DOWN_KEY && currentDir.dy === 0) {
-                newDx = 0; newDy = gridSize;
-            } else {
-                return; // Mouvement invalide ou demi-tour
-            }
-
-            // Évite de stocker plus de 2 actions rapides d'avance
-            if (directionQueue.length < 2) {
-                directionQueue.push({ dx: newDx, dy: newDy });
-            }
-        }
-
-        document.addEventListener("keydown", function(event) {
-            if (!gameStarted && event.key === "Enter") { startGame(); return; }
-            if (event.key === "Enter" && isGameOverState && event.target.id !== "playerNameInput") { 
-                resetGame(); return; 
-            }
-            if (event.key === "Enter" && event.target.id === "playerNameInput") {
-                submitPlayerScore();
-                return;
-            }
-            if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", " "].indexOf(event.key) > -1) {
-                event.preventDefault();
-            }
-            handleDirection(event.keyCode);
+            const LEFT = 37, UP = 38, RIGHT = 39, DOWN = 40;
+            let lastDir = inputQueue.length > 0 ? inputQueue[inputQueue.length - 1] : { dx, dy };
+            
+            if (e.keyCode === LEFT && lastDir.dx !== gridSize) inputQueue.push({dx: -gridSize, dy: 0});
+            else if (e.keyCode === UP && lastDir.dy !== gridSize) inputQueue.push({dx: 0, dy: -gridSize});
+            else if (e.keyCode === RIGHT && lastDir.dx !== -gridSize) inputQueue.push({dx: gridSize, dy: 0});
+            else if (e.keyCode === DOWN && lastDir.dy !== -gridSize) inputQueue.push({dx: 0, dy: gridSize});
         });
 
-        // Swipe Mobile fluide
         let touchStartX = 0, touchStartY = 0;
-        
-        document.addEventListener('touchstart', function(event) {
+        document.addEventListener('touchstart', e => {
             if (!gameStarted || isGameOverState) return;
-            touchStartX = event.changedTouches[0].screenX;
-            touchStartY = event.changedTouches[0].screenY;
-        }, { passive: true });
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, {passive: false});
 
-        document.addEventListener('touchend', function(event) {
+        document.addEventListener('touchmove', e => {
+            if(gameStarted && !isGameOverState && e.target === canvas) e.preventDefault();
+        }, {passive: false});
+
+        document.addEventListener('touchend', e => {
             if (!gameStarted || isGameOverState) return;
-            const diffX = event.changedTouches[0].screenX - touchStartX;
-            const diffY = event.changedTouches[0].screenY - touchStartY;
-
-            if (Math.abs(diffX) < 25 && Math.abs(diffY) < 25) return;
-
+            let diffX = e.changedTouches[0].screenX - touchStartX;
+            let diffY = e.changedTouches[0].screenY - touchStartY;
+            if (Math.abs(diffX) < 30 && Math.abs(diffY) < 30) return;
+            
+            let lastDir = inputQueue.length > 0 ? inputQueue[inputQueue.length - 1] : { dx, dy };
             if (Math.abs(diffX) > Math.abs(diffY)) {
-                if (diffX > 0) handleDirection(39); else handleDirection(37);
+                if (diffX > 0 && lastDir.dx !== -gridSize) inputQueue.push({dx: gridSize, dy: 0});
+                else if (diffX < 0 && lastDir.dx !== gridSize) inputQueue.push({dx: -gridSize, dy: 0});
             } else {
-                if (diffY > 0) handleDirection(40); else handleDirection(38);
+                if (diffY > 0 && lastDir.dy !== -gridSize) inputQueue.push({dx: 0, dy: gridSize});
+                else if (diffY < 0 && lastDir.dy !== gridSize) inputQueue.push({dx: 0, dy: -gridSize});
             }
-        }, { passive: true });
+        }, {passive: false});
 
-        // Initialisation initiale du décor
-        resizeGameCanvas();
-        clearCanvas();
-        drawGrid();
+        window.addEventListener('resize', () => { if(!gameStarted) resizeGameCanvas(); });
+        
+        // Initial setup
         chargerClassement();
+        
     </script>
 </body>
 </html>
