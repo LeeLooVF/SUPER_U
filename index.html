@@ -91,6 +91,19 @@
             display: block;
         }
 
+        #phoneIcon {
+            display: none;
+            font-size: 26px;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            animation: ring 0.6s ease-in-out infinite alternate;
+        }
+
+        @keyframes ring {
+            0% { transform: rotate(-12deg); }
+            100% { transform: rotate(12deg); }
+        }
+
         #roccoSpeech {
             position: absolute;
             left: 48px;
@@ -289,11 +302,11 @@
         }
 
         button.action-btn {
-            margin-top: 8px;
-            padding: 10px 20px;
-            width: 82%;
+            margin-top: 5px;
+            padding: 9px 18px;
+            width: 86%;
             max-width: 250px;
-            font-size: 15px;
+            font-size: 13px;
             background-color: #E30613;
             color: #ffffff;
             border: none;
@@ -310,6 +323,35 @@
         button.action-btn:active {
             transform: translateY(3px);
             box-shadow: 0 1px 0px #a10008;
+        }
+
+        button.action-btn.btn-easy {
+            background-color: #ec4899;
+            box-shadow: 0 4px 0px #be185d;
+        }
+        button.action-btn.btn-easy:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0px #be185d;
+        }
+
+        button.action-btn.btn-normal {
+            background: linear-gradient(135deg, #475569, #1e293b);
+            box-shadow: 0 4px 0px #0f172a;
+            border: 1px solid #94a3b8;
+        }
+        button.action-btn.btn-normal:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0px #0f172a;
+        }
+
+        button.action-btn.btn-hard {
+            background-color: #0055A4;
+            border: 1.5px solid #E30613;
+            box-shadow: 0 4px 0px #003366;
+        }
+        button.action-btn.btn-hard:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0px #003366;
         }
 
         .modal {
@@ -356,6 +398,7 @@
 
             <div id="roccoContainer">
                 <img id="roccoImg" src="Rocco.png" alt="Rocco" onerror="this.style.display='none'">
+                <div id="phoneIcon">📱</div>
                 <div id="roccoSpeech">Faites un tour<br>en zone promo</div>
             </div>
         </div>
@@ -375,18 +418,20 @@
         <canvas id="gameCanvas"></canvas>
         
         <div id="startScreen" class="overlayScreen">
-            <h2 style="color: #0055A4; font-size: 21px; text-transform: uppercase; font-weight: 900; margin-bottom: 4px;">MISE EN ROUTE AUTOLAVEUSE 🧼</h2>
-            <p style="font-size: 13px; font-weight: 700; color: #555; margin-bottom: 12px;">Nettoyez le magasin avant l'ouverture !</p>
+            <h2 style="color: #0055A4; font-size: 19px; text-transform: uppercase; font-weight: 900; margin-bottom: 2px;">MISE EN ROUTE AUTOLAVEUSE 🧼</h2>
+            <p style="font-size: 11px; font-weight: 700; color: #555; margin-bottom: 6px;">Choisissez votre défi :</p>
             
-            <div style="text-align: left; background: #fff; padding: 10px 14px; border-radius: 12px; border: 2px solid #0055A4; margin-bottom: 14px; font-size: 12px; font-weight: 800; width: 90%; max-width: 290px;">
-                <div style="color: #64748b; margin-bottom: 4px;">🧻 Mouchoir (Commun - 50%) <span style="float: right;">+10 pts</span></div>
-                <div style="color: #8b4513; margin-bottom: 4px;">☕ Tache (Peu commun - 24%) <span style="float: right;">+20 pts</span></div>
-                <div style="color: #22c55e; margin-bottom: 4px;">🍾 Bouteille (Rare - 15%) <span style="float: right;">+45 pts</span></div>
-                <div style="color: #eab308; margin-bottom: 4px;">🟡 Pipi (Épique - 8%) <span style="float: right;">+80 pts</span></div>
+            <div style="text-align: left; background: #fff; padding: 6px 10px; border-radius: 12px; border: 2px solid #0055A4; margin-bottom: 8px; font-size: 10.5px; font-weight: 800; width: 90%; max-width: 290px;">
+                <div style="color: #64748b; margin-bottom: 2px;">🧻 Mouchoir (Commun - 50%) <span style="float: right;">+10 pts</span></div>
+                <div style="color: #8b4513; margin-bottom: 2px;">☕ Tache (Peu commun - 24%) <span style="float: right;">+20 pts</span></div>
+                <div style="color: #22c55e; margin-bottom: 2px;">🍾 Bouteille (Rare - 15%) <span style="float: right;">+45 pts</span></div>
+                <div style="color: #a855f7; margin-bottom: 2px;"><span style="color: #eab308;">🟡</span> Pipi (Épique - 8%) <span style="float: right;">+80 pts</span></div>
                 <div style="color: #fbbf24;">👑 Caca doré (Légendaire - 3%) <span style="float: right;">+150 pts</span></div>
             </div>
 
-            <button class="action-btn" onclick="startGame()">Démarrer la tournée</button>
+            <button class="action-btn btn-easy" onclick="startGame('easy')">🌸 Tapette</button>
+            <button class="action-btn btn-normal" onclick="startGame('normal')">💪 Tes un Homme</button>
+            <button class="action-btn btn-hard" onclick="startGame('hard')">🛒 Condition réelle</button>
         </div>
 
         <div id="gameOverScreen" class="overlayScreen">
@@ -447,10 +492,11 @@
         let top10 = [];
         let vitesseJeu = 150; 
 
-        // Quotas mis à jour selon vos consignes :
-        // - Zone promo (rouge) : 5 objets
-        // - Devant les caisses (grande zone bleu) : 4 objets
-        // - Alcools (petite zone bleu) : 7 objets
+        let gameMode = 'normal';
+        let shoppers = [];
+        let shopperSpawnTimer = 0;
+        let shopperMoveCounter = 0;
+
         const ROCCO_MESSAGES = [
             { text: "Faites un tour<br>en zone promo", zone: "promo", count: 5 },
             { text: "Essayez de passer<br>devant les caisses", zone: "caisses", count: 4 },
@@ -461,17 +507,27 @@
         let roccoCycleTimeout = null;
         let roccoHideTimeout = null;
 
-        function setRoccoVisible(show) {
+        function setAlertVisible(show, isPhone = false, customText = "", customZone = "", customCount = 0) {
             const roccoEl = document.getElementById("roccoContainer");
             const titleEl = document.getElementById("gameTitle");
+            const roccoImg = document.getElementById("roccoImg");
+            const phoneIcon = document.getElementById("phoneIcon");
+            const speechEl = document.getElementById("roccoSpeech");
+
             if (show) {
-                const step = ROCCO_MESSAGES[currentMessageIndex];
-                const speechEl = document.getElementById("roccoSpeech");
-                speechEl.innerHTML = step.text;
-
-                spawnZoneFoods(step.zone, step.count);
-
-                currentMessageIndex = (currentMessageIndex + 1) % ROCCO_MESSAGES.length;
+                if (isPhone) {
+                    roccoImg.style.display = "none";
+                    phoneIcon.style.display = "block";
+                    speechEl.innerHTML = customText;
+                    spawnZoneFoods(customZone, customCount);
+                } else {
+                    phoneIcon.style.display = "none";
+                    roccoImg.style.display = "block";
+                    const step = ROCCO_MESSAGES[currentMessageIndex];
+                    speechEl.innerHTML = step.text;
+                    spawnZoneFoods(step.zone, step.count);
+                    currentMessageIndex = (currentMessageIndex + 1) % ROCCO_MESSAGES.length;
+                }
 
                 titleEl.style.opacity = "0";
                 roccoEl.classList.add("visible");
@@ -481,42 +537,61 @@
             }
         }
 
-        function scheduleNextRocco() {
+        function scheduleNextMessage() {
             clearTimeout(roccoCycleTimeout);
             clearTimeout(roccoHideTimeout);
 
-            // Intervalle de 45 secondes entre chaque annonce
-            roccoCycleTimeout = setTimeout(() => {
-                if (!gameStarted || isGameOverState) return;
-                setRoccoVisible(true);
+            if (gameMode === 'hard') {
+                // Condition réelle : appel téléphonique toutes les 10 secondes
+                roccoCycleTimeout = setTimeout(() => {
+                    if (!gameStarted || isGameOverState || gameMode !== 'hard') return;
+                    setAlertVisible(true, true, "Vous pouvez passer un coup<br>devant les caisses", "caisses", 6);
 
-                // Reste affiché 5 secondes
-                roccoHideTimeout = setTimeout(() => {
-                    setRoccoVisible(false);
-                    if (gameStarted && !isGameOverState) {
-                        scheduleNextRocco();
-                    }
-                }, 5000);
-            }, 45000);
+                    roccoHideTimeout = setTimeout(() => {
+                        setAlertVisible(false);
+                        if (gameStarted && !isGameOverState && gameMode === 'hard') {
+                            scheduleNextMessage();
+                        }
+                    }, 4000);
+                }, 10000);
+
+            } else if (gameMode === 'normal') {
+                // Tes un Homme : Rocco toutes les 45 secondes
+                roccoCycleTimeout = setTimeout(() => {
+                    if (!gameStarted || isGameOverState || gameMode !== 'normal') return;
+                    setAlertVisible(true, false);
+
+                    roccoHideTimeout = setTimeout(() => {
+                        setAlertVisible(false);
+                        if (gameStarted && !isGameOverState && gameMode === 'normal') {
+                            scheduleNextMessage();
+                        }
+                    }, 5000);
+                }, 45000);
+            }
         }
 
-        function startRoccoCycle() {
+        function startMessageCycle() {
+            if (gameMode === 'easy') {
+                stopMessageCycle();
+                return;
+            }
             currentMessageIndex = 0;
-            setRoccoVisible(false);
-            scheduleNextRocco();
+            setAlertVisible(false);
+            scheduleNextMessage();
         }
 
-        function stopRoccoCycle() {
+        function stopMessageCycle() {
             clearTimeout(roccoCycleTimeout);
             clearTimeout(roccoHideTimeout);
-            setRoccoVisible(false);
+            setAlertVisible(false);
         }
 
         const DECHETS = [
             { type: "Mouchoir", proba: 0.50, points: 10, color: "#94a3b8" },
             { type: "Tache", proba: 0.24, points: 20, color: "#8b4513", emoji: "💩" },
             { type: "Bouteille", proba: 0.15, points: 45, color: "#22c55e", emoji: "🍾" },
-            { type: "Pipi", proba: 0.08, points: 80, color: "#eab308" },
+            { type: "Pipi", proba: 0.08, points: 80, color: "#a855f7" },
             { type: "Caca d'or", proba: 0.03, points: 150, color: "#fbbf24", emoji: "👑" }
         ];
 
@@ -525,6 +600,7 @@
 
         let audioCtx;
         let currentAudio = null;
+        let currentAudioIndex = 0;
         const audioFiles = ['Audio001.mp3', 'Audio002.mp3', 'Audio003.mp3', 'Audio004.mp3', 'Audio005.mp3'];
 
         function initAudio() {
@@ -532,17 +608,22 @@
             if (audioCtx.state === 'suspended') audioCtx.resume();
         }
 
-        function playRandomMusic() {
-            if(currentAudio) currentAudio.pause();
-            const randIndex = Math.floor(Math.random() * audioFiles.length);
-            currentAudio = new Audio(audioFiles[randIndex]);
+        function playNextMusic() {
+            if (currentAudio) {
+                currentAudio.pause();
+                currentAudio = null;
+            }
+            currentAudio = new Audio(audioFiles[currentAudioIndex]);
             currentAudio.volume = 0.4;
-            currentAudio.onended = playRandomMusic;
+            currentAudio.onended = () => {
+                currentAudioIndex = (currentAudioIndex + 1) % audioFiles.length;
+                playNextMusic();
+            };
             currentAudio.play().catch(e => console.log("Audio:", e));
         }
 
         function stopMusic() {
-            if(currentAudio) currentAudio.pause();
+            if (currentAudio) currentAudio.pause();
         }
 
         function playSound(type) {
@@ -685,6 +766,8 @@
         }
 
         function isObstacle(col, row) {
+            if (gameMode === 'easy') return false;
+
             const bounds = getShelfBounds();
             
             if (row === gridRows - 1) {
@@ -704,6 +787,150 @@
             return false;
         }
 
+        function getSafeShopperTarget() {
+            let valid = false;
+            let c, r;
+            let attempts = 0;
+            while (!valid && attempts < 150) {
+                attempts++;
+                c = Math.floor(Math.random() * GRID_COLS);
+                r = Math.floor(Math.random() * (gridRows - 2));
+                if (!isObstacle(c, r)) valid = true;
+            }
+            return { c: c || 2, r: r || 2 };
+        }
+
+        function spawnShopper() {
+            if (shoppers.length >= 4) return;
+            const entryCols = [2, 3, 12, 13, 24, 25];
+            const startCol = entryCols[Math.floor(Math.random() * entryCols.length)];
+            const shopperColors = ["#e11d48", "#2563eb", "#059669", "#7c3aed", "#d97706"];
+            const color = shopperColors[Math.floor(Math.random() * shopperColors.length)];
+
+            shoppers.push({
+                c: startCol,
+                r: 0,
+                dirX: 0,
+                dirY: 1,
+                state: "entering",
+                target: getSafeShopperTarget(),
+                shoppingTime: 60 + Math.floor(Math.random() * 80),
+                color: color
+            });
+        }
+
+        function updateShoppers() {
+            shopperSpawnTimer++;
+            if (shopperSpawnTimer % 50 === 0) {
+                spawnShopper();
+            }
+
+            shopperMoveCounter++;
+            if (shopperMoveCounter % 2 !== 0) return;
+
+            for (let i = shoppers.length - 1; i >= 0; i--) {
+                const s = shoppers[i];
+
+                if (s.state === "shopping") {
+                    s.shoppingTime--;
+                    if (s.shoppingTime <= 0) {
+                        s.state = "exiting";
+                        const checkoutPassageCols = [0, 1, 7, 8, 11, 12, 15, 16, 19, 20, 25, 26];
+                        const exitCol = checkoutPassageCols[Math.floor(Math.random() * checkoutPassageCols.length)];
+                        s.target = { c: exitCol, r: gridRows - 1 };
+                    }
+                }
+
+                if (s.c === s.target.c && s.r === s.target.r) {
+                    if (s.state === "entering") {
+                        s.state = "shopping";
+                        s.target = getSafeShopperTarget();
+                    } else if (s.state === "shopping") {
+                        s.target = getSafeShopperTarget();
+                    } else if (s.state === "exiting") {
+                        shoppers.splice(i, 1);
+                        continue;
+                    }
+                }
+
+                const possibleMoves = [];
+                const diffC = s.target.c - s.c;
+                const diffR = s.target.r - s.r;
+
+                if (diffC > 0) possibleMoves.push({ dc: 1, dr: 0, weight: 3 });
+                else if (diffC < 0) possibleMoves.push({ dc: -1, dr: 0, weight: 3 });
+
+                if (diffR > 0) possibleMoves.push({ dc: 0, dr: 1, weight: 3 });
+                else if (diffR < 0) possibleMoves.push({ dc: 0, dr: -1, weight: 3 });
+
+                const allDirs = [
+                    { dc: 0, dr: 1 }, { dc: 0, dr: -1 },
+                    { dc: 1, dr: 0 }, { dc: -1, dr: 0 }
+                ];
+                for (let d of allDirs) {
+                    if (!possibleMoves.some(m => m.dc === d.dc && m.dr === d.dr)) {
+                        possibleMoves.push({ dc: d.dc, dr: d.dr, weight: 1 });
+                    }
+                }
+
+                possibleMoves.sort((a, b) => b.weight - a.weight);
+
+                for (let m of possibleMoves) {
+                    const nextC = s.c + m.dc;
+                    const nextR = s.r + m.dr;
+
+                    if (nextC >= 0 && nextC < GRID_COLS && nextR >= 0 && nextR < gridRows) {
+                        const isExitCaisse = (s.state === "exiting" && nextR === gridRows - 1 && !isObstacle(nextC, nextR));
+                        if (!isObstacle(nextC, nextR) || isExitCaisse) {
+                            s.dirX = m.dc;
+                            s.dirY = m.dr;
+                            s.c = nextC;
+                            s.r = nextR;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        function drawShoppers() {
+            for (let s of shoppers) {
+                const x = s.c * gridSize;
+                const y = s.r * gridSize;
+
+                ctx.fillStyle = s.color;
+                ctx.beginPath();
+                ctx.arc(x + gridSize / 2, y + gridSize / 2, gridSize * 0.36, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = "#fcd34d";
+                ctx.beginPath();
+                ctx.arc(x + gridSize / 2, y + gridSize / 2, gridSize * 0.22, 0, Math.PI * 2);
+                ctx.fill();
+
+                const cartX = x + (s.dirX * gridSize * 0.45);
+                const cartY = y + (s.dirY * gridSize * 0.45);
+
+                ctx.strokeStyle = "#475569";
+                ctx.lineWidth = 1.2;
+                ctx.strokeRect(cartX + 2, cartY + 2, gridSize - 4, gridSize - 4);
+
+                ctx.fillStyle = "#E30613";
+                if (s.dirY !== 0) {
+                    ctx.fillRect(cartX + 3, cartY + (s.dirY > 0 ? 2 : gridSize - 4), gridSize - 6, 2);
+                } else {
+                    ctx.fillRect(cartX + (s.dirX > 0 ? 2 : gridSize - 4), cartY + 3, 2, gridSize - 6);
+                }
+
+                ctx.strokeStyle = "rgba(71, 85, 105, 0.4)";
+                ctx.lineWidth = 0.8;
+                ctx.beginPath();
+                ctx.moveTo(cartX + gridSize / 2, cartY + 2);
+                ctx.lineTo(cartX + gridSize / 2, cartY + gridSize - 2);
+                ctx.stroke();
+            }
+        }
+
         function drawGrid() {
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -720,9 +947,11 @@
             }
             ctx.stroke();
 
-            const bounds = getShelfBounds();
-            drawSupermarketShelves(bounds);
-            drawCheckouts();
+            if (gameMode !== 'easy') {
+                const bounds = getShelfBounds();
+                drawSupermarketShelves(bounds);
+                drawCheckouts();
+            }
         }
 
         function drawSupermarketShelves(bounds) {
@@ -968,6 +1197,11 @@
             for (let f of foods) {
                 if (f.x === col * gridSize && f.y === row * gridSize) return true;
             }
+            if (gameMode === 'hard') {
+                for (let s of shoppers) {
+                    if (s.c === col && s.r === row) return true;
+                }
+            }
             return false;
         }
 
@@ -976,10 +1210,12 @@
             let rCol, rRow;
             let attempts = 0;
             
+            const maxRowBound = (gameMode === 'easy') ? gridRows : (gridRows - 1);
+
             while (!valid && attempts < 200) {
                 attempts++;
                 rCol = Math.floor(Math.random() * GRID_COLS);
-                rRow = Math.floor(Math.random() * (gridRows - 1));
+                rRow = Math.floor(Math.random() * maxRowBound);
                 
                 if (!isPositionOccupied(rCol, rRow)) {
                     valid = true;
@@ -996,6 +1232,8 @@
         }
 
         function spawnZoneFoods(zone, count) {
+            if (gameMode === 'easy') return;
+
             const bounds = getShelfBounds();
             const midRow = Math.floor(gridRows * 0.48);
 
@@ -1128,6 +1366,14 @@
                 showGameOver(); return;
             }
 
+            if (gameMode === 'hard') {
+                for (let s of shoppers) {
+                    if (s.c === headCol && s.r === headRow) {
+                        showGameOver(); return;
+                    }
+                }
+            }
+
             const head = {x: headX, y: headY};
             snake.unshift(head);
             
@@ -1143,8 +1389,10 @@
                 const eatenFood = foods[eatenIndex];
                 foods.splice(eatenIndex, 1);
 
-                score += eatenFood.item.points;
-                let displayText = eatenFood.item.type === "Pipi" ? "+80 PIPI" : `+${eatenFood.item.points}`;
+                const ptsGagnes = gameMode === 'hard' ? Math.round(eatenFood.item.points * 1.5) : eatenFood.item.points;
+                score += ptsGagnes;
+
+                let displayText = eatenFood.item.type === "Pipi" ? `+${ptsGagnes} PIPI` : `+${ptsGagnes}`;
                 floatingTexts.push({text: displayText, x: eatenFood.x, y: eatenFood.y, color: eatenFood.item.color, life: 1.0});
                 
                 document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
@@ -1207,19 +1455,24 @@
             ctx.globalAlpha = 1.0;
         }
 
-        function startGame() {
+        function startGame(mode = 'normal') {
+            gameMode = mode;
             document.getElementById('startScreen').style.display = "none";
             initAudio();
-            playRandomMusic();
+            currentAudioIndex = 0;
+            playNextMusic();
             gameStarted = true;
             resizeGameCanvas();
             initGame();
-            startRoccoCycle();
+            startMessageCycle();
         }
 
         function initGame() {
             score = 0;
-            vitesseJeu = 150;
+            if (gameMode === 'hard') vitesseJeu = 135;
+            else if (gameMode === 'easy') vitesseJeu = 165;
+            else vitesseJeu = 150;
+
             dx = gridSize;
             dy = 0;
             isGameOverState = false;
@@ -1227,6 +1480,9 @@
             floatingTexts = [];
             inputQueue = [];
             foods = [];
+            shoppers = [];
+            shopperSpawnTimer = 0;
+            shopperMoveCounter = 0;
             
             document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: 0";
             document.getElementById('gameOverScreen').style.display = "none";
@@ -1252,6 +1508,12 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 drawGrid();
                 drawFoods();
+
+                if (gameMode === 'hard') {
+                    updateShoppers();
+                    drawShoppers();
+                }
+
                 advanceSnake();
                 
                 for(let i = snake.length - 1; i >= 0; i--) {
@@ -1265,7 +1527,7 @@
 
         function showGameOver() {
             isGameOverState = true;
-            stopRoccoCycle();
+            stopMessageCycle();
             stopMusic();
             playSound('die');
             document.getElementById("finalScore").innerText = score;
@@ -1275,11 +1537,13 @@
 
         function resetGame() {
             clearTimeout(gameLoopTimeout);
-            startGame();
+            document.getElementById('gameOverScreen').style.display = "none";
+            document.getElementById('startScreen').style.display = "flex";
+            gameStarted = false;
         }
 
         document.addEventListener("keydown", function(e) {
-            if (!gameStarted && e.key === "Enter") { startGame(); return; }
+            if (!gameStarted && e.key === "Enter") { startGame('normal'); return; }
             if (isGameOverState && e.key === "Enter") { validerScore(); return; }
             if (["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)) e.preventDefault();
             
