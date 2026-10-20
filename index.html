@@ -312,34 +312,6 @@
             box-shadow: 0 2px 0px #003366;
         }
 
-        /* Contrôles tactiles (D-Pad discret pour mobile) */
-        #touchControls {
-            display: none;
-            margin-top: 6px;
-            grid-template-columns: repeat(3, 50px);
-            grid-template-rows: repeat(2, 42px);
-            gap: 6px;
-            justify-content: center;
-        }
-        .touch-key {
-            background: #0055A4;
-            color: white;
-            border: 2px solid #E30613;
-            border-radius: 12px;
-            font-size: 18px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 0 #002e5b;
-            cursor: pointer;
-        }
-        .touch-key:active {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #002e5b;
-            background: #E30613;
-        }
-
         /* Modale Top 10 */
         .modal {
             position: fixed;
@@ -393,10 +365,6 @@
         }
 
         .hidden { display: none !important; }
-
-        @media (max-height: 800px) {
-            #touchControls { display: grid; }
-        }
     </style>
 </head>
 <body>
@@ -461,16 +429,6 @@
             <button class="action-btn" onclick="resetGame()">Reprendre le service</button>
             <button class="action-btn secondary" onclick="chargerClassement()">Actualiser le top</button>
         </div>
-    </div>
-
-    <!-- TOUCH CONTROLS (optionnel / mobile) -->
-    <div id="touchControls">
-        <div></div>
-        <div class="touch-key" onclick="handleDirection(38)">▲</div>
-        <div></div>
-        <div class="touch-key" onclick="handleDirection(37)">◀</div>
-        <div class="touch-key" onclick="handleDirection(40)">▼</div>
-        <div class="touch-key" onclick="handleDirection(39)">▶</div>
     </div>
 
     <!-- MODALE DU TOP 10 COMPLET -->
