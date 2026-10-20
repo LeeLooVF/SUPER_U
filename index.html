@@ -554,11 +554,18 @@
         let particles = [];
         let floatingTexts = [];
 
-        // Audio Synth
+        // Audio : Playlist des 5 musiques MP3 & Bruitages
+        const TRACK_LIST = [
+            "Audio001.mp3",
+            "Audio002.mp3",
+            "Audio003.mp3",
+            "Audio004.mp3",
+            "Audio005.mp3"
+        ];
+        let currentAudio = null;
+        let currentTrackIndex = -1;
+
         let audioCtx = null;
-        let bgmInterval = null;
-        let currentNoteIndex = 0;
-        const melody = [392.00, 440.00, 493.88, 523.25, 392.00, 523.25, 659.25, 523.25];
 
         function initAudio() {
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -643,35 +650,50 @@
             }
         }
 
-        function playBGMNote() {
-            if (!audioCtx || isGameOverState || !gameStarted) return;
-            const osc = audioCtx.createOscillator();
-            const gainNode = audioCtx.createGain();
-            osc.connect(gainNode);
-            gainNode.connect(audioCtx.destination);
-            const now = audioCtx.currentTime;
-            
-            osc.type = 'triangle'; 
-            osc.frequency.value = melody[currentNoteIndex];
-            
-            gainNode.gain.setValueAtTime(0, now);
-            gainNode.gain.linearRampToValueAtTime(0.02, now + 0.04); 
-            gainNode.gain.exponentialRampToValueAtTime(0.001, now + 0.28); 
-            
-            osc.start(now);
-            osc.stop(now + 0.32);
-            
-            currentNoteIndex = (currentNoteIndex + 1) % melody.length;
+        function playRandomTrack() {
+            if (!TRACK_LIST || TRACK_LIST.length === 0) return;
+
+            // Choisit un morceau aléatoire différent du précédent
+            let nextIndex = Math.floor(Math.random() * TRACK_LIST.length);
+            if (TRACK_LIST.length > 1 && nextIndex === currentTrackIndex) {
+                nextIndex = (nextIndex + 1) % TRACK_LIST.length;
+            }
+            currentTrackIndex = nextIndex;
+
+            if (currentAudio) {
+                try {
+                    currentAudio.pause();
+                    currentAudio.currentTime = 0;
+                } catch (e) {}
+            }
+
+            currentAudio = new Audio(TRACK_LIST[currentTrackIndex]);
+            currentAudio.volume = 0.55;
+
+            // Enchaîne automatiquement avec un nouveau morceau à la fin
+            currentAudio.addEventListener('ended', () => {
+                if (gameStarted && !isGameOverState) {
+                    playRandomTrack();
+                }
+            });
+
+            currentAudio.play().catch(e => {
+                console.warn("Lecture audio bloquée ou fichier introuvable :", e);
+            });
         }
 
         function startBGM() {
-            if(bgmInterval) clearInterval(bgmInterval);
-            currentNoteIndex = 0;
-            bgmInterval = setInterval(playBGMNote, 520);
+            stopBGM();
+            playRandomTrack();
         }
 
         function stopBGM() {
-            if(bgmInterval) clearInterval(bgmInterval);
+            if (currentAudio) {
+                try {
+                    currentAudio.pause();
+                    currentAudio.currentTime = 0;
+                } catch (e) {}
+            }
         }
 
         // Leaderboard API
