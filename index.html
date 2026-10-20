@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Super U - Ménage Simulator</title>
+    <title>Super U - Ménage Simulator (V5)</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
     
@@ -401,7 +401,6 @@
         </div>
     </div>
 
-    <!-- MODALE DU TOP 10 COMPLET -->
     <div id="leaderboardModal" class="modal hidden" onclick="closeLeaderboard()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
@@ -420,7 +419,7 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        let gridSize = 32; // Adapted for mobile
+        let gridSize = 32;
         let dx = gridSize;
         let dy = 0;
         let snake = [];
@@ -464,8 +463,8 @@
             const randIndex = Math.floor(Math.random() * audioFiles.length);
             currentAudio = new Audio(audioFiles[randIndex]);
             currentAudio.volume = 0.4;
-            currentAudio.onended = playRandomMusic; // Loop
-            currentAudio.play().catch(e => console.log("Audio not available:", e));
+            currentAudio.onended = playRandomMusic;
+            currentAudio.play().catch(e => console.log("Audio non dispo :", e));
         }
 
         function stopMusic() {
@@ -614,12 +613,12 @@
             const startRow = 5; 
             const endRow = gridRows - 5; 
             
-            // Allée centrale élargie : midRow - 3 à midRow + 2
+            // Allée centrale élargie de 6 rangées : midRow - 3 à midRow + 2
             const midRow = Math.floor(gridRows / 2);
             const midStart = midRow - 3;
             const midEnd = midRow + 2;
 
-            // 4 colonnes de rayons
+            // 4 colonnes de rayons bien proportionnées
             const cols = [
                 Math.floor(gridCols * 0.18),
                 Math.floor(gridCols * 0.38),
@@ -632,12 +631,12 @@
 
         function isObstacle(col, row) {
             const bounds = getShelfBounds();
-            // Ligne des caisses en bas
+            // Ligne des caisses en bas (collision mortelle)
             if (row >= bounds.gridRows - 1) return true;
 
-            // Rayons
+            // Rayons verticaux
             if (row >= bounds.startRow && row <= bounds.endRow) {
-                // Coupure centrale jaune
+                // Coupure centrale complètement dégagée
                 if (row >= bounds.midStart && row <= bounds.midEnd) return false;
                 // Collision avec les colonnes de gondoles
                 if (bounds.cols.includes(col)) return true;
@@ -646,7 +645,7 @@
         }
 
         function drawGrid() {
-            // Carrelage blanc propre sur toute la surface
+            // Carrelage blanc propre
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
@@ -662,7 +661,7 @@
             drawSupermarketShelves();
             drawCheckouts();
 
-            // Mur d'enceinte rigide (pour éviter l'effet visuel de traverser les bords)
+            // Mur d'enceinte rigide bleu foncé
             ctx.strokeStyle = "#003366";
             ctx.lineWidth = 8;
             ctx.strokeRect(4, 4, canvas.width - 8, canvas.height - 8);
@@ -673,7 +672,7 @@
             
             bounds.cols.forEach((col, index) => {
                 for (let row = bounds.startRow; row <= bounds.endRow; row++) {
-                    if (row >= bounds.midStart && row <= bounds.midEnd) continue; // Allée centrale
+                    if (row >= bounds.midStart && row <= bounds.midEnd) continue;
                     
                     const x = col * gridSize;
                     const y = row * gridSize;
@@ -687,22 +686,22 @@
                     // Habillage selon la zone
                     if (index === 0 && row < bounds.midStart) {
                         // Zone Promo (Rouge)
-                        ctx.fillStyle = "#92400e"; // Palette bois
+                        ctx.fillStyle = "#92400e";
                         ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
-                        ctx.fillStyle = "#ef4444"; // Carton rouge
+                        ctx.fillStyle = "#ef4444";
                         ctx.fillRect(x + 6, y + 6, gridSize - 12, gridSize - 12);
-                        ctx.fillStyle = "#fef08a"; // Bande promo %
+                        ctx.fillStyle = "#fef08a";
                         ctx.fillRect(x + 10, y + 10, gridSize - 20, 8);
                     } else if ((index === 1 || index === 2) && row < bounds.midStart) {
-                        // Zone Frais (Bleu)
-                        ctx.fillStyle = "#fef3c7"; // Cagette bois clair
+                        // Zone Frais (Fruits & Légumes)
+                        ctx.fillStyle = "#fef3c7";
                         ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
-                        ctx.fillStyle = ["#22c55e", "#ef4444", "#f97316", "#8b5cf6"][row % 4]; // Fruits (pomme, orange, salade...)
+                        ctx.fillStyle = ["#22c55e", "#ef4444", "#f97316", "#8b5cf6"][row % 4];
                         ctx.beginPath();
                         ctx.arc(x + gridSize/2, y + gridSize/2, 5, 0, Math.PI*2);
                         ctx.fill();
                     } else {
-                        // Rayon classique
+                        // Rayon classique épicerie
                         ctx.fillStyle = ["#3b82f6", "#10b981", "#8b5cf6", "#f59e0b", "#ec4899"][Math.abs(row+index) % 5];
                         ctx.fillRect(x + 6, y + 4, gridSize - 12, gridSize - 8);
                     }
@@ -735,7 +734,7 @@
 
         function drawSnakePart(snakePart, index) {
             if (index === 0) {
-                // Tête = Autolaveuse
+                // Tête = Autolaveuse Super U
                 ctx.fillStyle = "#0055A4";
                 ctx.beginPath();
                 ctx.roundRect(snakePart.x + 2, snakePart.y + 2, gridSize - 4, gridSize - 4, 6);
@@ -776,9 +775,9 @@
                 // Sillage d'eau lustré
                 const ratio = index / snake.length;
                 const size = (gridSize/2 - 2) * (1 - ratio * 0.4);
-                ctx.fillStyle = "rgba(173, 216, 230, 0.5)"; // Eau bleutée
+                ctx.fillStyle = "rgba(173, 216, 230, 0.5)";
                 ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2, snakePart.y + gridSize/2, size, 0, Math.PI*2); ctx.fill();
-                ctx.fillStyle = "rgba(255, 255, 255, 0.6)"; // Reflet
+                ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
                 ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2 - size/3, snakePart.y + gridSize/2 - size/3, size/3, 0, Math.PI*2); ctx.fill();
             }
         }
@@ -822,7 +821,6 @@
         }
 
         function advanceSnake() {
-            // Buffer input to prevent instant suicide
             if (inputQueue.length > 0) {
                 const nextMove = inputQueue.shift();
                 dx = nextMove.dx;
@@ -832,7 +830,7 @@
             const headX = snake[0].x + dx;
             const headY = snake[0].y + dy;
 
-            // Hors limites (Murs extérieurs)
+            // Collision avec les murs extérieurs
             if (headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height) {
                 showGameOver(); return;
             }
@@ -840,7 +838,7 @@
             const headCol = Math.floor(headX / gridSize);
             const headRow = Math.floor(headY / gridSize);
 
-            // Obstacles physiques (Rayons, Caisses)
+            // Obstacles physiques mortels (Rayons et Caisses)
             if (isObstacle(headCol, headRow)) {
                 showGameOver(); return;
             }
@@ -848,7 +846,7 @@
             const head = {x: headX, y: headY};
             snake.unshift(head);
             
-            // Nettoyage de la tache
+            // Ramassage d'une saleté
             if (head.x === foodX && head.y === foodY) {
                 score += currentFood.points;
                 let displayText = currentFood.type === "Pipi" ? "+80 PIPI" : `+${currentFood.points}`;
@@ -859,12 +857,12 @@
                 createExplosion(foodX, foodY, currentFood.color);
                 generateFood();
                 
-                if (vitesseJeu > 60) vitesseJeu -= 2; // Accélération progressive
+                if (vitesseJeu > 60) vitesseJeu -= 2;
             } else {
                 snake.pop(); 
             }
 
-            // Auto-collision
+            // Auto-collision avec son propre corps
             for (let i = 4; i < snake.length; i++) {
                 if (snake[i].x === head.x && snake[i].y === head.y) {
                     showGameOver(); return;
@@ -883,7 +881,6 @@
         }
 
         function drawEffects() {
-            // Particules
             for (let i = particles.length - 1; i >= 0; i--) {
                 let p = particles[i];
                 p.x += p.vx; p.y += p.vy;
@@ -895,7 +892,6 @@
             }
             ctx.globalAlpha = 1.0;
 
-            // Textes flottants
             for(let i = floatingTexts.length -1; i >= 0; i--) {
                 let ft = floatingTexts[i];
                 ft.y -= 1;
@@ -939,7 +935,7 @@
             document.getElementById('scoreSubmittedMsg').style.display = "none";
             document.getElementById('playerNameInput').value = "";
             
-            // Spawn safe in row 2
+            // Spawn sécurisé dans l'allée haute (rangée 2)
             snake = [];
             const startY = 2 * gridSize;
             for(let i = 0; i < 4; i++){ 
@@ -958,8 +954,8 @@
                 drawGrid();
                 drawFood();
                 advanceSnake();
-                drawSnakePart(snake[0], 0); // Head
-                for(let i = snake.length - 1; i > 0; i--) drawSnakePart(snake[i], i); // Tail
+                drawSnakePart(snake[0], 0);
+                for(let i = snake.length - 1; i > 0; i--) drawSnakePart(snake[i], i);
                 drawEffects();
                 main();
             }, vitesseJeu); 
@@ -979,7 +975,6 @@
             startGame();
         }
 
-        // Controls
         document.addEventListener("keydown", function(e) {
             if (!gameStarted && e.key === "Enter") { startGame(); return; }
             if (isGameOverState && e.key === "Enter") { validerScore(); return; }
@@ -1023,9 +1018,7 @@
 
         window.addEventListener('resize', () => { if(!gameStarted) resizeGameCanvas(); });
         
-        // Initial setup
         chargerClassement();
-        
     </script>
 </body>
 </html>
