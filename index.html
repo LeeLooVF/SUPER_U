@@ -912,16 +912,67 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
+        function drawTrail() {
+            // Sillage d'eau lustrée et propre laissé sur le carrelage
+            if (!snake || snake.length < 2) return;
+            ctx.save();
+            for (let i = 1; i < snake.length; i++) {
+                const seg = snake[i];
+                const ratio = 1 - (i / snake.length);
+                
+                // Eau claire brillante
+                ctx.fillStyle = `rgba(186, 230, 253, ${0.12 + ratio * 0.22})`;
+                ctx.beginPath();
+                ctx.roundRect(seg.x + 3, seg.y + 3, gridSize - 6, gridSize - 6, 8);
+                ctx.fill();
+
+                // Reflet lustré en diagonale
+                ctx.fillStyle = `rgba(255, 255, 255, ${0.18 + ratio * 0.25})`;
+                ctx.beginPath();
+                ctx.ellipse(seg.x + gridSize * 0.35, seg.y + gridSize * 0.35, 6, 2.5, Math.PI / 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+            ctx.restore();
+        }
+
         function drawGrid() {
             // 1. Sol carrelé grand format de supermarché avec joints
-            ctx.fillStyle = "#f8fafc";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        function spawnDechet() {
+            // Choix du déchet selon les probabilités
+            const rand = Math.random();
+            let cumul = 0;
+            let selected = DECHETS_TYPES[0];
 
-            ctx.strokeStyle = "#e2e8f0"; 
-            ctx.lineWidth = 1.5;
-            for (let i = 0; i <= canvas.width; i += gridSize) {
-                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+            for (const item of DECHETS_TYPES) {
+                cumul += item.chance;
+                if (rand <= cumul) {
+                    selected = item;
+                    break;
+                }
             }
+
+            let valid = false;
+            let fx = 0, fy = 0;
+            let attempts = 0;
+            
+            // Laisse la zone des caisses et le bas complètement propres (zone encadré rouge)
+            const maxFoodRows = Math.max(1, gridRows - 2);
+
+            while (!valid && attempts < 500) {
+                fx = Math.floor(Math.random() * gridCols) * gridSize;
+                fy = Math.floor(Math.random() * maxFoodRows) * gridSize;
+                const col = Math.floor(fx / gridSize);
+                const row = Math.floor(fy / gridSize);
+                valid = !snake.some(segment => segment.x === fx && segment.y === fy) && !isObstacle(col, row);
+                attempts++;
+            }
+
+            currentFood = {
+                x: fx,
+                y: fy,
+                type: selected
+            };
+        }
             for (let i = 0; i <= canvas.height; i += gridSize) {
                 ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
             }
