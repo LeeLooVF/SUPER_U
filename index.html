@@ -8,6 +8,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
     
     <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
         body {
             display: flex;
             flex-direction: column;
@@ -15,28 +21,27 @@
             justify-content: flex-start;
             height: 100dvh;
             margin: 0;
-            padding: 5px 10px;
+            padding: 6px 10px;
             background-color: #f4f6f8; 
             color: #0055A4;
             font-family: 'Montserrat', sans-serif;
             overflow: hidden; 
             touch-action: none; 
-            box-sizing: border-box;
         }
 
+        /* Top Bar matching the screenshot exactly */
         #topBar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             width: 100%;
             padding: 5px 10px;
-            margin-bottom: 5px;
-            background: rgba(255, 255, 255, 0.95);
+            margin-bottom: 6px;
+            background: #ffffff;
             border-radius: 14px;
             border: 3px solid #0055A4;
             box-shadow: 0 4px 12px rgba(0, 85, 164, 0.12);
             flex-shrink: 0;
-            box-sizing: border-box;
         }
 
         #gameHeader {
@@ -44,7 +49,6 @@
             align-items: center;
             cursor: pointer;
             min-width: 0;
-            user-select: none;
             transition: transform 0.1s ease;
         }
         #gameHeader:active {
@@ -52,7 +56,7 @@
         }
 
         #gameTitle {
-            font-size: clamp(14px, 4.2vw, 22px); 
+            font-size: clamp(14px, 4.3vw, 22px); 
             white-space: nowrap; 
             margin: 0;
             color: #0055A4;
@@ -63,7 +67,7 @@
 
         .u-red { color: #E30613; }
 
-        /* Animation interactive Rocco */
+        /* Boss Rocco Interactive Inline Avatar */
         #bossInline {
             display: flex;
             align-items: center;
@@ -112,38 +116,42 @@
             border-right: 6px solid #0055A4;
         }
 
-        .right-header-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-        }
-
         .top-ten-btn {
             background: none;
             border: none;
             color: #E30613;
-            font-size: clamp(9px, 2.5vw, 12px);
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
             cursor: pointer;
-            text-decoration: underline;
-            padding: 2px 4px;
-            margin: 0;
-            line-height: 1.1;
-            white-space: nowrap;
+            padding: 0 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.05;
         }
 
-        .top-ten-btn:hover { color: #b3000b; }
+        .top-ten-btn span.title {
+            font-size: clamp(8px, 2.3vw, 11px);
+            font-weight: 900;
+            color: #E30613;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .top-ten-btn span.num {
+            font-size: clamp(10px, 2.7vw, 13px);
+            font-weight: 900;
+            color: #E30613;
+            text-decoration: underline;
+        }
 
         #scoreboard {
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: flex-end;
-            gap: 2px;
-            font-size: clamp(10px, 2.6vw, 13px);
+            align-items: flex-start;
+            gap: 1px;
+            font-size: clamp(10px, 2.6vw, 12.5px);
             font-weight: 900;
             color: #ffffff;
             background: linear-gradient(135deg, #0055A4, #003366);
@@ -158,13 +166,11 @@
             position: relative;
             width: 100%;
             flex: 1 1 auto;
-            margin: 0;
-            border-radius: 16px;
+            border-radius: 18px;
             border: 4px solid #0055A4;
             background-color: #ffffff; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
             overflow: hidden;
-            box-sizing: border-box;
         }
 
         canvas {
@@ -185,8 +191,7 @@
             justify-content: center;
             color: #0055A4;
             text-align: center;
-            padding: 12px;
-            box-sizing: border-box;
+            padding: 14px;
         }
 
         #startScreen { z-index: 10; }
@@ -232,7 +237,6 @@
             max-width: 300px;
             max-height: 140px;
             overflow-y: auto;
-            box-sizing: border-box;
         }
 
         #leaderboardContainer h3 {
@@ -261,7 +265,7 @@
         }
 
         .leaderboard-entry .rank { color: #E30613; width: 25px; }
-        .leaderboard-entry .name { color: #0055A4; max-width: 180px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .leaderboard-entry .name { color: #0055A4; max-width: 175px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
         .leaderboard-entry .score { color: #E30613; font-weight: 900; }
 
         input[type="text"] {
@@ -287,8 +291,6 @@
             text-transform: uppercase;
             font-family: inherit;
             letter-spacing: 0.5px;
-            user-select: none;
-            -webkit-user-select: none;
         }
 
         button.action-btn:active {
@@ -305,7 +307,6 @@
             align-items: center;
             z-index: 100;
             padding: 20px;
-            box-sizing: border-box;
         }
 
         .modal-content {
@@ -317,7 +318,6 @@
             padding: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             text-align: center;
-            box-sizing: border-box;
         }
 
         .modal-header {
@@ -344,12 +344,15 @@
                 <div class="boss-inline-bubble">Allez nettoyer en zone promo</div>
             </div>
         </div>
-        <div class="right-header-group">
-            <button class="top-ten-btn" onclick="openLeaderboard()">🏆 TOP 10</button>
-            <div id="scoreboard">
-                <div id="scoreDisplay">🧼 PROPRETÉ: 0</div>
-                <div id="highScoreDisplay">👑 RECORD: 0</div>
-            </div>
+
+        <button class="top-ten-btn" onclick="openLeaderboard()">
+            <span class="title">🏆 TOP</span>
+            <span class="num">10</span>
+        </button>
+
+        <div id="scoreboard">
+            <div id="scoreDisplay">🧼 PROPRETÉ: 0</div>
+            <div id="highScoreDisplay">👑 RECORD: 0</div>
         </div>
     </div>
     
@@ -360,7 +363,7 @@
             <h2 style="color: #0055A4; font-size: 21px; text-transform: uppercase; font-weight: 900; margin-bottom: 4px;">MISE EN ROUTE AUTOLAVEUSE 🧼</h2>
             <p style="font-size: 13px; font-weight: 700; color: #555; margin-bottom: 12px;">Nettoyez le magasin avant l'ouverture !</p>
             
-            <div style="text-align: left; background: #fff; padding: 10px 14px; border-radius: 12px; border: 2px solid #0055A4; margin-bottom: 12px; font-size: 12px; font-weight: 800; width: 90%; max-width: 290px; box-sizing: border-box;">
+            <div style="text-align: left; background: #fff; padding: 10px 14px; border-radius: 12px; border: 2px solid #0055A4; margin-bottom: 12px; font-size: 12px; font-weight: 800; width: 90%; max-width: 290px;">
                 <div style="color: #64748b; margin-bottom: 4px;">📄 Mouchoir (Commun - 50%) <span style="float: right;">+10 pts</span></div>
                 <div style="color: #8b4513; margin-bottom: 4px;">☕ Tache (Peu commun - 24%) <span style="float: right;">+20 pts</span></div>
                 <div style="color: #22c55e; margin-bottom: 4px;">🍾 Bouteille (Rare - 15%) <span style="float: right;">+45 pts</span></div>
@@ -392,6 +395,7 @@
         </div>
     </div>
 
+    <!-- Leaderboard Modal -->
     <div id="leaderboardModal" class="modal hidden" onclick="closeLeaderboard()">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
@@ -410,7 +414,7 @@
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
 
-        let gridSize = 32;
+        let gridSize = 30;
         let dx = gridSize, dy = 0;
         let snake = [];
         let inputQueue = [];
@@ -436,6 +440,7 @@
         let particles = [];
         let floatingTexts = [];
 
+        // Gestion Audio
         let audioCtx;
         let currentAudio = null;
         const audioFiles = ['Audio001.mp3', 'Audio002.mp3', 'Audio003.mp3', 'Audio004.mp3', 'Audio005.mp3'];
@@ -451,7 +456,7 @@
             currentAudio = new Audio(audioFiles[randIndex]);
             currentAudio.volume = 0.4;
             currentAudio.onended = playRandomMusic;
-            currentAudio.play().catch(e => console.log("Audio non dispo :", e));
+            currentAudio.play().catch(e => console.log("Audio file info:", e));
         }
 
         function stopMusic() {
@@ -587,6 +592,10 @@
         function resizeGameCanvas() {
             const container = document.getElementById('gameContainer');
             const rect = container.getBoundingClientRect();
+            
+            // Adapter la taille de grille pour avoir environ 17 à 19 colonnes sur mobile
+            gridSize = Math.max(26, Math.floor(rect.width / 18));
+            
             const cols = Math.floor(rect.width / gridSize);
             const rows = Math.floor(rect.height / gridSize);
             canvas.width = cols * gridSize;
@@ -597,21 +606,21 @@
             const gridRows = Math.floor(canvas.height / gridSize);
             const gridCols = Math.floor(canvas.width / gridSize);
 
-            const startRow = 5; 
+            const startRow = 6; 
             const endRow = gridRows - 5; 
             
-            // Allée centrale largement dégagée pour tourner
-            const midRow = Math.floor(gridRows / 2);
-            const midStart = midRow - 3;
+            // Allée centrale avec bande beige et pointillés
+            const midRow = Math.floor(gridRows * 0.47);
+            const midStart = midRow - 2;
             const midEnd = midRow + 2;
 
-            // 4 colonnes de gondoles
-            const cols = [
-                Math.floor(gridCols * 0.18),
-                Math.floor(gridCols * 0.38),
-                Math.floor(gridCols * 0.62),
-                Math.floor(gridCols * 0.82)
-            ];
+            // 4 colonnes régulières de gondoles
+            const col1 = Math.round(gridCols * 0.18);
+            const col2 = Math.round(gridCols * 0.38);
+            const col3 = Math.round(gridCols * 0.62);
+            const col4 = Math.round(gridCols * 0.82);
+
+            const cols = [col1, col2, col3, col4];
 
             return { gridRows, gridCols, startRow, endRow, midStart, midEnd, cols };
         }
@@ -621,7 +630,7 @@
             // Ligne de caisses tout en bas
             if (row >= bounds.gridRows - 1) return true;
 
-            // Rayons verticaux (murs rigides)
+            // Rayons verticaux
             if (row >= bounds.startRow && row <= bounds.endRow) {
                 if (row >= bounds.midStart && row <= bounds.midEnd) return false;
                 if (bounds.cols.includes(col)) return true;
@@ -634,7 +643,8 @@
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            ctx.strokeStyle = "#f1f5f9";
+            // Lignes de carrelage douces
+            ctx.strokeStyle = "#e8eff7";
             ctx.lineWidth = 1;
             for (let x = 0; x <= canvas.width; x += gridSize) {
                 ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
@@ -643,92 +653,192 @@
                 ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(canvas.width, y); ctx.stroke();
             }
 
-            drawSupermarketShelves();
-            drawCheckouts();
-
-            // Mur d'enceinte rigide bleu foncé
-            ctx.strokeStyle = "#003366";
-            ctx.lineWidth = 8;
-            ctx.strokeRect(4, 4, canvas.width - 8, canvas.height - 8);
-        }
-
-        function drawSupermarketShelves() {
             const bounds = getShelfBounds();
             
+            // Allée centrale couleur crème avec pointillés (exactement comme sur la capture)
+            const aisleY = bounds.midStart * gridSize;
+            const aisleHeight = (bounds.midEnd - bounds.midStart + 1) * gridSize;
+            
+            ctx.fillStyle = "rgba(254, 252, 240, 0.85)";
+            ctx.fillRect(0, aisleY, canvas.width, aisleHeight);
+
+            ctx.save();
+            ctx.setLineDash([6, 5]);
+            ctx.strokeStyle = "#e6dfb8";
+            ctx.lineWidth = 1.5;
+            ctx.beginPath();
+            ctx.moveTo(0, aisleY);
+            ctx.lineTo(canvas.width, aisleY);
+            ctx.moveTo(0, aisleY + aisleHeight);
+            ctx.lineTo(canvas.width, aisleY + aisleHeight);
+            ctx.stroke();
+            ctx.restore();
+
+            drawSupermarketShelves(bounds);
+            drawCheckouts(bounds);
+
+            // Murs rigides extérieurs bleus
+            ctx.strokeStyle = "#0055A4";
+            ctx.lineWidth = 6;
+            ctx.strokeRect(3, 3, canvas.width - 6, canvas.height - 6);
+        }
+
+        function drawSupermarketShelves(bounds) {
             bounds.cols.forEach((col, index) => {
-                for (let row = bounds.startRow; row <= bounds.endRow; row++) {
-                    if (row >= bounds.midStart && row <= bounds.midEnd) continue;
-                    
+                // RAYONS DU HAUT
+                for (let row = bounds.startRow; row < bounds.midStart; row++) {
                     const x = col * gridSize;
                     const y = row * gridSize;
                     
-                    // Structure gondole
-                    ctx.fillStyle = "#e2e8f0";
+                    // Fond étagère avec contour bleu fin
+                    ctx.fillStyle = "#ffffff";
                     ctx.fillRect(x + 2, y, gridSize - 4, gridSize);
-                    ctx.strokeStyle = "#cbd5e1";
+                    ctx.strokeStyle = "#0055A4";
+                    ctx.lineWidth = 2;
                     ctx.strokeRect(x + 2, y, gridSize - 4, gridSize);
-                    
-                    // Habillage des rayons selon l'allée
-                    if (index === 0 && row < bounds.midStart) {
-                        // 1. Zone Promo (Rouge / Jaune)
-                        ctx.fillStyle = "#92400e";
+
+                    if (index === 0) {
+                        // RAYON 1 HAUT : ZONE PROMO (Rouge & Jaune avec %)
+                        ctx.fillStyle = (row % 2 === 0) ? "#E30613" : "#f59e0b";
                         ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
-                        ctx.fillStyle = "#ef4444";
-                        ctx.fillRect(x + 6, y + 6, gridSize - 12, gridSize - 12);
-                        ctx.fillStyle = "#fef08a";
-                        ctx.fillRect(x + 10, y + 10, gridSize - 20, 8);
-                    } else if (index === 1 && row < bounds.midStart) {
-                        // 2. Zone Fruits & Légumes Frais
-                        ctx.fillStyle = "#fef3c7";
+                        
+                        ctx.fillStyle = "#ffffff";
+                        ctx.font = `bold ${Math.floor(gridSize * 0.45)}px Montserrat, sans-serif`;
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText("%", x + gridSize / 2, y + gridSize / 2);
+
+                    } else if (index === 1) {
+                        // RAYON 2 HAUT : FRUITS & LÉGUMES FRAIS (Points colorés)
+                        ctx.fillStyle = "#fefce8";
                         ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
-                        ctx.fillStyle = ["#22c55e", "#ef4444", "#f97316"][row % 3];
-                        ctx.beginPath();
-                        ctx.arc(x + gridSize/2, y + gridSize/2, 5, 0, Math.PI*2);
-                        ctx.fill();
-                    } else if (index === 2 && row < bounds.midStart) {
-                        // 3. Épicerie Bio
-                        ctx.fillStyle = "#f3e8ff";
+                        
+                        // Liseret horizontal
+                        ctx.strokeStyle = "#22c55e";
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+
+                        // Étal avec fruits colorés (rouges, verts, oranges)
+                        const colors = ["#ef4444", "#22c55e", "#f97316"];
+                        const dotRadius = Math.max(2, gridSize * 0.08);
+                        for(let d = 0; d < 3; d++) {
+                            ctx.fillStyle = colors[d];
+                            ctx.beginPath();
+                            ctx.arc(x + 7 + d * ((gridSize - 14) / 2), y + gridSize / 2, dotRadius, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+
+                    } else if (index === 2) {
+                        // RAYON 3 HAUT : ÉPICERIE / BIO (Points violets et jaunes)
+                        ctx.fillStyle = "#faf5ff";
                         ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
-                        ctx.fillStyle = ["#eab308", "#a855f7"][row % 2];
-                        ctx.beginPath();
-                        ctx.arc(x + gridSize/2, y + gridSize/2, 4, 0, Math.PI*2);
-                        ctx.fill();
-                    } else if (index === 3 && row < bounds.midStart) {
-                        // 4. Rayon Boissons / Fraîcheur
+
+                        ctx.strokeStyle = "#eab308";
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+
+                        const colors = ["#a855f7", "#eab308", "#a855f7"];
+                        const dotRadius = Math.max(2, gridSize * 0.08);
+                        for(let d = 0; d < 3; d++) {
+                            ctx.fillStyle = colors[d];
+                            ctx.beginPath();
+                            ctx.arc(x + 7 + d * ((gridSize - 14) / 2), y + gridSize / 2, dotRadius, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+
+                    } else if (index === 3) {
+                        // RAYON 4 HAUT : FRAÎCHEUR & BOISSONS (Lignes cyan/teal)
                         ctx.fillStyle = "#06b6d4";
-                        ctx.fillRect(x + 6, y + 4, gridSize - 12, gridSize - 8);
+                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                        
                         ctx.fillStyle = "#ffffff";
-                        ctx.fillRect(x + 10, y + 7, gridSize - 20, 3);
-                    } else {
-                        // Rayons inférieurs : alimentation variée
-                        ctx.fillStyle = ["#3b82f6", "#ec4899", "#8b5cf6", "#06b6d4"][Math.abs(row + index) % 4];
-                        ctx.fillRect(x + 6, y + 4, gridSize - 12, gridSize - 8);
-                        ctx.fillStyle = "#ffffff";
-                        ctx.fillRect(x + 8, y + 6, 4, 3);
+                        ctx.fillRect(x + 6, y + 4, gridSize - 12, 2);
+                        ctx.fillRect(x + 6, y + gridSize - 6, gridSize - 12, 2);
                     }
                 }
+
+                // Chapeau de tête de gondole haut
+                ctx.fillStyle = (index === 0) ? "#E30613" : (index === 1 ? "#22c55e" : "#0055A4");
+                ctx.fillRect(col * gridSize + 2, bounds.startRow * gridSize - 3, gridSize - 4, 3);
+                ctx.fillRect(col * gridSize + 2, (bounds.midStart - 1) * gridSize + gridSize - 1, gridSize - 4, 3);
+
+                // RAYONS DU BAS (En dessous de l'allée centrale)
+                for (let row = bounds.midEnd + 1; row <= bounds.endRow; row++) {
+                    const x = col * gridSize;
+                    const y = row * gridSize;
+                    
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillRect(x + 2, y, gridSize - 4, gridSize);
+                    ctx.strokeStyle = "#0055A4";
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x + 2, y, gridSize - 4, gridSize);
+
+                    if (index === 0) {
+                        // Bas 1 : Bleu et blanc
+                        ctx.fillStyle = "#0284c7";
+                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fillRect(x + 6, y + gridSize / 2 - 1.5, gridSize - 12, 3);
+
+                    } else if (index === 1) {
+                        // Bas 2 : Magenta / violet et blanc
+                        ctx.fillStyle = (row % 2 === 0) ? "#c026d3" : "#0055A4";
+                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fillRect(x + 6, y + gridSize / 2 - 1.5, gridSize - 12, 3);
+
+                    } else if (index === 2) {
+                        // Bas 3 : Violet & orange
+                        ctx.fillStyle = (row % 2 === 0) ? "#8b5cf6" : "#f59e0b";
+                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fillRect(x + 6, y + gridSize / 2 - 1.5, gridSize - 12, 3);
+
+                    } else if (index === 3) {
+                        // Bas 4 : Teal / turquoise
+                        ctx.fillStyle = "#0d9488";
+                        ctx.fillRect(x + 4, y + 2, gridSize - 8, gridSize - 4);
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fillRect(x + 6, y + gridSize / 2 - 1.5, gridSize - 12, 3);
+                    }
+                }
+
+                // Chapeau de tête de gondole bas
+                ctx.fillStyle = "#0055A4";
+                ctx.fillRect(col * gridSize + 2, (bounds.midEnd + 1) * gridSize, gridSize - 4, 3);
+                ctx.fillRect(col * gridSize + 2, bounds.endRow * gridSize + gridSize - 2, gridSize - 4, 3);
             });
         }
 
-        function drawCheckouts() {
-            const bounds = getShelfBounds();
+        function drawCheckouts(bounds) {
             const row = bounds.gridRows - 1;
             const y = row * gridSize;
-            
-            for (let col = 0; col < bounds.gridCols; col += 4) {
-                if (col + 2 >= bounds.gridCols) break;
+            const totalCaisses = 6;
+            const step = Math.floor(bounds.gridCols / totalCaisses);
+
+            for (let i = 0; i < totalCaisses; i++) {
+                const col = 1 + i * step;
+                if (col + 1 >= bounds.gridCols) break;
                 const x = col * gridSize;
-                
-                // Tapis noir
+
+                // Tapis noir avec rainures
                 ctx.fillStyle = "#1e293b";
-                ctx.fillRect(x + 4, y + 4, gridSize * 2 - 8, gridSize - 8);
-                // Meuble caisse U
+                ctx.fillRect(x, y + 3, gridSize * 1.3, gridSize - 6);
+                
+                ctx.strokeStyle = "#334155";
+                ctx.lineWidth = 1;
+                for(let l = x + 4; l < x + gridSize * 1.3; l += 4) {
+                    ctx.beginPath(); ctx.moveTo(l, y + 4); ctx.lineTo(l, y + gridSize - 5); ctx.stroke();
+                }
+
+                // Meuble caisse Super U bleu
                 ctx.fillStyle = "#0055A4";
-                ctx.fillRect(x + gridSize * 2 - 4, y + 4, gridSize - 4, gridSize - 8);
-                // Voyant TPE
+                ctx.fillRect(x + gridSize * 1.3, y + 3, gridSize * 0.7, gridSize - 6);
+
+                // Voyant TPE rouge surmonté
                 ctx.fillStyle = "#ef4444";
                 ctx.beginPath();
-                ctx.arc(x + gridSize * 2.5 - 4, y + gridSize/2, 3, 0, Math.PI*2);
+                ctx.arc(x + gridSize * 1.65, y + 7, 3, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
@@ -743,43 +853,51 @@
                 
                 // Liseret Rouge Super U
                 ctx.fillStyle = "#E30613";
-                if(dx !== 0) ctx.fillRect(snakePart.x + 8, snakePart.y + 2, gridSize - 16, gridSize - 4);
-                else ctx.fillRect(snakePart.x + 2, snakePart.y + 8, gridSize - 4, gridSize - 16);
+                if(dx !== 0) ctx.fillRect(snakePart.x + 7, snakePart.y + 2, gridSize - 14, gridSize - 4);
+                else ctx.fillRect(snakePart.x + 2, snakePart.y + 7, gridSize - 4, gridSize - 14);
 
                 // Pare-brise
-                ctx.fillStyle = "rgba(0,0,0,0.6)";
-                if(dx > 0) ctx.fillRect(snakePart.x + 18, snakePart.y + 6, 6, gridSize - 12);
-                else if(dx < 0) ctx.fillRect(snakePart.x + 8, snakePart.y + 6, 6, gridSize - 12);
-                else if(dy > 0) ctx.fillRect(snakePart.x + 6, snakePart.y + 18, gridSize - 12, 6);
-                else if(dy < 0) ctx.fillRect(snakePart.x + 6, snakePart.y + 8, gridSize - 12, 6);
+                ctx.fillStyle = "rgba(0,0,0,0.65)";
+                if(dx > 0) ctx.fillRect(snakePart.x + gridSize - 9, snakePart.y + 5, 5, gridSize - 10);
+                else if(dx < 0) ctx.fillRect(snakePart.x + 4, snakePart.y + 5, 5, gridSize - 10);
+                else if(dy > 0) ctx.fillRect(snakePart.x + 5, snakePart.y + gridSize - 9, gridSize - 10, 5);
+                else if(dy < 0) ctx.fillRect(snakePart.x + 5, snakePart.y + 4, gridSize - 10, 5);
 
                 // Gyrophare orange clignotant
                 ctx.fillStyle = "#f97316";
                 ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2, snakePart.y + gridSize/2, 3, 0, Math.PI*2); ctx.fill();
-                if(Math.floor(Date.now()/150) % 2 === 0) {
-                    ctx.fillStyle = "rgba(249, 115, 22, 0.4)";
+                if(Math.floor(Date.now() / 150) % 2 === 0) {
+                    ctx.fillStyle = "rgba(249, 115, 22, 0.45)";
                     ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2, snakePart.y + gridSize/2, 8, 0, Math.PI*2); ctx.fill();
                 }
 
                 // Brosses rotatives
-                ctx.fillStyle = "#475569";
+                ctx.fillStyle = "#334155";
                 let bx1, by1, bx2, by2;
-                if(dx > 0) { bx1 = 28; by1 = 6; bx2 = 28; by2 = 26; }
-                else if(dx < 0) { bx1 = 4; by1 = 6; bx2 = 4; by2 = 26; }
-                else if(dy < 0) { bx1 = 6; by1 = 4; bx2 = 26; by2 = 4; }
-                else { bx1 = 6; by1 = 28; bx2 = 26; by2 = 28; }
+                if(dx > 0) { bx1 = gridSize - 4; by1 = 5; bx2 = gridSize - 4; by2 = gridSize - 5; }
+                else if(dx < 0) { bx1 = 4; by1 = 5; bx2 = 4; by2 = gridSize - 5; }
+                else if(dy < 0) { bx1 = 5; by1 = 4; bx2 = gridSize - 5; by2 = 4; }
+                else { bx1 = 5; by1 = gridSize - 4; bx2 = gridSize - 5; by2 = gridSize - 4; }
                 
-                ctx.beginPath(); ctx.arc(snakePart.x + bx1, snakePart.y + by1, 5, 0, Math.PI*2); ctx.fill();
-                ctx.beginPath(); ctx.arc(snakePart.x + bx2, snakePart.y + by2, 5, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(snakePart.x + bx1, snakePart.y + by1, 4.5, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath(); ctx.arc(snakePart.x + bx2, snakePart.y + by2, 4.5, 0, Math.PI*2); ctx.fill();
 
             } else {
-                // Sillage d'eau lustré
+                // Sillage d'eau lustré avec bulles de savon (comme dans la capture)
                 const ratio = index / snake.length;
-                const size = (gridSize/2 - 2) * (1 - ratio * 0.4);
-                ctx.fillStyle = "rgba(173, 216, 230, 0.5)";
-                ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2, snakePart.y + gridSize/2, size, 0, Math.PI*2); ctx.fill();
-                ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-                ctx.beginPath(); ctx.arc(snakePart.x + gridSize/2 - size/3, snakePart.y + gridSize/2 - size/3, size/3, 0, Math.PI*2); ctx.fill();
+                const size = (gridSize / 2 - 2) * (1 - ratio * 0.35);
+                
+                // Bulle translucide
+                ctx.fillStyle = "rgba(186, 230, 253, 0.65)";
+                ctx.beginPath(); 
+                ctx.arc(snakePart.x + gridSize/2, snakePart.y + gridSize/2, size, 0, Math.PI*2); 
+                ctx.fill();
+                
+                // Reflet spéculaire blanc
+                ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+                ctx.beginPath(); 
+                ctx.arc(snakePart.x + gridSize/2 - size/2.8, snakePart.y + gridSize/2 - size/2.8, size/3, 0, Math.PI*2); 
+                ctx.fill();
             }
         }
 
@@ -790,7 +908,7 @@
             
             while(!valid) {
                 rCol = Math.floor(Math.random() * bounds.gridCols);
-                rRow = Math.floor(Math.random() * (bounds.gridRows - 2)); // Ne spawn pas dans les caisses
+                rRow = Math.floor(Math.random() * (bounds.gridRows - 2));
                 
                 if(!isObstacle(rCol, rRow)) {
                     let onSnake = false;
@@ -815,7 +933,7 @@
 
         function drawFood() {
             if(!currentFood) return;
-            ctx.font = (gridSize * 0.7) + "px Arial";
+            ctx.font = (gridSize * 0.72) + "px Arial";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
             ctx.fillText(currentFood.emoji, foodX + gridSize/2, foodY + gridSize/2);
@@ -939,8 +1057,9 @@
             // Démarrage sécurisé dans l'allée haute (rangée 2)
             snake = [];
             const startY = 2 * gridSize;
-            for(let i = 0; i < 4; i++){ 
-                snake.push({x: 5 * gridSize - (i*gridSize), y: startY});
+            const startX = 6 * gridSize;
+            for(let i = 0; i < 5; i++){ 
+                snake.push({x: startX - (i * gridSize), y: startY});
             }
 
             generateFood();
