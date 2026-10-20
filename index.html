@@ -931,9 +931,7 @@
             drawCheckouts();
         }
 
-        // Rayons / Gondoles d'épicerie vus du dessus (1 seule case de large par rayon)
-        function drawSupermarketShelves() {
-            // 4 rayons répartis harmonieusement pour former 4 allées confortables
+        function getShelfBounds() {
             const shelfCols = [
                 Math.round(gridCols * 0.18),
                 Math.round(gridCols * 0.38),
@@ -941,48 +939,74 @@
                 Math.round(gridCols * 0.82)
             ];
 
-            // Espace haut correspondant à l'encadré noir (environ 5 cases de dégagement)
             const startRow = 5; 
-            // Espace bas généreux entre les rayons et les caisses (laisse 4 cases libres)
             const endRow = Math.max(startRow + 6, gridRows - 5); 
-
-            // Allée transversale de passage au centre
             const midRow = Math.floor((startRow + endRow) / 2);
+            // Allée centrale jaune : 3 rangées totalement libres pour manœuvrer
             const midRowBreakStart = midRow - 1; 
             const midRowBreakEnd = midRow + 1;
 
-            // Thèmes de rayons (produits visibles d'en haut)
-            const shelfThemes = [
-                { name: "FRAIS", roof: "#e0f2fe", items: ['#38bdf8', '#0284c7', '#ffffff', '#7dd3fc'] },
-                { name: "ÉPICERIE", roof: "#fef3c7", items: ['#f59e0b', '#d97706', '#ef4444', '#10b981'] },
-                { name: "BIO", roof: "#dcfce7", items: ['#22c55e', '#16a34a', '#84cc16', '#a3e635'] },
-                { name: "BOISSONS", roof: "#fce7f3", items: ['#ec4899', '#be185d', '#f97316', '#3b82f6'] }
-            ];
+            return { shelfCols, startRow, endRow, midRowBreakStart, midRowBreakEnd };
+        }
+
+        function isShelf(c, r) {
+            const { shelfCols, startRow, endRow, midRowBreakStart, midRowBreakEnd } = getShelfBounds();
+            if (!shelfCols.includes(c)) return false;
+            // Partie haute (avant allée transversale jaune)
+            if (r >= startRow && r < midRowBreakStart) return true;
+            // Partie basse (après allée transversale jaune)
+            if (r > midRowBreakEnd && r <= endRow) return true;
+            return false;
+        }
+
+        function isCheckout(c, r) {
+            if (r !== gridRows - 1) return false;
+            const checkoutSpacing = 4;
+            for (let startC = 1; startC < gridCols - 2; startC += checkoutSpacing) {
+                if (c >= startC && c < startC + 2) return true;
+            }
+            return false;
+        }
+
+        function isObstacle(c, r) {
+            return isShelf(c, r) || isCheckout(c, r);
+        }
+
+        function drawSupermarketShelves() {
+            const { shelfCols, startRow, endRow, midRowBreakStart, midRowBreakEnd } = getShelfBounds();
 
             shelfCols.forEach((col, idx) => {
-                const theme = shelfThemes[idx % shelfThemes.length];
                 const x = col * gridSize;
 
-                // Segment supérieur (largeur exacte : 1 case)
-                drawShelfBlock(x, startRow * gridSize, gridSize - 4, (midRowBreakStart - startRow) * gridSize, theme);
-                // Segment inférieur (largeur exacte : 1 case)
-                drawShelfBlock(x, midRowBreakEnd * gridSize, gridSize - 4, (endRow - midRowBreakEnd) * gridSize, theme);
+                // Rayon 1 (Index 0) Haut : ZONE PROMO (Encadré Rouge)
+                // Rayon 2 & 3 (Index 1 & 2) Haut : ZONE FRUITS ET LÉGUMES FRAIS (Encadré Bleu)
+                // Rayon 4 (Index 3) Haut & Tous les Rayons Bas : Épicerie / Boissons / Hygiène
+                
+                let upperTheme = "STANDARD";
+                if (idx === 0) upperTheme = "PROMO";
+                else if (idx === 1 || idx === 2) upperTheme = "FRUITS_LEGUMES";
+
+                // Segment supérieur (au-dessus de l'allée transversale jaune)
+                drawShelfSection(x, startRow * gridSize, gridSize - 4, (midRowBreakStart - startRow) * gridSize, upperTheme, idx);
+
+                // Segment inférieur (sous l'allée jaune) : rayons standards
+                drawShelfSection(x, (midRowBreakEnd + 1) * gridSize, gridSize - 4, (endRow - midRowBreakEnd) * gridSize, "STANDARD", idx);
             });
         }
 
-        function drawShelfBlock(x, y, w, h, theme) {
+        function drawShelfSection(x, y, w, h, zoneType, colIndex) {
             if (h <= 0) return;
             ctx.save();
 
-            // Ombre portée de la structure
-            ctx.shadowColor = "rgba(0, 30, 80, 0.08)";
-            ctx.shadowBlur = 5;
-            ctx.shadowOffsetY = 2;
+            // Ombre 3D marquée pour matérialiser le mur physique infranchissable
+            ctx.shadowColor = "rgba(0, 20, 60, 0.22)";
+            ctx.shadowBlur = 6;
+            ctx.shadowOffsetY = 3;
 
-            // Structure métallique du rayon (1 case de large)
+            // Cadre principal
             ctx.fillStyle = "#ffffff";
-            ctx.strokeStyle = "#cbd5e1";
-            ctx.lineWidth = 1.5;
+            ctx.strokeStyle = "#0055A4";
+            ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.roundRect(x + 2, y + 2, w, h - 4, 4);
             ctx.fill();
@@ -990,41 +1014,108 @@
 
             ctx.shadowColor = "transparent";
 
-            // Fond teinté de la gondole
-            ctx.fillStyle = theme.roof;
-            ctx.fillRect(x + 4, y + 4, w - 4, h - 8);
+            if (zoneType === "PROMO") {
+                // --- ZONE PROMO (Encadré Rouge) ---
+                // Fond jaune/orange promo avec palettes et cartons supermarché
+                ctx.fillStyle = "#fef08a";
+                ctx.fillRect(x + 4, y + 4, w - 4, h - 8);
 
-            // Produits alignés le long de la case
-            const itemH = 13;
-            const count = Math.floor((h - 10) / itemH);
-            for (let i = 0; i < count; i++) {
-                const itemY = y + 6 + (i * itemH);
-                const itemColor = theme.items[i % theme.items.length];
+                const count = Math.floor((h - 10) / 14);
+                for (let i = 0; i < count; i++) {
+                    const itemY = y + 6 + (i * 14);
+                    // Palette bois
+                    ctx.fillStyle = "#b45309";
+                    ctx.fillRect(x + 4, itemY + 11, w - 4, 2);
 
-                // Tablette d'étagère
-                ctx.fillStyle = "#94a3b8";
-                ctx.fillRect(x + 4, itemY, w - 4, 1.5);
+                    // Cartons de promo rouges et jaunes
+                    ctx.fillStyle = (i % 2 === 0) ? "#E30613" : "#f59e0b";
+                    ctx.fillRect(x + 6, itemY + 2, w - 8, 9);
 
-                // Boîtes / paquets de produits
-                ctx.fillStyle = itemColor;
-                ctx.fillRect(x + 6, itemY + 2, w - 8, itemH - 4);
+                    // Badge promo blanc
+                    ctx.fillStyle = "#ffffff";
+                    ctx.font = "bold 7px sans-serif";
+                    ctx.textAlign = "center";
+                    ctx.fillText("%", x + 2 + w / 2, itemY + 9);
+                }
 
-                // Petite étiquette blanche
-                ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
-                ctx.fillRect(x + 7, itemY + 3.5, 4, itemH - 7);
+                // Tête de gondole jaune éclatant "PROMO"
+                ctx.fillStyle = "#E30613";
+                ctx.fillRect(x + 2, y + 2, w, 5);
+                ctx.fillRect(x + 2, y + h - 7, w, 5);
+                ctx.fillStyle = "#ffeb3b";
+                ctx.fillRect(x + 5, y + 3, w - 6, 3);
+                ctx.fillRect(x + 5, y + h - 6, w - 6, 3);
+
+            } else if (zoneType === "FRUITS_LEGUMES") {
+                // --- ZONE FRUITS & LÉGUMES FRAIS (Encadré Bleu) ---
+                // Fond effet bois primeur
+                ctx.fillStyle = "#fef3c7";
+                ctx.fillRect(x + 4, y + 4, w - 4, h - 8);
+
+                const produce = colIndex === 1 
+                    ? ['#ef4444', '#f97316', '#22c55e'] // Pommes rouges, Oranges, Salades
+                    : ['#eab308', '#84cc16', '#a855f7']; // Bananes, Poires vertes, Aubergines
+
+                const count = Math.floor((h - 10) / 13);
+                for (let i = 0; i < count; i++) {
+                    const itemY = y + 6 + (i * 13);
+
+                    // Cagette en bois
+                    ctx.fillStyle = "#d97706";
+                    ctx.fillRect(x + 4, itemY + 10, w - 4, 2);
+
+                    // Étal primeur : 3 fruits/légumes vus du dessus
+                    const color = produce[i % produce.length];
+                    ctx.fillStyle = color;
+                    ctx.beginPath();
+                    ctx.arc(x + 8, itemY + 5, 3.5, 0, Math.PI * 2);
+                    ctx.arc(x + 16, itemY + 5, 3.5, 0, Math.PI * 2);
+                    ctx.arc(x + 24, itemY + 5, 3.5, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Petite feuille verte
+                    ctx.fillStyle = "#15803d";
+                    ctx.fillRect(x + 15, itemY + 1.5, 2, 2);
+                }
+
+                // Tête de gondole verte primeur "FRAIS U"
+                ctx.fillStyle = "#16a34a";
+                ctx.fillRect(x + 2, y + 2, w, 5);
+                ctx.fillRect(x + 2, y + h - 7, w, 5);
+
+            } else {
+                // --- RAYONS STANDARDS (Épicerie, Boissons, Hygiène) ---
+                const themes = [
+                    { roof: "#e0f2fe", items: ['#0284c7', '#38bdf8', '#ffffff'] },
+                    { roof: "#fce7f3", items: ['#ec4899', '#be185d', '#3b82f6'] },
+                    { roof: "#f3e8ff", items: ['#9333ea', '#c084fc', '#f59e0b'] },
+                    { roof: "#ccfbf1", items: ['#0d9488', '#14b8a6', '#0284c7'] }
+                ];
+                const theme = themes[colIndex % themes.length];
+
+                ctx.fillStyle = theme.roof;
+                ctx.fillRect(x + 4, y + 4, w - 4, h - 8);
+
+                const count = Math.floor((h - 10) / 12);
+                for (let i = 0; i < count; i++) {
+                    const itemY = y + 6 + (i * 12);
+                    ctx.fillStyle = "#94a3b8";
+                    ctx.fillRect(x + 4, itemY + 9, w - 4, 1.5);
+
+                    ctx.fillStyle = theme.items[i % theme.items.length];
+                    ctx.fillRect(x + 6, itemY + 2, w - 8, 7);
+                }
+
+                ctx.fillStyle = "#E30613";
+                ctx.fillRect(x + 2, y + 2, w, 4);
+                ctx.fillRect(x + 2, y + h - 6, w, 4);
             }
-
-            // Tête de gondole rouge Super U en haut et en bas du rayon
-            ctx.fillStyle = "#E30613";
-            ctx.fillRect(x + 2, y + 2, w, 4);
-            ctx.fillRect(x + 2, y + h - 6, w, 4);
 
             ctx.restore();
         }
 
         // Caisses enregistreuses collées contre l'extrémité bas de la grille
         function drawCheckouts() {
-            // Positionnement sur la toute dernière ligne de la grille (au ras du bord inférieur)
             const y = canvas.height - gridSize;
             const checkoutSpacing = 4 * gridSize;
 
@@ -1059,7 +1150,7 @@
                 // 3. Écran TPE / terminal allumé
                 ctx.fillStyle = "#0f172a";
                 ctx.fillRect(x + gridSize * 1.42, y + 11, 10, 8);
-                ctx.fillStyle = "#22c55e"; // Écran caisse allumé vert
+                ctx.fillStyle = "#22c55e";
                 ctx.fillRect(x + gridSize * 1.42 + 1.5, y + 12.5, 7, 5);
 
                 // 4. Pastille rouge numéro de caisse
@@ -1077,33 +1168,72 @@
                 ctx.restore();
             }
         }
-
-        // Sillage d'eau propre et lustrée derrière l'autolaveuse
-        function drawTrail() {
-            if (snake.length < 2) return;
-            ctx.save();
-            ctx.lineCap = "round";
-            ctx.lineJoin = "round";
-
-            for (let i = snake.length - 1; i > 0; i--) {
-                const p1 = snake[i];
-                const p2 = snake[i - 1];
-                const alpha = (1 - (i / snake.length)) * 0.35;
-                ctx.strokeStyle = `rgba(147, 197, 253, ${alpha})`;
-                ctx.lineWidth = gridSize * 0.7;
-                ctx.beginPath();
-                ctx.moveTo(p1.x + gridSize / 2, p1.y + gridSize / 2);
-                ctx.lineTo(p2.x + gridSize / 2, p2.y + gridSize / 2);
-                ctx.stroke();
-
-                // Ligne centrale de brillance
-                ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.9})`;
-                ctx.lineWidth = gridSize * 0.25;
-                ctx.beginPath();
-                ctx.moveTo(p1.x + gridSize / 2, p1.y + gridSize / 2);
-                ctx.lineTo(p2.x + gridSize / 2, p2.y + gridSize / 2);
-                ctx.stroke();
+        function initGame() {
+            resizeGameCanvas();
+            score = 0;
+            dx = gridSize;
+            dy = 0;
+            directionQueue = [];
+            isGameOverState = false;
+            particles = [];
+            floatingTexts = [];
+            brushRotation = 0;
+            beaconFlash = 0;
+            
+            document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
+            document.getElementById('gameOverScreen').style.display = "none";
+            document.getElementById('playerNameInput').disabled = false;
+            document.getElementById('playerNameInput').value = "";
+            document.getElementById('submitStatus').innerText = "";
+            
+            // Démarrage sécurisé : dans la grande allée supérieure libre (rangée 2)
+            snake = [];
+            const startCol = Math.floor(gridCols / 2);
+            const startRow = 2; 
+            for (let i = 0; i < 5; i++) { 
+                snake.push({ x: (startCol - i) * gridSize, y: startRow * gridSize });
             }
+
+            spawnDechet();
+            startBGM(); 
+            main();
+        }
+
+        function spawnDechet() {
+            const rand = Math.random();
+            let cumul = 0;
+            let selected = DECHETS_TYPES[0];
+
+            for (const item of DECHETS_TYPES) {
+                cumul += item.chance;
+                if (rand <= cumul) {
+                    selected = item;
+                    break;
+                }
+            }
+
+            let valid = false;
+            let fx = 0, fy = 0;
+            let attempts = 0;
+            const maxFoodRows = Math.max(1, gridRows - 2);
+
+            while (!valid && attempts < 1000) {
+                fx = Math.floor(Math.random() * gridCols) * gridSize;
+                fy = Math.floor(Math.random() * maxFoodRows) * gridSize;
+                const c = Math.floor(fx / gridSize);
+                const r = Math.floor(fy / gridSize);
+
+                // Ne génère JAMAIS de déchet sur un rayon ou une caisse (murs)
+                valid = !isObstacle(c, r) && !snake.some(segment => segment.x === fx && segment.y === fy);
+                attempts++;
+            }
+
+            currentFood = {
+                x: fx,
+                y: fy,
+                type: selected
+            };
+        }
             ctx.restore();
         }
 
@@ -1553,9 +1683,25 @@
 
         // Fin de jeu et collisions
         function hasGameEnded() {
+            // Collision avec le propre corps du serpent
             for (let i = 4; i < snake.length; i++) {
                 if (snake[i].x === snake[0].x && snake[i].y === snake[0].y) return true;
             }
+
+            // Collision avec les bords de la grille
+            if (snake[0].x < 0 || snake[0].x >= canvas.width || snake[0].y < 0 || snake[0].y >= canvas.height) {
+                return true;
+            }
+
+            // Collision physique : les rayons et les caisses sont des MURS solides
+            const headCol = Math.floor(snake[0].x / gridSize);
+            const headRow = Math.floor(snake[0].y / gridSize);
+            if (isObstacle(headCol, headRow)) {
+                return true;
+            }
+
+            return false;
+        }
             return snake[0].x < 0 || snake[0].x >= canvas.width || snake[0].y < 0 || snake[0].y >= canvas.height;
         }
 
