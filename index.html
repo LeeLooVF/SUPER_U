@@ -36,7 +36,7 @@
             width: 100%;
             height: 58px;
             padding: 4px 10px;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             background: #ffffff;
             border-radius: 18px;
             border: 3.5px solid #0055A4;
@@ -180,13 +180,56 @@
             font-weight: 900;
             color: #ffffff;
             background: #003974;
-            padding: 6px 12px;
-            border-radius: 18px;
+            padding: 5px 10px;
+            border-radius: 16px;
             border: 2.5px solid #E30613;
             box-shadow: 0 3px 8px rgba(0, 85, 164, 0.25);
             white-space: nowrap;
             flex-shrink: 0;
         }
+
+        #machineGauges {
+            display: none;
+            width: 100%;
+            gap: 8px;
+            margin-bottom: 6px;
+            flex-shrink: 0;
+        }
+
+        .gauge-card {
+            flex: 1;
+            background: #ffffff;
+            border: 2px solid #0055A4;
+            border-radius: 12px;
+            padding: 4px 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .gauge-label {
+            font-size: 9.5px;
+            font-weight: 900;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .gauge-bar-bg {
+            width: 100%;
+            height: 7px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .gauge-bar-fill {
+            height: 100%;
+            width: 100%;
+            transition: width 0.15s ease, background-color 0.2s;
+        }
+
+        #batteryFill { background-color: #22c55e; }
+        #waterFill { background-color: #0284c7; width: 0%; }
 
         #gameContainer {
             position: relative;
@@ -241,6 +284,13 @@
             letter-spacing: 1.5px;
             font-weight: 900;
             text-transform: uppercase;
+        }
+
+        #gameOverReason {
+            font-size: 13px;
+            font-weight: 800;
+            color: #E30613;
+            margin: 4px 0 0 0;
         }
 
         .overlayScreen p.score-text {
@@ -413,6 +463,27 @@
             <div id="highScoreDisplay">👑 RECORD: 0</div>
         </div>
     </div>
+
+    <div id="machineGauges">
+        <div class="gauge-card">
+            <div class="gauge-label">
+                <span>⚡ BATTERIE</span>
+                <span id="batteryText">100%</span>
+            </div>
+            <div class="gauge-bar-bg">
+                <div id="batteryFill" class="gauge-bar-fill"></div>
+            </div>
+        </div>
+        <div class="gauge-card">
+            <div class="gauge-label">
+                <span>🪣 CUVE SALE</span>
+                <span id="waterText">0%</span>
+            </div>
+            <div class="gauge-bar-bg">
+                <div id="waterFill" class="gauge-bar-fill"></div>
+            </div>
+        </div>
+    </div>
     
     <div id="gameContainer">
         <canvas id="gameCanvas"></canvas>
@@ -431,16 +502,17 @@
 
             <button class="action-btn btn-easy" onclick="startGame('easy')">🌸 Tapette</button>
             <button class="action-btn btn-normal" onclick="startGame('normal')">💪 Tes un Homme</button>
-            <button class="action-btn btn-hard" onclick="startGame('hard')">🛒 Condition réelle</button>
+            <button class="action-btn btn-hard" onclick="startGame('hard')">🤖 Tes une IA</button>
         </div>
 
         <div id="gameOverScreen" class="overlayScreen">
             <h1 class="cheh-title">ACCIDENT !</h1>
+            <p id="gameOverReason"></p>
             <p class="score-text">Score : <span id="finalScore" style="color:#ffcc00;">0</span></p>
             
             <div id="scoreForm" style="margin-bottom: 8px; display: flex; flex-direction: column; align-items: center; gap: 6px;">
-                <input type="text" id="playerNameInput" maxlength="15" placeholder="Votre pseudo (15 max)" style="padding: 8px; width: 210px; border-radius: 8px; border: 2px solid #0055A4; text-align: center; text-transform: uppercase; font-size: 13px; font-weight: 800;">
-                <button class="action-btn" onclick="validerScore()" style="margin-top: 0; width: 220px; padding: 8px;">Enregistrer le score</button>
+                <input type="text" id="playerNameInput" maxlength="20" placeholder="Votre pseudo (20 max)" style="padding: 8px; width: 230px; border-radius: 8px; border: 2px solid #0055A4; text-align: center; text-transform: uppercase; font-size: 13px; font-weight: 800;">
+                <button class="action-btn" onclick="validerScore()" style="margin-top: 0; width: 230px; padding: 8px;">Enregistrer le score</button>
             </div>
             <div id="scoreSubmittedMsg" style="display:none; color: #22c55e; font-weight: 900; margin-bottom: 8px; font-size: 14px;">✅ Score enregistré !</div>
 
@@ -492,10 +564,14 @@
         let top10 = [];
         let vitesseJeu = 150; 
 
+        // Modes : 'easy' (Tapette), 'normal' (Tes un Homme), 'hard' (Tes une IA)
         let gameMode = 'normal';
         let shoppers = [];
         let shopperSpawnTimer = 0;
         let shopperMoveCounter = 0;
+
+        let battery = 100;
+        let wasteWater = 0;
 
         const ROCCO_MESSAGES = [
             { text: "Faites un tour<br>en zone promo", zone: "promo", count: 5 },
@@ -503,6 +579,7 @@
             { text: "Un box de picon est tombé<br>dans les alcools", zone: "alcools", count: 7 }
         ];
         let currentMessageIndex = 0;
+        let hardTurnIsCall = true;
 
         let roccoCycleTimeout = null;
         let roccoHideTimeout = null;
@@ -542,21 +619,25 @@
             clearTimeout(roccoHideTimeout);
 
             if (gameMode === 'hard') {
-                // Condition réelle : appel téléphonique toutes les 10 secondes
                 roccoCycleTimeout = setTimeout(() => {
                     if (!gameStarted || isGameOverState || gameMode !== 'hard') return;
-                    setAlertVisible(true, true, "Vous pouvez passer un coup<br>devant les caisses", "caisses", 6);
+
+                    if (hardTurnIsCall) {
+                        setAlertVisible(true, true, "Vous pouvez passer un coup<br>devant les caisses", "caisses", 6);
+                    } else {
+                        setAlertVisible(true, false);
+                    }
+                    hardTurnIsCall = !hardTurnIsCall;
 
                     roccoHideTimeout = setTimeout(() => {
                         setAlertVisible(false);
                         if (gameStarted && !isGameOverState && gameMode === 'hard') {
                             scheduleNextMessage();
                         }
-                    }, 4000);
-                }, 10000);
+                    }, 4500);
+                }, 15000);
 
             } else if (gameMode === 'normal') {
-                // Tes un Homme : Rocco toutes les 45 secondes
                 roccoCycleTimeout = setTimeout(() => {
                     if (!gameStarted || isGameOverState || gameMode !== 'normal') return;
                     setAlertVisible(true, false);
@@ -577,6 +658,7 @@
                 return;
             }
             currentMessageIndex = 0;
+            hardTurnIsCall = true;
             setAlertVisible(false);
             scheduleNextMessage();
         }
@@ -642,6 +724,22 @@
                 gainNode.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
                 osc.start(now);
                 osc.stop(now + 0.18);
+            } else if (type === 'recharge') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(350, now);
+                osc.frequency.linearRampToValueAtTime(950, now + 0.22);
+                gainNode.gain.setValueAtTime(0.16, now);
+                gainNode.gain.linearRampToValueAtTime(0.01, now + 0.22);
+                osc.start(now);
+                osc.stop(now + 0.23);
+            } else if (type === 'drain') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(450, now);
+                osc.frequency.linearRampToValueAtTime(180, now + 0.22);
+                gainNode.gain.setValueAtTime(0.15, now);
+                gainNode.gain.linearRampToValueAtTime(0.01, now + 0.22);
+                osc.start(now);
+                osc.stop(now + 0.23);
             } else if (type === 'die') {
                 osc.type = 'sawtooth';
                 osc.frequency.setValueAtTime(160, now);
@@ -684,7 +782,7 @@
 
         async function validerScore() {
             const nameInput = document.getElementById("playerNameInput");
-            const name = nameInput.value.trim().substring(0, 15).toUpperCase() || "EMPLOYÉ";
+            const name = nameInput.value.trim().substring(0, 20).toUpperCase() || "EMPLOYÉ";
             await envoyerScore(name, score);
             document.getElementById("scoreForm").style.display = "none";
             document.getElementById("scoreSubmittedMsg").style.display = "block";
@@ -795,14 +893,14 @@
                 attempts++;
                 c = Math.floor(Math.random() * GRID_COLS);
                 r = Math.floor(Math.random() * (gridRows - 2));
-                if (!isObstacle(c, r)) valid = true;
+                if (!isObstacle(c, r) && !(r < 4 && (c <= 2 || c >= GRID_COLS - 3))) valid = true;
             }
-            return { c: c || 2, r: r || 2 };
+            return { c: c || 2, r: r || 4 };
         }
 
         function spawnShopper() {
-            if (shoppers.length >= 4) return;
-            const entryCols = [2, 3, 12, 13, 24, 25];
+            if (shoppers.length >= 6) return;
+            const entryCols = [6, 7, 12, 13, 19, 20];
             const startCol = entryCols[Math.floor(Math.random() * entryCols.length)];
             const shopperColors = ["#e11d48", "#2563eb", "#059669", "#7c3aed", "#d97706"];
             const color = shopperColors[Math.floor(Math.random() * shopperColors.length)];
@@ -814,14 +912,15 @@
                 dirY: 1,
                 state: "entering",
                 target: getSafeShopperTarget(),
-                shoppingTime: 60 + Math.floor(Math.random() * 80),
+                shoppingTime: 120 + Math.floor(Math.random() * 100),
                 color: color
             });
         }
 
         function updateShoppers() {
             shopperSpawnTimer++;
-            if (shopperSpawnTimer % 50 === 0) {
+            const spawnIntervalTicks = Math.round(120000 / vitesseJeu);
+            if (shopperSpawnTimer % spawnIntervalTicks === 0) {
                 spawnShopper();
             }
 
@@ -931,6 +1030,49 @@
             }
         }
 
+        function drawSpecialZones() {
+            if (gameMode === 'easy') return;
+
+            const vidangeW = 3 * gridSize;
+            const vidangeH = 4 * gridSize;
+
+            // Zone Vidange Cuve : 3x4
+            ctx.fillStyle = "rgba(2, 132, 199, 0.22)";
+            ctx.fillRect(0, 0, vidangeW, vidangeH);
+            ctx.strokeStyle = "#0284c7";
+            ctx.lineWidth = 2.5;
+            ctx.strokeRect(1.5, 1.5, vidangeW - 3, vidangeH - 3);
+
+            ctx.fillStyle = "#0369a1";
+            ctx.font = `900 ${Math.floor(gridSize * 0.75)}px Montserrat`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("🪣", vidangeW / 2, vidangeH * 0.38);
+
+            ctx.font = `900 ${Math.floor(gridSize * 0.46)}px Montserrat`;
+            ctx.fillText("VIDANGE", vidangeW / 2, vidangeH * 0.72);
+
+            // Zone Recharge Batterie : 3x4
+            const rx = (GRID_COLS - 3) * gridSize;
+            const rechargeW = 3 * gridSize;
+            const rechargeH = 4 * gridSize;
+
+            ctx.fillStyle = "rgba(234, 179, 8, 0.22)";
+            ctx.fillRect(rx, 0, rechargeW, rechargeH);
+            ctx.strokeStyle = "#eab308";
+            ctx.lineWidth = 2.5;
+            ctx.strokeRect(rx + 1.5, 1.5, rechargeW - 3, rechargeH - 3);
+
+            ctx.fillStyle = "#ca8a04";
+            ctx.font = `900 ${Math.floor(gridSize * 0.75)}px Montserrat`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText("⚡", rx + rechargeW / 2, rechargeH * 0.38);
+
+            ctx.font = `900 ${Math.floor(gridSize * 0.46)}px Montserrat`;
+            ctx.fillText("RECHARGE", rx + rechargeW / 2, rechargeH * 0.72);
+        }
+
         function drawGrid() {
             ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -952,6 +1094,8 @@
                 drawSupermarketShelves(bounds);
                 drawCheckouts();
             }
+
+            drawSpecialZones();
         }
 
         function drawSupermarketShelves(bounds) {
@@ -1191,6 +1335,8 @@
 
         function isPositionOccupied(col, row) {
             if (isObstacle(col, row)) return true;
+            if (gameMode !== 'easy' && row < 4 && (col <= 2 || col >= GRID_COLS - 3)) return true;
+
             for (let part of snake) {
                 if (part.x === col * gridSize && part.y === row * gridSize) return true;
             }
@@ -1243,12 +1389,12 @@
             if (zone === "promo") {
                 minCol = 0;
                 maxCol = 13;
-                minRow = 0;
+                minRow = 4;
                 maxRow = midRow - 1;
             } else if (zone === "alcools") {
                 minCol = 22;
                 maxCol = GRID_COLS - 1;
-                minRow = Math.max(0, bounds.topStartRow - 2);
+                minRow = Math.max(4, bounds.topStartRow - 2);
                 maxRow = bounds.topEndRow + 2;
             } else if (zone === "caisses") {
                 minCol = 0;
@@ -1345,6 +1491,28 @@
             }
         }
 
+        function updateGaugesDisplay() {
+            if (gameMode === 'easy') return;
+
+            const batteryFill = document.getElementById("batteryFill");
+            const batteryText = document.getElementById("batteryText");
+            batteryFill.style.width = Math.max(0, battery) + "%";
+            batteryText.innerText = Math.round(battery) + "%";
+
+            if (battery > 50) batteryFill.style.backgroundColor = "#22c55e";
+            else if (battery > 20) batteryFill.style.backgroundColor = "#eab308";
+            else batteryFill.style.backgroundColor = "#E30613";
+
+            const waterFill = document.getElementById("waterFill");
+            const waterText = document.getElementById("waterText");
+            waterFill.style.width = Math.min(100, wasteWater) + "%";
+            waterText.innerText = Math.round(wasteWater) + "%";
+
+            if (wasteWater >= 100) waterFill.style.backgroundColor = "#E30613";
+            else if (wasteWater > 70) waterFill.style.backgroundColor = "#f97316";
+            else waterFill.style.backgroundColor = "#0284c7";
+        }
+
         function advanceSnake() {
             if (inputQueue.length > 0) {
                 const nextMove = inputQueue.shift();
@@ -1356,26 +1524,62 @@
             const headY = snake[0].y + dy;
 
             if (headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height) {
-                showGameOver(); return;
+                showGameOver("Vous avez percuté un mur extérieur !"); return;
             }
 
             const headCol = Math.floor(headX / gridSize);
             const headRow = Math.floor(headY / gridSize);
 
             if (isObstacle(headCol, headRow)) {
-                showGameOver(); return;
+                showGameOver("Accident de rayon ou de caisse !"); return;
             }
 
             if (gameMode === 'hard') {
                 for (let s of shoppers) {
                     if (s.c === headCol && s.r === headRow) {
-                        showGameOver(); return;
+                        showGameOver("Accident avec un client et son caddie !"); return;
                     }
                 }
             }
 
             const head = {x: headX, y: headY};
             snake.unshift(head);
+
+            if (gameMode !== 'easy') {
+                const drainPerTick = (100 / (120000 / vitesseJeu));
+                battery -= drainPerTick;
+
+                if (battery <= 0) {
+                    battery = 0;
+                    updateGaugesDisplay();
+                    showGameOver("Panne sèche : la batterie est vide !");
+                    return;
+                }
+
+                if (headRow <= 3 && headCol >= GRID_COLS - 3) {
+                    if (battery < 100) {
+                        battery = 100;
+                        playSound('recharge');
+                        floatingTexts.push({
+                            text: "⚡ 100% RECHARGÉ !",
+                            x: headX, y: headY, color: "#eab308", life: 1.0
+                        });
+                    }
+                }
+
+                if (headRow <= 3 && headCol <= 2) {
+                    if (wasteWater > 0) {
+                        wasteWater = 0;
+                        playSound('drain');
+                        floatingTexts.push({
+                            text: "🪣 CUVE VIDÉE !",
+                            x: headX, y: headY, color: "#0284c7", life: 1.0
+                        });
+                    }
+                }
+
+                updateGaugesDisplay();
+            }
             
             let eatenIndex = -1;
             for (let i = 0; i < foods.length; i++) {
@@ -1386,31 +1590,44 @@
             }
 
             if (eatenIndex !== -1) {
-                const eatenFood = foods[eatenIndex];
-                foods.splice(eatenIndex, 1);
+                if (gameMode !== 'easy' && wasteWater >= 100) {
+                    floatingTexts.push({
+                        text: "🪣 CUVE PLEINE ! VIDANGEZ !",
+                        x: headX, y: headY, color: "#E30613", life: 1.0
+                    });
+                    snake.pop();
+                } else {
+                    const eatenFood = foods[eatenIndex];
+                    foods.splice(eatenIndex, 1);
 
-                const ptsGagnes = gameMode === 'hard' ? Math.round(eatenFood.item.points * 1.5) : eatenFood.item.points;
-                score += ptsGagnes;
+                    if (gameMode !== 'easy') {
+                        wasteWater = Math.min(100, wasteWater + 4);
+                        updateGaugesDisplay();
+                    }
 
-                let displayText = eatenFood.item.type === "Pipi" ? `+${ptsGagnes} PIPI` : `+${ptsGagnes}`;
-                floatingTexts.push({text: displayText, x: eatenFood.x, y: eatenFood.y, color: eatenFood.item.color, life: 1.0});
-                
-                document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
-                playSound('eat');
-                createExplosion(eatenFood.x, eatenFood.y, eatenFood.item.color);
+                    const ptsGagnes = gameMode === 'hard' ? Math.round(eatenFood.item.points * 1.5) : eatenFood.item.points;
+                    score += ptsGagnes;
 
-                if (foods.length === 0) {
-                    generateFood();
+                    let displayText = eatenFood.item.type === "Pipi" ? `+${ptsGagnes} PIPI` : `+${ptsGagnes}`;
+                    floatingTexts.push({text: displayText, x: eatenFood.x, y: eatenFood.y, color: eatenFood.item.color, life: 1.0});
+                    
+                    document.getElementById('scoreDisplay').innerHTML = "🧼 PROPRETÉ: " + score;
+                    playSound('eat');
+                    createExplosion(eatenFood.x, eatenFood.y, eatenFood.item.color);
+
+                    if (foods.length === 0) {
+                        generateFood();
+                    }
+                    
+                    if (vitesseJeu > 65) vitesseJeu -= 1.5;
                 }
-                
-                if (vitesseJeu > 65) vitesseJeu -= 1.5;
             } else {
                 snake.pop(); 
             }
 
             for (let i = 4; i < snake.length; i++) {
                 if (snake[i].x === head.x && snake[i].y === head.y) {
-                    showGameOver(); return;
+                    showGameOver("Vous avez roulé sur votre propre traînée !"); return;
                 }
             }
         }
@@ -1444,7 +1661,7 @@
                 if(ft.life <= 0) { floatingTexts.splice(i, 1); continue; }
                 
                 ctx.globalAlpha = ft.life;
-                ctx.font = "bold 15px Montserrat";
+                ctx.font = "bold 13px Montserrat";
                 ctx.textAlign = "center";
                 ctx.fillStyle = ft.color;
                 ctx.strokeStyle = "#fff";
@@ -1458,6 +1675,14 @@
         function startGame(mode = 'normal') {
             gameMode = mode;
             document.getElementById('startScreen').style.display = "none";
+            
+            const gaugesEl = document.getElementById("machineGauges");
+            if (gameMode !== 'easy') {
+                gaugesEl.style.display = "flex";
+            } else {
+                gaugesEl.style.display = "none";
+            }
+
             initAudio();
             currentAudioIndex = 0;
             playNextMusic();
@@ -1472,6 +1697,10 @@
             if (gameMode === 'hard') vitesseJeu = 135;
             else if (gameMode === 'easy') vitesseJeu = 165;
             else vitesseJeu = 150;
+
+            battery = 100;
+            wasteWater = 0;
+            updateGaugesDisplay();
 
             dx = gridSize;
             dy = 0;
@@ -1489,9 +1718,10 @@
             document.getElementById('scoreForm').style.display = "flex";
             document.getElementById('scoreSubmittedMsg').style.display = "none";
             document.getElementById('playerNameInput').value = "";
+            document.getElementById('gameOverReason').innerText = "";
             
             snake = [];
-            const startY = 4 * gridSize;
+            const startY = 6 * gridSize;
             const startX = 12 * gridSize;
             for(let i = 0; i < 5; i++){ 
                 snake.push({x: startX - (i * gridSize), y: startY});
@@ -1525,11 +1755,12 @@
             }, vitesseJeu); 
         }
 
-        function showGameOver() {
+        function showGameOver(reason = "") {
             isGameOverState = true;
             stopMessageCycle();
             stopMusic();
             playSound('die');
+            document.getElementById("gameOverReason").innerText = reason;
             document.getElementById("finalScore").innerText = score;
             document.getElementById("gameOverScreen").style.display = "flex";
             chargerClassement();
@@ -1539,6 +1770,7 @@
             clearTimeout(gameLoopTimeout);
             document.getElementById('gameOverScreen').style.display = "none";
             document.getElementById('startScreen').style.display = "flex";
+            document.getElementById("machineGauges").style.display = "none";
             gameStarted = false;
         }
 
