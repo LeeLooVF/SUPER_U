@@ -17,19 +17,29 @@
     <style>
         @font-face {
             font-family: 'Museo Slab';
-            src: local('Museo Slab'), local('MuseoSlab-500'), url('https://fonts.cdnfonts.com/s/13918/Museo_Slab_500.woff') format('woff');
+            src: url("Copie de Museo_Slab_500.otf") format("opentype"),
+                 url("Copie de Museo_Slab.otf") format("opentype"),
+                 url("Copie de Museo_Slab_2.otf") format("opentype"),
+                 local('Museo Slab'), local('MuseoSlab-500'),
+                 url('https://fonts.cdnfonts.com/s/13918/Museo_Slab_500.woff') format('woff');
             font-weight: 500;
             font-style: normal;
         }
         @font-face {
             font-family: 'Museo Slab';
-            src: local('Museo Slab 700'), local('MuseoSlab-700'), url('https://fonts.cdnfonts.com/s/13918/Museo_Slab_700.woff') format('woff');
+            src: url("Copie de Museo_Slab_700.otf") format("opentype"),
+                 url("Copie de Museo_Slab_3.otf") format("opentype"),
+                 local('Museo Slab 700'), local('MuseoSlab-700'),
+                 url('https://fonts.cdnfonts.com/s/13918/Museo_Slab_700.woff') format('woff');
             font-weight: 700;
             font-style: normal;
         }
         @font-face {
             font-family: 'Museo Slab';
-            src: local('Museo Slab 900'), local('MuseoSlab-900'), url('https://fonts.cdnfonts.com/s/13918/Museo_Slab_900.woff') format('woff');
+            src: url("Copie de Museo_Slab_900.otf") format("opentype"),
+                 url("Copie de Museo_Slab_4.otf") format("opentype"),
+                 local('Museo Slab 900'), local('MuseoSlab-900'),
+                 url('https://fonts.cdnfonts.com/s/13918/Museo_Slab_900.woff') format('woff');
             font-weight: 900;
             font-style: normal;
         }
@@ -51,6 +61,9 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <span id="ocrStatus" class="text-xs font-bold text-blue-700 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200 hidden"></span>
+                    <span id="fontStatus" class="text-[11px] font-semibold text-green-700 bg-green-50 px-2.5 py-1 rounded border border-green-200 hidden">
+                        ✓ Polices Museo Slab chargées
+                    </span>
                     <label class="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-1.5 px-3 rounded-lg cursor-pointer border border-gray-300 transition">
                         🔤 Charger polices .OTF (Museo Slab)
                         <input type="file" id="inputCustomFonts" accept=".otf,.ttf,.woff,.woff2" multiple class="hidden">
@@ -69,7 +82,7 @@
                         class="w-full text-xs text-blue-800 file:mr-2 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-700 cursor-pointer">
                 </div>
 
-                <!-- Colonne 2 : Image Gauche (Liste prédéfinie + Dépôt au choix) -->
+                <!-- Colonne 2 : Image Gauche (Galerie + Dépôt auto-enregistré) -->
                 <div class="bg-red-50/50 p-2.5 rounded-lg border border-red-100 h-full flex flex-col justify-between">
                     <div class="flex justify-between items-center mb-1.5">
                         <label class="block text-xs font-bold text-gray-700 uppercase">
@@ -81,29 +94,13 @@
                         </label>
                     </div>
                     <div class="flex items-center gap-1.5">
-                        <select id="selectPresetLeftImage" class="w-1/2 p-1.5 border border-red-200 rounded-md text-xs font-bold text-gray-800 bg-white focus:ring-2 focus:ring-red-500 cursor-pointer" title="Choisir une image enregistrée">
-                            <option value="">-- Choisir visuel --</option>
-                            <option value="Always.png">Always</option>
-                            <option value="Ariel.png">Ariel</option>
-                            <option value="Bjorg.png">Bjorg</option>
-                            <option value="Carte_Noire.png">Carte Noire</option>
-                            <option value="Divella.png">Divella</option>
-                            <option value="Gilette.png">Gillette</option>
-                            <option value="Granola.png">Granola</option>
-                            <option value="milka.png">Milka</option>
-                            <option value="Mutti.png">Mutti</option>
-                            <option value="Nutella.png">Nutella</option>
-                            <option value="Oldepaso.png">Old El Paso</option>
-                            <option value="Oral_B.png">Oral-B</option>
-                            <option value="Pom'Potes.png">Pom'Potes</option>
-                            <option value="REM.png">REM</option>
-                            <option value="Skip.png">Skip</option>
-                            <option value="WHISKAS.png">Whiskas</option>
-                            <option value="Wilkinson.png">Wilkinson</option>
-                        </select>
+                        <button type="button" id="btnOpenGlobalGallery" class="w-1/2 py-1.5 px-2.5 bg-white hover:bg-red-50 border border-red-300 rounded-md text-xs font-bold text-gray-800 flex items-center justify-between shadow-sm transition" title="Ouvrir la galerie visuelle">
+                            <span id="globalGalleryLabel" class="truncate">🖼️ Choisir visuel</span>
+                            <span class="text-[10px] text-gray-500 ml-1">▼</span>
+                        </button>
                         <input type="file" id="inputLeftImage" accept=".jpeg,.jpg,.png,.pdf,.webp,.gif,.bmp,.svg,image/*,application/pdf" 
                             class="w-1/2 text-[11px] text-gray-600 file:mr-1.5 file:py-1.5 file:px-2.5 file:rounded-md file:border-0 file:text-[11px] file:font-bold file:bg-red-600 file:text-white hover:file:bg-red-700 cursor-pointer"
-                            title="Ou déposer une autre image / PDF au choix">
+                            title="Déposer une image ou PDF (sauvegardé dans ta galerie !)">
                     </div>
                 </div>
 
@@ -137,24 +134,56 @@
                 </div>
             </div>
 
-            <!-- LIGNE 2 DE CONFIGURATION -->
+            <!-- LIGNE 2 DE CONFIGURATION : MENU DÉROULANT DES MÉCANIQUES PROMO -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end pt-3 border-t border-gray-100">
-                <!-- Colonne 1 : Mécanique (Pourcentage / Texte) -->
+                <!-- Colonne 1 : Choix déroulant de la mécanique + Valeur -->
                 <div>
                     <label class="block text-xs font-bold text-gray-700 uppercase mb-1.5">
-                        ⚙️ MÉCANIQUE (EX: -30%, 1+1...)
+                        ⚙️ TYPE DE MÉCANIQUE & VALEUR
                     </label>
-                    <input type="text" id="inputDiscount" value="34%" 
-                        class="w-full p-2 border rounded-lg text-sm font-bold text-red-600 text-center">
+                    <div class="flex gap-1.5">
+                        <select id="selectMechanicPreset" class="w-2/3 p-2 border rounded-lg text-xs font-bold text-gray-800 bg-gray-50 focus:ring-2 focus:ring-red-500 cursor-pointer">
+                            <optgroup label="Remise immédiate">
+                                <option value="remise_imm" selected>Remise immédiate (-X%)</option>
+                                <option value="remise_imm_choix">Remise immédiate (Au choix)</option>
+                                <option value="remise_euros">Remise immédiate en € (-X€)</option>
+                            </optgroup>
+                            <optgroup label="Offres sur le 2ème produit">
+                                <option value="2eme_50">-50% sur le 2ème produit</option>
+                                <option value="2eme_50_choix">-50% sur le 2ème au choix</option>
+                                <option value="2eme_60">-60% sur le 2ème produit</option>
+                                <option value="2eme_60_choix">-60% sur le 2ème au choix</option>
+                                <option value="2eme_68">-68% sur le 2ème produit</option>
+                                <option value="2eme_70">-70% sur le 2ème produit</option>
+                                <option value="2eme_80">-80% sur le 2ème produit</option>
+                            </optgroup>
+                            <optgroup label="Lots gratuits (1+1, 2+1...)">
+                                <option value="1_plus_1">1 + 1 GRATUIT</option>
+                                <option value="1_plus_1_choix">1 + 1 GRATUIT (Au choix)</option>
+                                <option value="2_plus_1">2 + 1 GRATUIT</option>
+                                <option value="2_plus_1_choix">2 + 1 GRATUIT (Au choix)</option>
+                            </optgroup>
+                            <optgroup label="Lots & Prix spéciaux">
+                                <option value="le_lot">Le Lot (Prix du lot)</option>
+                                <option value="le_lot_choix">Le Lot au choix</option>
+                                <option value="lot_de_2">Le Lot de 2</option>
+                                <option value="lot_de_3">Le Lot de 3</option>
+                                <option value="carte_u">Cumulez sur Carte U (%)</option>
+                                <option value="prix_choc">Prix Choc / Prix Bas</option>
+                            </optgroup>
+                        </select>
+                        <input type="text" id="inputDiscount" value="-34%" title="Valeur affichée en grand dans le cercle rouge"
+                            class="w-1/3 p-2 border rounded-lg text-sm font-bold text-red-600 text-center">
+                    </div>
                 </div>
 
                 <!-- Colonne 2 : Texte de la mécanique + Bouton affichée/masquée à droite -->
                 <div>
                     <div class="flex justify-between items-center mb-1.5">
                         <label class="block text-xs font-bold text-gray-700 uppercase">
-                            MÉCANIQUE
+                            MÉCANIQUE (TEXTE CERCLE)
                         </label>
-                        <button type="button" id="btnToggleDiscountText" class="min-w-[88px] text-center text-[11px] font-bold px-3 py-0.5 rounded bg-green-100 text-green-800 border border-green-300 hover:bg-green-200 transition">
+                        <button type="button" id="btnToggleDiscountText" class="min-w-[88px] text-center text-[11px] font-bold px-3 py-0.5 rounded bg-green-100 text-green-800 border border-green-300 hover:bg-green-200 transition" title="Affiche ou masque toute la mécanique et le cercle rouge">
                             affichée
                         </button>
                     </div>
@@ -162,11 +191,17 @@
                         class="w-full p-2 border rounded-lg text-xs font-semibold">
                 </div>
 
-                <!-- Colonne 3 : Mention sous prix -->
+                <!-- Colonne 3 : Mention sous prix + Option Contenance -->
                 <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1.5">
-                        📌 MENTION SOUS PRIX
-                    </label>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="block text-xs font-bold text-gray-700 uppercase">
+                            📌 MENTION SOUS PRIX
+                        </label>
+                        <label class="flex items-center gap-1 text-[11px] font-bold text-blue-700 cursor-pointer" title="Afficher ou masquer la contenance sur les grandes étiquettes">
+                            <input type="checkbox" id="chkShowContenance" checked class="rounded text-blue-600">
+                            <span>Afficher contenance</span>
+                        </label>
+                    </div>
                     <input type="text" id="inputUnitLabel" value="LE PRODUIT" 
                         class="w-full p-2 border rounded-lg text-xs font-bold text-red-600 uppercase">
                 </div>
@@ -185,8 +220,190 @@
 
     </div>
 
+    <!-- FENÊTRE MODALE : GALERIE VISUELLE -->
+    <div id="visualGalleryModal" class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] flex flex-col overflow-hidden border-t-4 border-red-600">
+            <div class="flex flex-wrap justify-between items-center px-5 py-3.5 border-b bg-gray-50 gap-3">
+                <div>
+                    <h2 id="galleryModalTitle" class="text-sm font-extrabold text-gray-800 uppercase tracking-wide">
+                        🖼️ Choisir un visuel de gauche
+                    </h2>
+                    <p class="text-[11px] text-gray-500">
+                        Clique sur un visuel ou utilise « Ajouter & Mémoriser » pour importer une ou plusieurs images de ton PC
+                    </p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <input type="text" id="inputSearchGallery" placeholder="🔍 Filtrer (ex: Cirio, Mutti, Noël...)" 
+                        class="text-xs border rounded-lg px-3 py-1.5 w-48 focus:ring-2 focus:ring-red-500">
+                    <label class="text-xs font-bold bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg cursor-pointer shadow-sm transition" title="Sélectionne une ou toutes les images pour les mémoriser à 100%">
+                        ➕ Ajouter & Mémoriser image(s)
+                        <input type="file" id="inputAddGalleryImage" accept=".jpeg,.jpg,.png,.pdf,.webp,.gif,.bmp,.svg,image/*,application/pdf" multiple class="hidden">
+                    </label>
+                    <button type="button" id="btnCloseGalleryModal" class="text-gray-500 hover:text-red-600 font-bold text-lg px-2.5 py-1 rounded-lg hover:bg-red-50 transition">
+                        ✕
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-5 overflow-y-auto space-y-5 bg-gray-100/70 flex-1">
+                <!-- SECTION 1 : IMAGES DÉPOSÉES ET MÉMORISÉES -->
+                <div id="savedGallerySection" class="hidden space-y-2">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-xs font-extrabold uppercase text-blue-800 bg-blue-100 px-2.5 py-1 rounded-md inline-block">
+                            💾 Mes dépôts enregistrés automatiquement (<span id="savedCountBadge">0</span>)
+                        </h3>
+                        <button type="button" id="btnClearAllSavedImages" class="text-[11px] text-red-600 hover:underline font-semibold">
+                            Vider les dépôts mémorisés
+                        </button>
+                    </div>
+                    <div id="savedGalleryGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3"></div>
+                </div>
+
+                <!-- SECTION 2 : BIBLIOTHÈQUE COMPLÈTE DU DOSSIER IMAGES GAUCHE -->
+                <div class="space-y-2">
+                    <h3 class="text-xs font-extrabold uppercase text-gray-700 bg-gray-200 px-2.5 py-1 rounded-md inline-block">
+                        📁 Bibliothèque du dossier "Images Gauche" (<span id="presetCountBadge">0</span> visuels)
+                    </h3>
+                    <div id="galleryGrid" class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-3"></div>
+                </div>
+            </div>
+
+            <div class="px-5 py-3 border-t bg-white flex justify-between items-center">
+                <button type="button" id="btnClearVisualSelection" class="text-xs font-bold text-red-600 hover:text-red-800 px-3 py-1.5 rounded border border-red-200 hover:bg-red-50 transition">
+                    🗑️ Aucun visuel (Fond rouge uni)
+                </button>
+                <button type="button" id="btnCancelGalleryModal" class="text-xs font-bold bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-1.5 rounded-lg transition">
+                    Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        // Liste complète pointant vers le sous-dossier "Images Gauche/"[cite: 11]
+        const PRESET_IMAGES = [
+            { label: '20% Carte U', file: 'Images Gauche/20%carte_U.png', alts: ['Images Gauche/20%carte_u.png', 'Images Gauche/20carte_U.png', 'Images Gauche/20%carte_U.jpg'] },
+            { label: 'Always', file: 'Images Gauche/Always.png', alts: ['Images Gauche/always.png', 'Images Gauche/Always.jpg'] },
+            { label: 'Always 1', file: 'Images Gauche/Always1.png', alts: ['Images Gauche/always1.png', 'Images Gauche/Always1.jpg'] },
+            { label: 'Ariel', file: 'Images Gauche/Ariel.png', alts: ['Images Gauche/ariel.png', 'Images Gauche/Ariel.jpg'] },
+            { label: 'Ariel 1', file: 'Images Gauche/Ariel1.png', alts: ['Images Gauche/ariel1.png', 'Images Gauche/Ariel1.jpg'] },
+            { label: 'Belin', file: 'Images Gauche/Belin1.jpg', alts: ['Images Gauche/Belin1.png', 'Images Gauche/belin1.jpg', 'Images Gauche/Belin.png'] },
+            { label: 'Bjorg', file: 'Images Gauche/Bjorg.png', alts: ['Images Gauche/bjorg.png', 'Images Gauche/Bjorg.jpg'] },
+            { label: 'BN Logo', file: 'Images Gauche/BN - Logo.png', alts: ['Images Gauche/BN-Logo.png', 'Images Gauche/bn - logo.png'] },
+            { label: 'BN 1', file: 'Images Gauche/Bn1.png', alts: ['Images Gauche/BN1.png', 'Images Gauche/bn1.png'] },
+            { label: 'BN 2', file: 'Images Gauche/Bn2.png', alts: ['Images Gauche/BN2.png', 'Images Gauche/bn2.png'] },
+            { label: 'BN 3', file: 'Images Gauche/Bn3.png', alts: ['Images Gauche/BN3.png', 'Images Gauche/bn3.png'] },
+            { label: 'Bonne Année', file: 'Images Gauche/bonne annee.png', alts: ['Images Gauche/Bonne annee.png', 'Images Gauche/bonne année.png'] },
+            { label: 'Bonne Maman', file: 'Images Gauche/BonneMaman.png', alts: ['Images Gauche/bonnemaman.png', 'Images Gauche/Bonne_Maman.png'] },
+            { label: 'Bredele', file: 'Images Gauche/bredele.png', alts: ['Images Gauche/Bredele.png', 'Images Gauche/bredele.jpg'] },
+            { label: 'Carte Noire', file: 'Images Gauche/Carte_Noire.png', alts: ['Images Gauche/carte_noire.png', 'Images Gauche/Carte Noire.png'] },
+            { label: 'Carte Noire 1', file: 'Images Gauche/Carte_Noire1.png', alts: ['Images Gauche/carte_noire1.png', 'Images Gauche/Carte Noire1.png'] },
+            { label: 'Carte Noire 2', file: 'Images Gauche/Carte_Noire2.png', alts: ['Images Gauche/carte_noire2.png', 'Images Gauche/Carte Noire2.png'] },
+            { label: 'Carte Noire 3', file: 'Images Gauche/carte noire3.png', alts: ['Images Gauche/Carte_Noire3.png', 'Images Gauche/carte_noire3.png'] },
+            { label: "Carte d'Or", file: 'Images Gauche/CarteDor.png', alts: ['Images Gauche/Cartedor.png', 'Images Gauche/cartedor.png'] },
+            { label: 'Chupa Chups', file: 'Images Gauche/Chupa_Chups.png', alts: ['Images Gauche/chupa_chups.png', 'Images Gauche/Chupa Chups.png'] },
+            { label: 'Cirio 1', file: 'Images Gauche/Cirio1.jpg', alts: ['Images Gauche/cirio1.jpg', 'Images Gauche/Cirio1.png'] },
+            { label: 'Cirio 2', file: 'Images Gauche/Cirio2.jpg', alts: ['Images Gauche/cirio2.jpg', 'Images Gauche/Cirio2.png'] },
+            { label: "Côte d'Or", file: 'Images Gauche/cote dor.png', alts: ['Images Gauche/Cote dor.png', 'Images Gauche/CoteDor.png'] },
+            { label: 'Daisuki', file: 'Images Gauche/daisuki.jpg', alts: ['Images Gauche/Daisuki.jpg', 'Images Gauche/daisuki.png'] },
+            { label: 'Daisuki 1', file: 'Images Gauche/daisuki1.jpg', alts: ['Images Gauche/Daisuki1.jpg', 'Images Gauche/daisuki1.png'] },
+            { label: 'Divella', file: 'Images Gauche/Divella.png', alts: ['Images Gauche/divella.png', 'Images Gauche/Divella.jpg'] },
+            { label: 'Divella 2', file: 'Images Gauche/divella2.jpg', alts: ['Images Gauche/Divella2.jpg', 'Images Gauche/divella2.png'] },
+            { label: 'Divella 3', file: 'Images Gauche/divella3.jpg', alts: ['Images Gauche/Divella3.jpg', 'Images Gauche/divella3.png'] },
+            { label: 'Divella 4', file: 'Images Gauche/divella4.jpg', alts: ['Images Gauche/Divella4.jpg', 'Images Gauche/divella4.png'] },
+            { label: 'Fabriqué en France', file: 'Images Gauche/fabriquer en france.png', alts: ['Images Gauche/Fabriquer en france.png', 'Images Gauche/fabriqué en france.png'] },
+            { label: 'Gavottes', file: 'Images Gauche/Gavottes.jpg', alts: ['Images Gauche/gavottes.jpg', 'Images Gauche/Gavottes.png'] },
+            { label: 'Gillette', file: 'Images Gauche/Gilette.png', alts: ['Images Gauche/Gillette.png', 'Images Gauche/gilette.png'] },
+            { label: 'Gillette 1', file: 'Images Gauche/Gilette1.png', alts: ['Images Gauche/Gillette1.png', 'Images Gauche/gilette1.png'] },
+            { label: 'Granola', file: 'Images Gauche/Granola.png', alts: ['Images Gauche/granola.png', 'Images Gauche/Granola.jpg'] },
+            { label: 'Granola 1', file: 'Images Gauche/Granola1.png', alts: ['Images Gauche/granola1.png', 'Images Gauche/Granola1.jpg'] },
+            { label: 'Halloween', file: 'Images Gauche/halloween.png', alts: ['Images Gauche/Halloween.png', 'Images Gauche/halloween.jpg'] },
+            { label: 'Direction Italie', file: 'Images Gauche/italie.png', alts: ['Images Gauche/Italie.png', 'Images Gauche/italie.jpg'] },
+            { label: 'Prix Bas Semaine', file: 'Images Gauche/Les_Prix_Bas_De_La_Semaine.png', alts: ['Images Gauche/les_prix_bas_de_la_semaine.png'] },
+            { label: 'Lindt', file: 'Images Gauche/Lindt.png', alts: ['Images Gauche/lindt.png', 'Images Gauche/Lindt.jpg'] },
+            { label: 'Local et Engagé', file: 'Images Gauche/local et engage.png', alts: ['Images Gauche/Local et engage.png', 'Images Gauche/local et engagé.png'] },
+            { label: 'Logo PomPotes', file: 'Images Gauche/LOGO_POMPOTES.png', alts: ['Images Gauche/logo_pompotes.png', 'Images Gauche/Logo_Pompotes.png'] },
+            { label: "L'Or", file: "Images Gauche/L'or.png", alts: ["Images Gauche/l'or.png", "Images Gauche/L'Or.png", "Images Gauche/Lor.png"] },
+            { label: 'LU', file: 'Images Gauche/Lu.png', alts: ['Images Gauche/LU.png', 'Images Gauche/lu.png'] },
+            { label: 'Matthieu', file: 'Images Gauche/Matthieu.png', alts: ['Images Gauche/matthieu.png', 'Images Gauche/Mathieu.png'] },
+            { label: 'Milka', file: 'Images Gauche/milka.png', alts: ['Images Gauche/Milka.png', 'Images Gauche/milka.jpg'] },
+            { label: 'Mutti', file: 'Images Gauche/Mutti.png', alts: ['Images Gauche/mutti.png', 'Images Gauche/Mutti.jpg'] },
+            { label: 'Mutti 1', file: 'Images Gauche/mutti1.png', alts: ['Images Gauche/Mutti1.png', 'Images Gauche/mutti1.jpg'] },
+            { label: 'Mutti 2', file: 'Images Gauche/mutti2.jpg', alts: ['Images Gauche/Mutti2.jpg', 'Images Gauche/mutti2.png'] },
+            { label: 'Mutti 3', file: 'Images Gauche/mutti3.png', alts: ['Images Gauche/Mutti3.png', 'Images Gauche/mutti3.jpg'] },
+            { label: 'Noël', file: 'Images Gauche/noel.png', alts: ['Images Gauche/noel.jpg', 'Images Gauche/Noel.png', 'Images Gauche/noël.png'] },
+            { label: 'Nutella', file: 'Images Gauche/Nutella.png', alts: ['Images Gauche/nutella.png', 'Images Gauche/Nutella.jpg'] },
+            { label: 'Old El Paso', file: 'Images Gauche/Oldepaso.png', alts: ['Images Gauche/oldepaso.png', 'Images Gauche/Oldelpaso.png'] },
+            { label: 'Old El Paso 1', file: 'Images Gauche/oldelpaso1.png', alts: ['Images Gauche/oldelpaso1.jpg', 'Images Gauche/Oldelpaso1.png', 'Images Gauche/odepaso1.png'] },
+            { label: 'Old El Paso 2', file: 'Images Gauche/oldelpaso2.jpg', alts: ['Images Gauche/oldelpaso2.png', 'Images Gauche/Oldelpaso2.jpg', 'Images Gauche/odepaso2.png'] },
+            { label: 'Old El Paso 3', file: 'Images Gauche/oldelpaso3.jpg', alts: ['Images Gauche/oldelpaso3.png', 'Images Gauche/Oldelpaso3.jpg', 'Images Gauche/odepaso3.png'] },
+            { label: 'Oral-B', file: 'Images Gauche/Oral_B.png', alts: ['Images Gauche/oral_b.png', 'Images Gauche/OralB.png'] },
+            { label: 'Oral-B 1', file: 'Images Gauche/Oral_B1.png', alts: ['Images Gauche/oral_b1.png', 'Images Gauche/OralB1.png'] },
+            { label: 'Oreo', file: 'Images Gauche/Oreo.png', alts: ['Images Gauche/oreo.png', 'Images Gauche/Oreo.jpg'] },
+            { label: 'Pâques', file: 'Images Gauche/paque.png', alts: ['Images Gauche/paque.jpg', 'Images Gauche/Paque.png', 'Images Gauche/paques.png'] },
+            { label: "Pom'Potes", file: "Images Gauche/Pom'Potes.png", alts: ["Images Gauche/pom'potes.png", "Images Gauche/Pompotes.png"] },
+            { label: "Pom'Potes R", file: 'Images Gauche/pomepotesR.png', alts: ['Images Gauche/PomepotesR.png', 'Images Gauche/pomepotesr.png'] },
+            { label: "Pom'Potes 1", file: 'Images Gauche/POMPOTES1.png', alts: ['Images Gauche/Pompotes1.png', 'Images Gauche/pompotes1.png'] },
+            { label: "Pom'Potes 2", file: 'Images Gauche/POMPOTES2.png', alts: ['Images Gauche/Pompotes2.png', 'Images Gauche/pompotes2.png'] },
+            { label: 'Prince LU', file: 'Images Gauche/Prince1.jpg', alts: ['Images Gauche/prince1.jpg', 'Images Gauche/Prince1.png'] },
+            { label: 'REM', file: 'Images Gauche/REM.png', alts: ['Images Gauche/rem.png', 'Images Gauche/Rem.png'] },
+            { label: 'Rummo 1', file: 'Images Gauche/rummo1.jpg', alts: ['Images Gauche/Rummo1.jpg', 'Images Gauche/rummo1.png'] },
+            { label: 'Rummo 2', file: 'Images Gauche/rummo2.jpg', alts: ['Images Gauche/Rummo2.jpg', 'Images Gauche/rummo2.png'] },
+            { label: 'Rummo 3', file: 'Images Gauche/rummo3.jpg', alts: ['Images Gauche/Rummo3.jpg', 'Images Gauche/rummo3.png'] },
+            { label: 'Saint Michel', file: 'Images Gauche/Saint_Michel.png', alts: ['Images Gauche/saint_michel.png', 'Images Gauche/Saint Michel.png'] },
+            { label: 'Rentrée Scolaire', file: 'Images Gauche/scolaire.png', alts: ['Images Gauche/Scolaire.png', 'Images Gauche/scolaire.jpg'] },
+            { label: 'Skip', file: 'Images Gauche/Skip.png', alts: ['Images Gauche/skip.png', 'Images Gauche/Skip.jpg'] },
+            { label: 'Super U', file: 'Images Gauche/Super_U.png', alts: ['Images Gauche/Super U.png', 'Images Gauche/super u.png'] },
+            { label: 'Toussaint', file: 'Images Gauche/toussain.png', alts: ['Images Gauche/Toussain.png', 'Images Gauche/toussaint.png'] },
+            { label: 'Vacances', file: 'Images Gauche/vacances.png', alts: ['Images Gauche/Vacances.png', 'Images Gauche/vacances.jpg'] },
+            { label: 'Whiskas', file: 'Images Gauche/WHISKAS.png', alts: ['Images Gauche/Whiskas.png', 'Images Gauche/whiskas.png'] },
+            { label: 'Wilkinson', file: 'Images Gauche/Wilkinson.png', alts: ['Images Gauche/wilkinson.png', 'Images Gauche/Wilkinson.jpg'] },
+            { label: 'Wilkinson 1', file: 'Images Gauche/Wilkinson1.png', alts: ['Images Gauche/wilkinson1.png', 'Images Gauche/Wilkinson1.jpg'] },
+            { label: 'Wilkinson 2', file: 'Images Gauche/Wilkinson2.jpg', alts: ['Images Gauche/wilkinson2.jpg', 'Images Gauche/Wilkinson2.png'] }
+        ];
+
+        function safeFileUrl(fileName) {
+            return fileName.split('/').map(part => encodeURIComponent(part)).join('/');
+        }
+
+        function getCandidateUrls(preset) {
+            const list = [preset.file, ...(preset.alts || [])];
+            const baseNoExt = preset.file.replace(/\.[^.]+$/, '');
+            const ext = (preset.file.match(/\.[^.]+$/) || ['.png'])[0].toLowerCase();
+            const otherExt = ext === '.png' ? '.jpg' : '.png';
+
+            list.push(baseNoExt + otherExt);
+            list.push(baseNoExt.toLowerCase() + ext);
+            list.push(baseNoExt.toLowerCase() + otherExt);
+
+            const unique = [...new Set(list)];
+            return unique.map(safeFileUrl);
+        }
+
+        const MECHANIC_PRESETS = {
+            remise_imm:       { discount: '-34%', text: 'DE REMISE|IMMÉDIATE', unitLabel: 'LE PRODUIT', mode: 'pct_single' },
+            remise_imm_choix: { discount: '-30%', text: 'DE REMISE IMMÉDIATE|AU CHOIX', unitLabel: 'LE PRODUIT AU CHOIX', mode: 'pct_single' },
+            remise_euros:     { discount: '-1€',  text: 'DE REMISE|IMMÉDIATE', unitLabel: 'LE PRODUIT', mode: 'euro_single' },
+            '2eme_50':        { discount: '-50%', text: 'SUR LE 2ÈME|PRODUIT', unitLabel: 'LE 2ÈME PRODUIT', mode: 'nth_2', nthPct: 50 },
+            '2eme_50_choix':  { discount: '-50%', text: 'SUR LE 2ÈME|AU CHOIX', unitLabel: 'LE 2ÈME AU CHOIX', mode: 'nth_2', nthPct: 50 },
+            '2eme_60':        { discount: '-60%', text: 'SUR LE 2ÈME|PRODUIT', unitLabel: 'LE 2ÈME PRODUIT', mode: 'nth_2', nthPct: 60 },
+            '2eme_60_choix':  { discount: '-60%', text: 'SUR LE 2ÈME|AU CHOIX', unitLabel: 'LE 2ÈME AU CHOIX', mode: 'nth_2', nthPct: 60 },
+            '2eme_68':        { discount: '-68%', text: 'SUR LE 2ÈME|PRODUIT', unitLabel: 'LE 2ÈME PRODUIT', mode: 'nth_2', nthPct: 68 },
+            '2eme_70':        { discount: '-70%', text: 'SUR LE 2ÈME|PRODUIT', unitLabel: 'LE 2ÈME PRODUIT', mode: 'nth_2', nthPct: 70 },
+            '2eme_80':        { discount: '-80%', text: 'SUR LE 2ÈME|PRODUIT', unitLabel: 'LE 2ÈME PRODUIT', mode: 'nth_2', nthPct: 80 },
+            '1_plus_1':       { discount: '1+1',  text: 'GRATUIT', unitLabel: 'LE LOT DE 2', mode: 'bogo_1_1' },
+            '1_plus_1_choix': { discount: '1+1',  text: 'GRATUIT|AU CHOIX', unitLabel: 'LE LOT DE 2 AU CHOIX', mode: 'bogo_1_1' },
+            '2_plus_1':       { discount: '2+1',  text: 'GRATUIT', unitLabel: 'LE LOT DE 3', mode: 'bogo_2_1' },
+            '2_plus_1_choix': { discount: '2+1',  text: 'GRATUIT|AU CHOIX', unitLabel: 'LE LOT DE 3 AU CHOIX', mode: 'bogo_2_1' },
+            le_lot:           { discount: 'LE LOT', text: 'PRIX SPÉCIAL', unitLabel: 'LE LOT', mode: 'direct_lot' },
+            le_lot_choix:     { discount: 'LE LOT', text: 'AU CHOIX', unitLabel: 'LE LOT AU CHOIX', mode: 'direct_lot' },
+            lot_de_2:         { discount: 'LE LOT', text: 'DE 2 PRODUITS', unitLabel: 'LE LOT DE 2', mode: 'direct_lot' },
+            lot_de_3:         { discount: 'LE LOT', text: 'DE 3 PRODUITS', unitLabel: 'LE LOT DE 3', mode: 'direct_lot' },
+            carte_u:          { discount: '20%',  text: 'EN BONS D\'ACHAT|CARTE U', unitLabel: 'PRIX PAYÉ EN CAISSE', mode: 'direct_lot' },
+            prix_choc:        { discount: 'PRIX', text: 'CHOC !', unitLabel: 'LE PRODUIT', mode: 'direct_lot' }
+        };
 
         let postersList = [
             {
@@ -195,7 +412,12 @@
                 baseUnitPrice: 23.10,
                 unitQty: 0.100,
                 unitType: 'kg',
-                gencode: '000015561621'
+                contenanceText: '100 g',
+                gencode: '000015561621',
+                useCustomLeftImage: false,
+                customRawImg: null,
+                customTrimmedImg: null,
+                customImageLabel: ''
             }
         ];
 
@@ -203,28 +425,147 @@
         let trimmedLeftImage = null;
         let dateColor = '#FFFFFF';
         let showDate = false;
-        let showDiscountText = true;
+        let showMechanic = true;
+        let currentGalleryTarget = 'global';
+        let savedUserImages = [];
 
         const FONT_SLAB = '"Museo Slab", "Arvo", "Rockwell", serif';
         const FONT_SANS = '"Montserrat", Arial, sans-serif';
 
-        // Gestion des polices personnalisées .OTF
+        const DB_NAME = 'SuperU_PromoLabels_DB';
+        const STORE_NAME = 'saved_left_images';
+
+        function openImageDB() {
+            return new Promise((resolve, reject) => {
+                const req = indexedDB.open(DB_NAME, 1);
+                req.onupgradeneeded = (e) => {
+                    const db = e.target.result;
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                    }
+                };
+                req.onsuccess = () => resolve(req.result);
+                req.onerror = () => reject(req.error);
+            });
+        }
+
+        async function saveImageToDB(label, dataUrl) {
+            try {
+                const db = await openImageDB();
+                const existing = savedUserImages.find(it => it.label.toLowerCase() === label.toLowerCase());
+                return new Promise((resolve) => {
+                    const tx = db.transaction(STORE_NAME, 'readwrite');
+                    const store = tx.objectStore(STORE_NAME);
+                    if (existing) {
+                        store.put({ id: existing.id, label, dataUrl, date: Date.now() });
+                    } else {
+                        store.add({ label, dataUrl, date: Date.now() });
+                    }
+                    tx.oncomplete = async () => {
+                        await loadSavedImagesFromDB();
+                        resolve();
+                    };
+                });
+            } catch (e) {}
+        }
+
+        async function loadSavedImagesFromDB() {
+            try {
+                const db = await openImageDB();
+                return new Promise((resolve) => {
+                    const tx = db.transaction(STORE_NAME, 'readonly');
+                    const store = tx.objectStore(STORE_NAME);
+                    const req = store.getAll();
+                    req.onsuccess = () => {
+                        savedUserImages = (req.result || []).sort((a, b) => b.date - a.date);
+                        renderSavedGallerySection(document.getElementById('inputSearchGallery')?.value || '');
+                        resolve(savedUserImages);
+                    };
+                });
+            } catch (e) {
+                return [];
+            }
+        }
+
+        async function deleteSavedImageFromDB(id) {
+            try {
+                const db = await openImageDB();
+                const tx = db.transaction(STORE_NAME, 'readwrite');
+                tx.objectStore(STORE_NAME).delete(id);
+                tx.oncomplete = () => loadSavedImagesFromDB();
+            } catch (e) {}
+        }
+
+        async function clearAllSavedImagesFromDB() {
+            try {
+                const db = await openImageDB();
+                const tx = db.transaction(STORE_NAME, 'readwrite');
+                tx.objectStore(STORE_NAME).clear();
+                tx.oncomplete = () => loadSavedImagesFromDB();
+            } catch (e) {}
+        }
+
+        async function autoLoadMuseoSlabFonts() {
+            if (window.location.protocol === 'file:') return;
+            const fontCandidates = [
+                { file: 'Copie de Museo_Slab.otf', weight: '500' },
+                { file: 'Copie de Museo_Slab_0.otf', weight: '500' },
+                { file: 'Copie de Museo_Slab_1.otf', weight: '500' },
+                { file: 'Copie de Museo_Slab_2.otf', weight: '500' },
+                { file: 'Copie de Museo_Slab_3.otf', weight: '700' },
+                { file: 'Copie de Museo_Slab_4.otf', weight: '900' }
+            ];
+
+            let loadedCount = 0;
+            for (const item of fontCandidates) {
+                try {
+                    const response = await fetch(safeFileUrl(item.file));
+                    if (response.ok) {
+                        const buffer = await response.arrayBuffer();
+                        const fontFace = new FontFace('Museo Slab', buffer, { weight: item.weight });
+                        await fontFace.load();
+                        document.fonts.add(fontFace);
+                        loadedCount++;
+                    }
+                } catch (e) {}
+            }
+
+            if (loadedCount > 0) {
+                document.getElementById('fontStatus')?.classList.remove('hidden');
+                renderAllPosters();
+            }
+        }
+
         document.getElementById('inputCustomFonts').addEventListener('change', async function(e) {
             const files = Array.from(e.target.files);
             for (const file of files) {
                 const buffer = await file.arrayBuffer();
                 const name = file.name.toLowerCase();
                 let weight = '500';
-                if (name.includes('900')) weight = '900';
-                else if (name.includes('700')) weight = '700';
+                if (name.includes('900') || name.includes('1000') || name.includes('_4')) weight = '900';
+                else if (name.includes('700') || name.includes('_3')) weight = '700';
                 const fontFace = new FontFace('Museo Slab', buffer, { weight });
                 await fontFace.load();
                 document.fonts.add(fontFace);
             }
+            document.getElementById('fontStatus').classList.remove('hidden');
             renderAllPosters();
         });
 
-        // Bouton Afficher / Masquer la date
+        const selectMechanicPreset = document.getElementById('selectMechanicPreset');
+        const inputDiscount = document.getElementById('inputDiscount');
+        const inputDiscountText = document.getElementById('inputDiscountText');
+        const inputUnitLabel = document.getElementById('inputUnitLabel');
+
+        selectMechanicPreset.addEventListener('change', function() {
+            const preset = MECHANIC_PRESETS[this.value];
+            if (!preset) return;
+            inputDiscount.value = preset.discount;
+            inputDiscountText.value = preset.text;
+            inputUnitLabel.value = preset.unitLabel;
+            renderAllPosters();
+        });
+
         const btnToggleDate = document.getElementById('btnToggleDate');
         const inputDates = document.getElementById('inputDates');
         btnToggleDate.addEventListener('click', () => {
@@ -243,26 +584,31 @@
             renderAllPosters();
         });
 
-        // Bouton Afficher / Masquer la phrase de mécanique
         const btnToggleDiscountText = document.getElementById('btnToggleDiscountText');
-        const inputDiscountText = document.getElementById('inputDiscountText');
         btnToggleDiscountText.addEventListener('click', () => {
-            showDiscountText = !showDiscountText;
-            if (showDiscountText) {
+            showMechanic = !showMechanic;
+            if (showMechanic) {
                 btnToggleDiscountText.textContent = 'affichée';
                 btnToggleDiscountText.className = 'min-w-[88px] text-center text-[11px] font-bold px-3 py-0.5 rounded bg-green-100 text-green-800 border border-green-300 hover:bg-green-200 transition';
+                selectMechanicPreset.disabled = false;
+                selectMechanicPreset.classList.remove('opacity-50', 'bg-gray-100');
+                inputDiscount.disabled = false;
+                inputDiscount.classList.remove('opacity-50', 'bg-gray-100');
                 inputDiscountText.disabled = false;
                 inputDiscountText.classList.remove('opacity-50', 'bg-gray-100');
             } else {
                 btnToggleDiscountText.textContent = 'masquée';
                 btnToggleDiscountText.className = 'min-w-[88px] text-center text-[11px] font-bold px-3 py-0.5 rounded bg-red-100 text-red-800 border border-red-300 hover:bg-red-200 transition';
+                selectMechanicPreset.disabled = true;
+                selectMechanicPreset.classList.add('opacity-50', 'bg-gray-100');
+                inputDiscount.disabled = true;
+                inputDiscount.classList.add('opacity-50', 'bg-gray-100');
                 inputDiscountText.disabled = true;
                 inputDiscountText.classList.add('opacity-50', 'bg-gray-100');
             }
             renderAllPosters();
         });
 
-        // Couleur de la date
         const btnDateWhite = document.getElementById('btnDateWhite');
         const btnDateBlack = document.getElementById('btnDateBlack');
 
@@ -280,49 +626,55 @@
             renderAllPosters();
         });
 
+        document.getElementById('chkShowContenance').addEventListener('change', renderAllPosters);
+
         function autoTrimWhiteBorders(img) {
-            const tempCanvas = document.createElement('canvas');
-            const tempCtx = tempCanvas.getContext('2d');
-            tempCanvas.width = img.width;
-            tempCanvas.height = img.height;
-            tempCtx.drawImage(img, 0, 0);
+            try {
+                const tempCanvas = document.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d');
+                tempCanvas.width = img.width;
+                tempCanvas.height = img.height;
+                tempCtx.drawImage(img, 0, 0);
 
-            const imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-            const data = imgData.data;
-            const w = tempCanvas.width;
-            const h = tempCanvas.height;
+                const imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                const data = imgData.data;
+                const w = tempCanvas.width;
+                const h = tempCanvas.height;
 
-            let top = 0, bottom = h - 1, left = 0, right = w - 1;
-            const isWhite = (x, y) => {
-                const idx = (y * w + x) * 4;
-                return data[idx + 3] < 15 || (data[idx] > 240 && data[idx + 1] > 240 && data[idx + 2] > 240);
-            };
+                let top = 0, bottom = h - 1, left = 0, right = w - 1;
+                const isWhite = (x, y) => {
+                    const idx = (y * w + x) * 4;
+                    return data[idx + 3] < 15 || (data[idx] > 240 && data[idx + 1] > 240 && data[idx + 2] > 240);
+                };
 
-            topLoop: for (let y = 0; y < h; y++) {
-                for (let x = 0; x < w; x++) { if (!isWhite(x, y)) { top = y; break topLoop; } }
+                topLoop: for (let y = 0; y < h; y++) {
+                    for (let x = 0; x < w; x++) { if (!isWhite(x, y)) { top = y; break topLoop; } }
+                }
+                bottomLoop: for (let y = h - 1; y >= top; y--) {
+                    for (let x = 0; x < w; x++) { if (!isWhite(x, y)) { bottom = y; break bottomLoop; } }
+                }
+                leftLoop: for (let x = 0; x < w; x++) {
+                    for (let y = top; y <= bottom; y++) { if (!isWhite(x, y)) { left = x; break leftLoop; } }
+                }
+                rightLoop: for (let x = w - 1; x >= left; x--) {
+                    for (let y = top; y <= bottom; y++) { if (!isWhite(x, y)) { right = x; break rightLoop; } }
+                }
+
+                const cropW = right - left + 1;
+                const cropH = bottom - top + 1;
+                if (cropW <= 20 || cropH <= 20) return img;
+
+                const outCanvas = document.createElement('canvas');
+                outCanvas.width = cropW;
+                outCanvas.height = cropH;
+                outCanvas.getContext('2d').drawImage(tempCanvas, left, top, cropW, cropH, 0, 0, cropW, cropH);
+
+                const outImg = new Image();
+                outImg.src = outCanvas.toDataURL('image/png');
+                return outImg;
+            } catch (err) {
+                return img;
             }
-            bottomLoop: for (let y = h - 1; y >= top; y--) {
-                for (let x = 0; x < w; x++) { if (!isWhite(x, y)) { bottom = y; break bottomLoop; } }
-            }
-            leftLoop: for (let x = 0; x < w; x++) {
-                for (let y = top; y <= bottom; y++) { if (!isWhite(x, y)) { left = x; break leftLoop; } }
-            }
-            rightLoop: for (let x = w - 1; x >= left; x--) {
-                for (let y = top; y <= bottom; y++) { if (!isWhite(x, y)) { right = x; break rightLoop; } }
-            }
-
-            const cropW = right - left + 1;
-            const cropH = bottom - top + 1;
-            if (cropW <= 20 || cropH <= 20) return img;
-
-            const outCanvas = document.createElement('canvas');
-            outCanvas.width = cropW;
-            outCanvas.height = cropH;
-            outCanvas.getContext('2d').drawImage(tempCanvas, left, top, cropW, cropH, 0, 0, cropW, cropH);
-
-            const outImg = new Image();
-            outImg.src = outCanvas.toDataURL('image/png');
-            return outImg;
         }
 
         async function loadFileToPages(file) {
@@ -375,37 +727,245 @@
             }
         }
 
-        // Sélection d'une image prédéfinie dans la liste déroulante
-        document.getElementById('selectPresetLeftImage').addEventListener('change', function(e) {
-            const fileName = e.target.value;
-            if (!fileName) return;
+        const visualGalleryModal = document.getElementById('visualGalleryModal');
+        const galleryGrid = document.getElementById('galleryGrid');
+        const savedGallerySection = document.getElementById('savedGallerySection');
+        const savedGalleryGrid = document.getElementById('savedGalleryGrid');
+        const galleryModalTitle = document.getElementById('galleryModalTitle');
+        const inputSearchGallery = document.getElementById('inputSearchGallery');
 
-            // Réinitialise l'input fichier libre pour montrer qu'on utilise le visuel prédéfini
-            document.getElementById('inputLeftImage').value = '';
+        function renderSavedGallerySection(filterText = '') {
+            const q = filterText.trim().toLowerCase();
+            const filtered = savedUserImages.filter(it => !q || it.label.toLowerCase().includes(q));
+            document.getElementById('savedCountBadge').textContent = filtered.length;
 
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            img.onload = () => {
-                rawLeftImage = img;
-                trimmedLeftImage = autoTrimWhiteBorders(rawLeftImage);
-                trimmedLeftImage.onload = renderAllPosters;
-                setTimeout(renderAllPosters, 80);
-            };
-            img.onerror = () => {
-                alert(`Impossible de charger "${fileName}". Vérifie que le fichier est bien présent dans le même dossier que index.html.`);
-            };
-            img.src = encodeURI(fileName);
+            if (filtered.length === 0) {
+                savedGallerySection.classList.add('hidden');
+                return;
+            }
+
+            savedGallerySection.classList.remove('hidden');
+            savedGalleryGrid.innerHTML = '';
+
+            filtered.forEach(saved => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'relative bg-white border-2 border-blue-300 hover:border-red-600 rounded-xl p-2 flex flex-col items-center gap-1.5 shadow-sm hover:shadow-md transition group cursor-pointer';
+                wrapper.innerHTML = `
+                    <button type="button" data-del-id="${saved.id}" class="btn-del-saved absolute top-1 right-1 bg-red-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center opacity-80 hover:opacity-100 z-10" title="Supprimer ce dépôt">✕</button>
+                    <div class="w-full h-24 bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center border border-gray-100">
+                        <img src="${saved.dataUrl}" alt="${saved.label}" class="max-w-full max-h-full object-contain group-hover:scale-105 transition duration-200">
+                    </div>
+                    <span class="text-[11px] font-extrabold text-blue-900 group-hover:text-red-600 uppercase truncate w-full text-center">${saved.label}</span>
+                `;
+                wrapper.addEventListener('click', (e) => {
+                    if (e.target.closest('.btn-del-saved')) {
+                        e.stopPropagation();
+                        deleteSavedImageFromDB(saved.id);
+                        return;
+                    }
+                    applyDataUrlVisual(saved.dataUrl, saved.label);
+                });
+                savedGalleryGrid.appendChild(wrapper);
+            });
+        }
+
+        function buildVisualGallery(filterText = '') {
+            const q = filterText.trim().toLowerCase();
+            galleryGrid.innerHTML = '';
+            const filtered = PRESET_IMAGES.filter(p => !q || p.label.toLowerCase().includes(q) || p.file.toLowerCase().includes(q));
+            document.getElementById('presetCountBadge').textContent = filtered.length;
+
+            filtered.forEach(preset => {
+                const candidates = getCandidateUrls(preset);
+                let resolvedUrl = candidates[0];
+
+                const card = document.createElement('button');
+                card.type = 'button';
+                card.className = 'bg-white border-2 border-gray-200 hover:border-red-600 rounded-xl p-2 flex flex-col items-center gap-1.5 shadow-sm hover:shadow-md transition group cursor-pointer focus:outline-none focus:ring-2 focus:ring-red-500';
+
+                const imgBox = document.createElement('div');
+                imgBox.className = 'w-full h-24 bg-gray-50 rounded-lg overflow-hidden flex items-center justify-center border border-gray-100';
+
+                const thumbImg = document.createElement('img');
+                thumbImg.alt = preset.label;
+                thumbImg.className = 'max-w-full max-h-full object-contain group-hover:scale-105 transition duration-200';
+
+                let tryIndex = 0;
+                thumbImg.onerror = () => {
+                    tryIndex++;
+                    if (tryIndex < candidates.length) {
+                        resolvedUrl = candidates[tryIndex];
+                        thumbImg.src = resolvedUrl;
+                    } else {
+                        imgBox.innerHTML = `<span class="text-[10px] text-gray-400 p-2 text-center leading-tight">Introuvable :<br><b>${preset.label}</b><br><span class="text-[9px] text-blue-600">Clique sur ➕ pour l'importer</span></span>`;
+                    }
+                };
+                thumbImg.src = resolvedUrl;
+
+                imgBox.appendChild(thumbImg);
+
+                const caption = document.createElement('span');
+                caption.className = 'text-[11px] font-extrabold text-gray-800 group-hover:text-red-600 uppercase tracking-tight truncate w-full text-center';
+                caption.textContent = preset.label;
+
+                card.appendChild(imgBox);
+                card.appendChild(caption);
+
+                card.addEventListener('click', () => {
+                    applyPresetVisualWithFallback(candidates, preset.label);
+                });
+                galleryGrid.appendChild(card);
+            });
+
+            renderSavedGallerySection(filterText);
+        }
+
+        inputSearchGallery.addEventListener('input', function() {
+            buildVisualGallery(this.value);
         });
 
-        // Dépôt d'une image ou PDF au choix via le bouton parcourir
+        document.getElementById('btnClearAllSavedImages').addEventListener('click', () => {
+            if (confirm('Vider toutes les images déposées mémorisées dans le navigateur ?')) {
+                clearAllSavedImagesFromDB();
+            }
+        });
+
+        document.getElementById('inputAddGalleryImage').addEventListener('change', async function(e) {
+            const files = Array.from(e.target.files);
+            if (files.length === 0) return;
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const pages = await loadFileToPages(file);
+                const dataUrl = pages[0].canvas.toDataURL('image/png');
+                const cleanName = file.name.replace(/\.[^.]+$/, '');
+                await saveImageToDB(cleanName, dataUrl);
+                if (files.length === 1) {
+                    applyDataUrlVisual(dataUrl, cleanName);
+                }
+            }
+            this.value = '';
+        });
+
+        function openVisualGallery(target) {
+            currentGalleryTarget = target;
+            inputSearchGallery.value = '';
+            buildVisualGallery('');
+            if (target === 'global') {
+                galleryModalTitle.textContent = '🖼️ Choisir le visuel de gauche (Global)';
+            } else {
+                galleryModalTitle.textContent = `🖼️ Choisir le visuel de gauche pour l'Étiquette #${target + 1}`;
+            }
+            visualGalleryModal.classList.remove('hidden');
+        }
+
+        function closeVisualGallery() {
+            visualGalleryModal.classList.add('hidden');
+        }
+
+        function applyDataUrlVisual(dataUrl, labelName) {
+            const img = new Image();
+            img.onload = () => {
+                const trimmed = autoTrimWhiteBorders(img);
+                if (currentGalleryTarget === 'global') {
+                    rawLeftImage = img;
+                    trimmedLeftImage = trimmed;
+                    document.getElementById('globalGalleryLabel').textContent = `🖼️ ${labelName}`;
+                    trimmed.onload = renderAllPosters;
+                    setTimeout(renderAllPosters, 60);
+                } else {
+                    const idx = currentGalleryTarget;
+                    if (postersList[idx]) {
+                        postersList[idx].useCustomLeftImage = true;
+                        postersList[idx].customRawImg = img;
+                        postersList[idx].customTrimmedImg = trimmed;
+                        postersList[idx].customImageLabel = labelName;
+                        trimmed.onload = renderAllPosters;
+                        setTimeout(renderAllPosters, 60);
+                    }
+                }
+                closeVisualGallery();
+            };
+            img.src = dataUrl;
+        }
+
+        function applyPresetVisualWithFallback(candidateUrls, labelName) {
+            let idxTry = 0;
+            const tryNext = () => {
+                if (idxTry >= candidateUrls.length) {
+                    alert(`Le fichier pour "${labelName}" n'a pas été trouvé dans le dossier "Images Gauche".\nAstuce : Clique sur le bouton rouge "➕ Ajouter & Mémoriser image(s)" pour l'importer directement !`);
+                    return;
+                }
+                const img = new Image();
+                if (window.location.protocol !== 'file:') {
+                    img.crossOrigin = 'anonymous';
+                }
+                img.onload = () => {
+                    const trimmed = autoTrimWhiteBorders(img);
+                    if (currentGalleryTarget === 'global') {
+                        rawLeftImage = img;
+                        trimmedLeftImage = trimmed;
+                        document.getElementById('inputLeftImage').value = '';
+                        document.getElementById('globalGalleryLabel').textContent = `🖼️ ${labelName}`;
+                        trimmed.onload = renderAllPosters;
+                        setTimeout(renderAllPosters, 60);
+                    } else {
+                        const idx = currentGalleryTarget;
+                        if (postersList[idx]) {
+                            postersList[idx].useCustomLeftImage = true;
+                            postersList[idx].customRawImg = img;
+                            postersList[idx].customTrimmedImg = trimmed;
+                            postersList[idx].customImageLabel = labelName;
+                            trimmed.onload = renderAllPosters;
+                            setTimeout(renderAllPosters, 60);
+                        }
+                    }
+                    closeVisualGallery();
+                };
+                img.onerror = () => {
+                    idxTry++;
+                    tryNext();
+                };
+                img.src = candidateUrls[idxTry];
+            };
+            tryNext();
+        }
+
+        document.getElementById('btnOpenGlobalGallery').addEventListener('click', () => openVisualGallery('global'));
+        document.getElementById('btnCloseGalleryModal').addEventListener('click', closeVisualGallery);
+        document.getElementById('btnCancelGalleryModal').addEventListener('click', closeVisualGallery);
+        visualGalleryModal.addEventListener('click', (e) => {
+            if (e.target === visualGalleryModal) closeVisualGallery();
+        });
+
+        document.getElementById('btnClearVisualSelection').addEventListener('click', () => {
+            if (currentGalleryTarget === 'global') {
+                rawLeftImage = null;
+                trimmedLeftImage = null;
+                document.getElementById('inputLeftImage').value = '';
+                document.getElementById('globalGalleryLabel').textContent = '🖼️ Choisir visuel';
+            } else {
+                const idx = currentGalleryTarget;
+                if (postersList[idx]) {
+                    postersList[idx].customRawImg = null;
+                    postersList[idx].customTrimmedImg = null;
+                    postersList[idx].customImageLabel = '';
+                }
+            }
+            closeVisualGallery();
+            renderAllPosters();
+        });
+
         document.getElementById('inputLeftImage').addEventListener('change', async function(e) {
             const file = e.target.files[0];
             if (!file) return;
-
-            // Remet le menu déroulant sur "-- Choisir visuel --"
-            document.getElementById('selectPresetLeftImage').value = '';
+            const cleanName = file.name.replace(/\.[^.]+$/, '');
+            document.getElementById('globalGalleryLabel').textContent = `🖼️ ${cleanName}`;
 
             const pages = await loadFileToPages(file);
+            const dataUrl = pages[0].canvas.toDataURL('image/png');
+
+            await saveImageToDB(cleanName, dataUrl);
+
             const img = new Image();
             img.onload = () => {
                 rawLeftImage = img;
@@ -413,7 +973,7 @@
                 trimmedLeftImage.onload = renderAllPosters;
                 setTimeout(renderAllPosters, 100);
             };
-            img.src = pages[0].canvas.toDataURL('image/png');
+            img.src = dataUrl;
         });
 
         document.getElementById('chkAutoTrim').addEventListener('change', renderAllPosters);
@@ -440,6 +1000,24 @@
             if (/^\d+[.,€\s]*\d*€?$/.test(clean)) return false;
             const letters = (clean.match(/[A-ZÀ-Ý]/g) || []).length;
             return letters >= 3;
+        }
+
+        function formatContenanceString(unitQty, unitType, productName) {
+            const titleMatch = (productName || '').match(/\b(\d+(?:[.,]\d+)?)\s*(ML|CL|L|GR|G|KG)\b/i);
+            if (titleMatch) {
+                const val = titleMatch[1].replace('.', ',');
+                const unit = titleMatch[2].toUpperCase() === 'GR' ? 'g' : titleMatch[2].toLowerCase();
+                return `${val} ${unit}`;
+            }
+            if (unitType === 'kg') {
+                if (unitQty < 1) return `${Math.round(unitQty * 1000)} g`;
+                return `${unitQty.toString().replace('.', ',')} kg`;
+            }
+            if (unitType === 'l') {
+                if (unitQty < 1) return `${Math.round(unitQty * 1000)} ml`;
+                return `${unitQty.toString().replace('.', ',')} L`;
+            }
+            return `${Math.round(unitQty || 1)} pièce${unitQty > 1 ? 's' : ''}`;
         }
 
         function parseSingleLabelBlock(blockText, topTitleText = '') {
@@ -543,6 +1121,8 @@
             if (!unitType) unitType = 'pièce';
             if (unitQty <= 0) unitQty = 1.0;
 
+            const contenanceText = formatContenanceString(unitQty, unitType, productName);
+
             let baseUnitPrice = 0;
             let oldPrice = 0;
 
@@ -611,7 +1191,12 @@
                 baseUnitPrice: baseUnitPrice > 0 ? baseUnitPrice : (oldPrice > 0 ? oldPrice : 1.99),
                 unitQty: unitQty,
                 unitType: unitType,
-                gencode: gencode
+                contenanceText: contenanceText,
+                gencode: gencode,
+                useCustomLeftImage: false,
+                customRawImg: null,
+                customTrimmedImg: null,
+                customImageLabel: ''
             };
         }
 
@@ -994,24 +1579,100 @@
             }
         }
 
+        function computePromoPricing(item, presetKey, discountInput, isMechanicShown) {
+            const uType = item.unitType || 'pièce';
+            const prefix = uType === 'pièce' ? 'La pièce' : (uType === 'l' ? 'Le L' : 'Le kg');
+            const baseUnit = item.baseUnitPrice > 0 ? item.baseUnitPrice : (item.unitQty > 0 ? item.oldPrice / item.unitQty : item.oldPrice);
+
+            if (!isMechanicShown) {
+                return {
+                    hasCrossedPrice: false,
+                    crossedPrice: item.oldPrice,
+                    mainPrice: item.oldPrice,
+                    unitPriceText: `${prefix} : ${baseUnit.toFixed(2).replace('.', ',')} €`
+                };
+            }
+
+            const preset = MECHANIC_PRESETS[presetKey] || { mode: 'pct_single' };
+            const pctMatch = discountInput.match(/(\d+(?:[.,]\d+)?)\s*%/);
+            const euroMatch = discountInput.match(/(\d+(?:[.,]\d+)?)\s*€/);
+
+            if (preset.mode === 'nth_2') {
+                const nthPct = pctMatch ? parseFloat(pctMatch[1].replace(',', '.')) : (preset.nthPct || 50);
+                const secondPrice = item.oldPrice * (1 - nthPct / 100);
+                const avgUnit = baseUnit * (1 - (nthPct / 2) / 100);
+                return {
+                    hasCrossedPrice: true,
+                    crossedPrice: item.oldPrice,
+                    mainPrice: secondPrice,
+                    unitPriceText: `${prefix} par 2 : ${avgUnit.toFixed(2).replace('.', ',')} €`
+                };
+            }
+
+            if (preset.mode === 'bogo_1_1') {
+                const lotOldPrice = item.oldPrice * 2;
+                const lotNewPrice = item.oldPrice;
+                const avgUnit = baseUnit / 2;
+                return {
+                    hasCrossedPrice: true,
+                    crossedPrice: lotOldPrice,
+                    mainPrice: lotNewPrice,
+                    unitPriceText: `${prefix} par 2 : ${avgUnit.toFixed(2).replace('.', ',')} €`
+                };
+            }
+
+            if (preset.mode === 'bogo_2_1') {
+                const lotOldPrice = item.oldPrice * 3;
+                const lotNewPrice = item.oldPrice * 2;
+                const avgUnit = (baseUnit * 2) / 3;
+                return {
+                    hasCrossedPrice: true,
+                    crossedPrice: lotOldPrice,
+                    mainPrice: lotNewPrice,
+                    unitPriceText: `${prefix} par 3 : ${avgUnit.toFixed(2).replace('.', ',')} €`
+                };
+            }
+
+            if (preset.mode === 'euro_single' || (!pctMatch && euroMatch)) {
+                const euroOff = euroMatch ? parseFloat(euroMatch[1].replace(',', '.')) : 0;
+                const newP = Math.max(0, item.oldPrice - euroOff);
+                const ratio = item.oldPrice > 0 ? (newP / item.oldPrice) : 1;
+                const newUnit = baseUnit * ratio;
+                return {
+                    hasCrossedPrice: euroOff > 0,
+                    crossedPrice: item.oldPrice,
+                    mainPrice: newP,
+                    unitPriceText: `${prefix} : ${newUnit.toFixed(2).replace('.', ',')} €`
+                };
+            }
+
+            if (preset.mode === 'direct_lot' && !pctMatch) {
+                return {
+                    hasCrossedPrice: false,
+                    crossedPrice: item.oldPrice,
+                    mainPrice: item.oldPrice,
+                    unitPriceText: `${prefix} : ${baseUnit.toFixed(2).replace('.', ',')} €`
+                };
+            }
+
+            const pct = pctMatch ? parseFloat(pctMatch[1].replace(',', '.')) : 0;
+            const newPrice = item.oldPrice * (1 - pct / 100);
+            const newUnitVal = baseUnit * (1 - pct / 100);
+            return {
+                hasCrossedPrice: pct > 0,
+                crossedPrice: item.oldPrice,
+                mainPrice: newPrice,
+                unitPriceText: `${prefix} : ${newUnitVal.toFixed(2).replace('.', ',')} €`
+            };
+        }
+
         function drawSinglePoster(canvas, item) {
             const ctx = canvas.getContext('2d');
             const discountInput = document.getElementById('inputDiscount').value.trim();
-            const discountMatch = discountInput.match(/(\d+(?:[.,]\d+)?)\s*%/);
-            const pct = discountMatch ? parseFloat(discountMatch[1].replace(',', '.')) : 0;
+            const presetKey = document.getElementById('selectMechanicPreset').value;
+            const showContenance = document.getElementById('chkShowContenance').checked;
 
-            const newPrice = item.oldPrice * (1 - pct / 100);
-            let unitPriceText = '';
-            const uType = item.unitType || 'pièce';
-            const prefix = uType === 'pièce' ? 'La pièce' : (uType === 'l' ? 'Le L' : 'Le kg');
-
-            if (item.baseUnitPrice > 0) {
-                const newUnitVal = item.baseUnitPrice * (1 - pct / 100);
-                unitPriceText = `${prefix} : ${newUnitVal.toFixed(2).replace('.', ',')} €`;
-            } else if (item.unitQty > 0) {
-                const newUnitVal = newPrice / item.unitQty;
-                unitPriceText = `${prefix} : ${newUnitVal.toFixed(2).replace('.', ',')} €`;
-            }
+            const pricing = computePromoPricing(item, presetKey, discountInput, showMechanic);
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -1024,12 +1685,19 @@
             ctx.fillStyle = '#EE1C25';
             ctx.fillRect(0, 0, leftWidth, canvas.height);
 
-            const activeImg = document.getElementById('chkAutoTrim').checked ? (trimmedLeftImage || rawLeftImage) : rawLeftImage;
-            if (activeImg && activeImg.complete) {
+            const autoTrim = document.getElementById('chkAutoTrim').checked;
+            let activeImg = null;
+            if (item.useCustomLeftImage && item.customRawImg) {
+                activeImg = autoTrim ? (item.customTrimmedImg || item.customRawImg) : item.customRawImg;
+            } else {
+                activeImg = autoTrim ? (trimmedLeftImage || rawLeftImage) : rawLeftImage;
+            }
+
+            if (activeImg && activeImg.complete && activeImg.naturalWidth > 0) {
                 drawLeftZoneImage(ctx, activeImg, leftWidth, canvas.height);
             }
 
-            // Dates (si affichées)
+            // Dates
             const dateRaw = document.getElementById('inputDates').value.trim();
             if (showDate && dateRaw) {
                 const dateLines = dateRaw.split('|').map(s => s.trim());
@@ -1046,66 +1714,100 @@
             const circleY = 185;
             const radius = 114;
 
-            ctx.fillStyle = '#EE1C25';
-            ctx.beginPath();
-            ctx.arc(circleX, circleY, radius, 0, Math.PI * 2);
-            ctx.fill();
+            if (showMechanic) {
+                ctx.fillStyle = '#EE1C25';
+                ctx.beginPath();
+                ctx.arc(circleX, circleY, radius, 0, Math.PI * 2);
+                ctx.fill();
 
-            const discountStr = discountInput;
-            const rawDiscText = document.getElementById('inputDiscountText').value.trim();
-            const hasDiscPhrase = showDiscountText && rawDiscText.length > 0;
-            const mainYOffset = hasDiscPhrase ? 2 : 26;
+                const discountStr = discountInput;
+                const rawDiscText = document.getElementById('inputDiscountText').value.trim();
+                const hasDiscPhrase = rawDiscText.length > 0;
+                const mainYOffset = hasDiscPhrase ? 2 : 26;
 
-            ctx.fillStyle = '#FFFFFF';
-            ctx.textAlign = 'center';
+                ctx.fillStyle = '#FFFFFF';
+                ctx.textAlign = 'center';
 
-            if (discountStr.endsWith('%')) {
-                const numPart = discountStr.slice(0, -1);
-                const mainFontSize = hasDiscPhrase ? 74 : 84;
-                const pctFontSize = hasDiscPhrase ? 42 : 48;
+                if (discountStr.endsWith('%')) {
+                    const numPart = discountStr.slice(0, -1);
+                    const mainFontSize = hasDiscPhrase ? 74 : 84;
+                    const pctFontSize = hasDiscPhrase ? 42 : 48;
 
-                ctx.font = `900 ${mainFontSize}px ${FONT_SLAB}`;
-                const numW = ctx.measureText(numPart).width;
-                ctx.font = `900 ${pctFontSize}px ${FONT_SLAB}`;
-                const pctW = ctx.measureText('%').width;
+                    ctx.font = `900 ${mainFontSize}px ${FONT_SLAB}`;
+                    const numW = ctx.measureText(numPart).width;
+                    ctx.font = `900 ${pctFontSize}px ${FONT_SLAB}`;
+                    const pctW = ctx.measureText('%').width;
 
-                const startX = circleX - ((numW + pctW) / 2);
-                ctx.textAlign = 'left';
-                ctx.font = `900 ${mainFontSize}px ${FONT_SLAB}`;
-                ctx.fillText(numPart, startX, circleY + mainYOffset);
+                    const startX = circleX - ((numW + pctW) / 2);
+                    ctx.textAlign = 'left';
+                    ctx.font = `900 ${mainFontSize}px ${FONT_SLAB}`;
+                    ctx.fillText(numPart, startX, circleY + mainYOffset);
 
-                ctx.font = `900 ${pctFontSize}px ${FONT_SLAB}`;
-                ctx.fillText('%', startX + numW + 2, circleY + mainYOffset - 26);
+                    ctx.font = `900 ${pctFontSize}px ${FONT_SLAB}`;
+                    ctx.fillText('%', startX + numW + 2, circleY + mainYOffset - 26);
+                } else if (discountStr.length > 0) {
+                    const customFontSize = discountStr.length > 7 ? 38 : (discountStr.length > 5 ? 48 : (hasDiscPhrase ? 62 : 72));
+                    ctx.font = `900 ${customFontSize}px ${FONT_SLAB}`;
+                    ctx.textAlign = 'center';
+                    ctx.fillText(discountStr, circleX, circleY + mainYOffset);
+                }
+
+                if (hasDiscPhrase) {
+                    const discTextLines = rawDiscText.split('|');
+                    const phraseFontSize = discTextLines.some(l => l.trim().length > 14) ? 18 : 21;
+                    ctx.font = `700 ${phraseFontSize}px ${FONT_SLAB}`;
+                    ctx.textAlign = 'center';
+                    discTextLines.forEach((line, idx) => {
+                        ctx.fillText(line.trim(), circleX, circleY + 32 + (idx * 23));
+                    });
+                }
+            }
+
+            // 4. Prix + Mention sous prix + Prix à l'unité + Contenance
+            if (showMechanic) {
+                const priceCenterX = 550;
+                const maxPriceRightX = circleX - radius - 12;
+
+                if (pricing.hasCrossedPrice) {
+                    drawFormattedPrice(ctx, pricing.crossedPrice, priceCenterX + 15, 162, true, maxPriceRightX);
+                    drawFormattedPrice(ctx, pricing.mainPrice, priceCenterX, 264, false, maxPriceRightX);
+                } else {
+                    drawFormattedPrice(ctx, pricing.mainPrice, priceCenterX, 232, false, maxPriceRightX);
+                }
+
+                ctx.fillStyle = '#EE1C25';
+                ctx.font = `800 15px ${FONT_SANS}`;
+                ctx.textAlign = 'center';
+                ctx.fillText(document.getElementById('inputUnitLabel').value.toUpperCase(), priceCenterX + 5, 294);
+
+                ctx.fillStyle = '#000000';
+                ctx.font = `600 15px ${FONT_SANS}`;
+                ctx.fillText(pricing.unitPriceText, priceCenterX + 5, 314);
+
+                if (showContenance && item.contenanceText) {
+                    ctx.fillStyle = '#374151';
+                    ctx.font = `700 14px ${FONT_SANS}`;
+                    ctx.fillText(`Contenance : ${item.contenanceText}`, priceCenterX + 5, 334);
+                }
             } else {
-                const customFontSize = discountStr.length > 7 ? 42 : (hasDiscPhrase ? 64 : 74);
-                ctx.font = `900 ${customFontSize}px ${FONT_SLAB}`;
+                const soloPriceCenterX = 645;
+                drawFormattedPrice(ctx, pricing.mainPrice, soloPriceCenterX, 230, false, 885);
+
+                ctx.fillStyle = '#EE1C25';
+                ctx.font = `800 16px ${FONT_SANS}`;
                 ctx.textAlign = 'center';
-                ctx.fillText(discountStr, circleX, circleY + mainYOffset);
+                ctx.fillText(document.getElementById('inputUnitLabel').value.toUpperCase(), soloPriceCenterX, 265);
+
+                ctx.fillStyle = '#000000';
+                ctx.font = `600 16px ${FONT_SANS}`;
+                ctx.fillText(pricing.unitPriceText, soloPriceCenterX, 287);
+
+                if (showContenance && item.contenanceText) {
+                    ctx.fillStyle = '#374151';
+                    ctx.font = `700 15px ${FONT_SANS}`;
+                    ctx.fillText(`Contenance : ${item.contenanceText}`, soloPriceCenterX, 309);
+                }
             }
-
-            if (hasDiscPhrase) {
-                const discTextLines = rawDiscText.split('|');
-                ctx.font = `700 21px ${FONT_SLAB}`;
-                ctx.textAlign = 'center';
-                discTextLines.forEach((line, idx) => {
-                    ctx.fillText(line.trim(), circleX, circleY + 32 + (idx * 24));
-                });
-            }
-
-            // 4. Prix (Ancien prix barré + Nouveau prix remisé)
-            const priceCenterX = 550;
-            const maxPriceRightX = circleX - radius - 12;
-            drawFormattedPrice(ctx, item.oldPrice, priceCenterX + 15, 168, true, maxPriceRightX);
-            drawFormattedPrice(ctx, newPrice, priceCenterX, 270, false, maxPriceRightX);
-
-            ctx.fillStyle = '#EE1C25';
-            ctx.font = `800 15px ${FONT_SANS}`;
-            ctx.textAlign = 'center';
-            ctx.fillText(document.getElementById('inputUnitLabel').value.toUpperCase(), priceCenterX + 5, 300);
-
-            ctx.fillStyle = '#000000';
-            ctx.font = `600 15px ${FONT_SANS}`;
-            ctx.fillText(unitPriceText, priceCenterX + 5, 320);
 
             // 5. Nom du produit à droite
             const rightX = 912;
@@ -1115,7 +1817,7 @@
 
             drawFittedProductTitle(ctx, item.productName, rightX, 68, maxRightWidth, 315);
 
-            // 6. Bas de l'étiquette (Mention d'ouverture + Code-barres visuel)
+            // 6. Bas de l'étiquette
             if (showDate && dateRaw.includes('*')) {
                 ctx.fillStyle = '#000000';
                 ctx.font = `500 12px ${FONT_SANS}`;
@@ -1135,8 +1837,15 @@
             document.getElementById('badgeCount').textContent = `${postersList.length} étiquette${postersList.length > 1 ? 's' : ''}`;
 
             postersList.forEach((item, index) => {
+                if (!item.contenanceText) {
+                    item.contenanceText = formatContenanceString(item.unitQty, item.unitType, item.productName);
+                }
+
                 const card = document.createElement('div');
                 card.className = 'bg-white p-5 rounded-xl shadow-md space-y-3';
+
+                const isCustomActive = Boolean(item.useCustomLeftImage);
+                const customLabelText = item.customImageLabel ? item.customImageLabel : 'Visuel';
 
                 const header = document.createElement('div');
                 header.className = 'flex flex-wrap items-center border-b pb-2 gap-2';
@@ -1145,8 +1854,24 @@
                         #${index + 1}
                     </span>
                     <input type="text" data-idx="${index}" data-field="productName" value="${item.productName.replace(/"/g, '&quot;')}" 
-                        class="poster-edit-input flex-1 min-w-[200px] text-xs font-bold uppercase border rounded px-2.5 py-1 text-gray-800 focus:ring-2 focus:ring-red-500"
+                        class="poster-edit-input flex-1 min-w-[170px] text-xs font-bold uppercase border rounded px-2.5 py-1 text-gray-800 focus:ring-2 focus:ring-red-500"
                         title="Nom du produit (1re ligne)" placeholder="Nom du produit" />
+
+                    <!-- BOUTON OPTIONNEL D'IMAGE GAUCHE INDIVIDUELLE -->
+                    <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-lg border ${isCustomActive ? 'border-green-500 bg-green-50/60' : 'border-gray-200 bg-gray-50'}">
+                        <span class="text-[11px] font-bold text-gray-600">Img gauche:</span>
+                        <button type="button" data-idx="${index}" class="btn-toggle-item-img text-[11px] font-bold px-2 py-0.5 rounded transition ${isCustomActive ? 'bg-green-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}">
+                            ${isCustomActive ? 'Activé' : 'Désactivé'}
+                        </button>
+                        <button type="button" data-idx="${index}" class="btn-open-item-gallery ${isCustomActive ? '' : 'hidden'} text-[11px] font-bold px-2 py-0.5 rounded bg-white border border-green-400 text-green-900 hover:bg-green-100 transition">
+                            🖼️ ${customLabelText}
+                        </button>
+                        <label class="${isCustomActive ? '' : 'hidden'} text-[11px] font-bold px-2 py-0.5 rounded bg-red-600 text-white hover:bg-red-700 cursor-pointer transition" title="Déposer un fichier">
+                            📁 Fichier
+                            <input type="file" data-idx="${index}" accept=".jpeg,.jpg,.png,.pdf,.webp,.gif,.bmp,.svg,image/*,application/pdf" class="input-item-left-file hidden">
+                        </label>
+                    </div>
+
                     <label class="flex items-center gap-1 text-xs font-semibold text-gray-600">
                         Prix (€):
                         <input type="number" step="0.01" data-idx="${index}" data-field="oldPrice" value="${item.oldPrice.toFixed(2)}" 
@@ -1155,7 +1880,7 @@
                     <label class="flex items-center gap-1 text-xs font-semibold text-gray-600">
                         Prix Unité (€):
                         <input type="number" step="0.01" data-idx="${index}" data-field="baseUnitPrice" value="${(item.baseUnitPrice || item.oldPrice).toFixed(2)}" 
-                            class="poster-edit-input w-20 text-xs font-bold border rounded px-2 py-1 text-amber-800 bg-amber-50" title="Prix au kg, au litre ou à la pièce avant remise" />
+                            class="poster-edit-input w-20 text-xs font-bold border rounded px-2 py-1 text-amber-800 bg-amber-50" />
                     </label>
                     <label class="flex items-center gap-1 text-xs font-semibold text-gray-600">
                         Unité:
@@ -1166,10 +1891,18 @@
                         </select>
                     </label>
                     <label class="flex items-center gap-1 text-xs font-semibold text-gray-600">
+                        Cont.:
+                        <input type="text" data-idx="${index}" data-field="contenanceText" value="${(item.contenanceText || '').replace(/"/g, '&quot;')}" 
+                            class="poster-edit-input w-20 text-xs font-bold border rounded px-2 py-1 text-emerald-800 bg-emerald-50" placeholder="ex: 100 g" title="Contenance" />
+                    </label>
+                    <label class="flex items-center gap-1 text-xs font-semibold text-gray-600">
                         EAN:
                         <input type="text" data-idx="${index}" data-field="gencode" value="${item.gencode || ''}" 
-                            class="poster-edit-input w-32 text-xs font-bold border rounded px-2 py-1 text-blue-800 bg-blue-50" placeholder="Code-barres" />
+                            class="poster-edit-input w-28 text-xs font-bold border rounded px-2 py-1 text-blue-800 bg-blue-50" placeholder="Code-barres" />
                     </label>
+                    <button type="button" data-idx="${index}" class="btn-delete-poster text-xs font-bold px-2.5 py-1 rounded bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 transition" title="Supprimer">
+                        🗑️ Supprimer
+                    </button>
                 `;
 
                 const canvasWrapper = document.createElement('div');
@@ -1205,6 +1938,8 @@
                         postersList[idx].baseUnitPrice = parseFloat(this.value) || 0;
                     } else if (field === 'unitType') {
                         postersList[idx].unitType = this.value;
+                    } else if (field === 'contenanceText') {
+                        postersList[idx].contenanceText = this.value;
                     } else if (field === 'gencode') {
                         postersList[idx].gencode = this.value.trim();
                     }
@@ -1212,9 +1947,62 @@
                     if (c) drawSinglePoster(c, postersList[idx]);
                 });
             });
+
+            document.querySelectorAll('.btn-delete-poster').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.getAttribute('data-idx'), 10);
+                    if (postersList.length <= 1) {
+                        alert("Il doit rester au moins 1 étiquette dans la liste.");
+                        return;
+                    }
+                    postersList.splice(idx, 1);
+                    renderAllPosters();
+                });
+            });
+
+            document.querySelectorAll('.btn-toggle-item-img').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.getAttribute('data-idx'), 10);
+                    postersList[idx].useCustomLeftImage = !postersList[idx].useCustomLeftImage;
+                    renderAllPosters();
+                    if (postersList[idx].useCustomLeftImage && !postersList[idx].customRawImg) {
+                        openVisualGallery(idx);
+                    }
+                });
+            });
+
+            document.querySelectorAll('.btn-open-item-gallery').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const idx = parseInt(this.getAttribute('data-idx'), 10);
+                    openVisualGallery(idx);
+                });
+            });
+
+            document.querySelectorAll('.input-item-left-file').forEach(fileInput => {
+                fileInput.addEventListener('change', async function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const idx = parseInt(this.getAttribute('data-idx'), 10);
+                    const cleanName = file.name.replace(/\.[^.]+$/, '');
+                    const pages = await loadFileToPages(file);
+                    const dataUrl = pages[0].canvas.toDataURL('image/png');
+
+                    await saveImageToDB(cleanName, dataUrl);
+
+                    const img = new Image();
+                    img.onload = () => {
+                        postersList[idx].useCustomLeftImage = true;
+                        postersList[idx].customRawImg = img;
+                        postersList[idx].customTrimmedImg = autoTrimWhiteBorders(img);
+                        postersList[idx].customImageLabel = cleanName.slice(0, 12);
+                        postersList[idx].customTrimmedImg.onload = renderAllPosters;
+                        setTimeout(renderAllPosters, 80);
+                    };
+                    img.src = dataUrl;
+                });
+            });
         }
 
-        // EXPORT PDF A4 PORTRAIT : 4 étiquettes par page
         document.getElementById('btnDownloadPdfA4').addEventListener('click', async function() {
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
@@ -1253,10 +2041,15 @@
             });
         });
 
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadSavedImagesFromDB();
+            buildVisualGallery();
+            autoLoadMuseoSlabFonts();
+            renderAllPosters();
+        });
         document.fonts.ready.then(() => {
             renderAllPosters();
         });
-        window.onload = renderAllPosters;
     </script>
 </body>
 </html>
